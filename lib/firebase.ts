@@ -2,7 +2,7 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getDatabase, Database } from "firebase/database";
-// import { getAnalytics } from "firebase/analytics"; // Optional: if you use analytics
+// import { getAnalytics } from "firebase/analytics"; // Optional
 
 // Your web app's Firebase configuration
 const firebaseConfig = {

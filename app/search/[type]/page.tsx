@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ParticleBackground } from "@/components/ui/particle-background"
 import { SplineBackground } from "@/components/ui/spline-background"
 import { DelhiKhasraMap } from "@/components/ui/delhi-khasra-map"
+import { SimpleRevenueMap } from "@/components/ui/simple-revenue-map"
 import { db } from "@/lib/firebase"
 import { ref, get } from "firebase/database"
 
@@ -708,7 +709,7 @@ export default function SearchPage() {
             </Card>
           </motion.div>
               
-              {/* Right Side - Map Section (Only for Rural) */}
+              {/* Right Side - Map Section */}
               {!isUrban && (
                 <motion.div variants={itemVariants} className="sticky top-4">
                   <Card className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl">
@@ -725,6 +726,28 @@ export default function SearchPage() {
                         village={ruralFormData.village}
                         rectangle={ruralFormData.rectangle}
                         khasra={ruralFormData.khasra}
+                        height={550}
+                      />
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              )}
+              
+              {/* Urban Map Section */}
+              {isUrban && (
+                <motion.div variants={itemVariants} className="sticky top-4">
+                  <Card className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl">
+                    <CardHeader>
+                      <CardTitle className="text-xl text-white">Delhi Urban Property Map</CardTitle>
+                      <CardDescription className="text-gray-400">
+                        Interactive map showing selected SRO and locality
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <SimpleRevenueMap 
+                        district={locationData?.urban?.[urbanFormData.sro]?.name || ""}
+                        division={urbanFormData.sro || ""}
+                        village={urbanFormData.locality || ""}
                         height={550}
                       />
                     </CardContent>

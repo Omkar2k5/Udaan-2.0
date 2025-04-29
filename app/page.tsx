@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth-context"
-import { LogOut } from "lucide-react"
 import { ParticleBackground } from "@/components/ui/particle-background"
+import { NavBar } from "@/app/components/NavBar"
 
 export default function HomePage() {
   const router = useRouter()
@@ -16,27 +16,33 @@ export default function HomePage() {
     router.push("/property-type")
   }
 
+  useEffect(() => {
+    // Load Spline script if needed
+    const script = document.createElement('script')
+    script.src = 'https://unpkg.com/@splinetool/viewer@0.9.369/build/spline-viewer.js'
+    script.async = true
+    document.body.appendChild(script)
+    
+    return () => {
+      document.body.removeChild(script)
+    }
+  }, [])
+
   return (
     <div className="relative h-screen w-full bg-black overflow-hidden">
-      {/* Logout Button */}
-      <div className="absolute top-4 right-4 z-20">
-        <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
-          <LogOut className="h-4 w-4 mr-2" />
-          Logout
-        </Button>
-      </div>
+      {/* Navigation Bar */}
+      <NavBar showBackButton={false} />
 
       {/* Welcome Message */}
-      <div className="absolute top-4 left-4 z-20">
+      <div className="absolute top-20 left-4 z-20">
         <p className="text-white text-sm">Welcome, {user?.displayName || user?.email || "User"}</p>
       </div>
 
       {/* 3D Spline Object */}
       <div className="absolute inset-0 z-0">
-        <spline-viewer 
-          url="https://prod.spline.design/pY4CEJVxSZ9x753F/scene.splinecode" 
-          class="w-full h-full"
-        />
+        <div dangerouslySetInnerHTML={{ 
+          __html: '<spline-viewer url="https://prod.spline.design/pY4CEJVxSZ9x753F/scene.splinecode" class="w-full h-full"></spline-viewer>' 
+        }} />
       </div>
 
       {/* Content Overlay */}

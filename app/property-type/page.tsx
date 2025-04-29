@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, Building, Home, LogOut, Trees, FileText, Building2 } from "lucide-react"
+import { Building, Home, Trees, FileText, Building2 } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
 import { ParticleBackground } from "@/components/ui/particle-background"
 import { SplineBackground } from "@/app/components/SplineBackground"
+import { NavBar } from "@/app/components/NavBar"
 
 export default function PropertyTypePage() {
   const router = useRouter()
@@ -38,19 +39,10 @@ export default function PropertyTypePage() {
       {/* Spline 3D Background */}
       <SplineBackground />
 
-      {/* Logout Button */}
-      <div className="absolute top-4 right-4 z-20">
-        <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
-          <LogOut className="h-4 w-4 mr-2" />
-          Logout
-        </Button>
-      </div>
+      {/* Navigation Bar */}
+      <NavBar showBackButton={true} />
 
-      <div className="relative z-10">
-        <Button variant="ghost" className="text-white mb-6" onClick={() => router.push("/")}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Home
-        </Button>
-
+      <div className="relative z-10 mt-16">
         <motion.div initial="hidden" animate="visible" variants={containerVariants} className="max-w-6xl mx-auto">
           <motion.div variants={itemVariants} className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Select Property Type</h1>

@@ -12,7 +12,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ArrowLeft, Search, LogOut, Building, Trees } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { SplineViewer } from "@/components/ui/spline-viewer"
 import { ParticleBackground } from "@/components/ui/particle-background"
 
 interface UrbanFormData {

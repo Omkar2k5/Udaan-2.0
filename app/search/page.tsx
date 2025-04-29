@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ArrowLeft, Search, Database, LogOut } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
 import { ParticleBackground } from "@/components/ui/particle-background"
-import { SplineViewer } from "@/components/ui/spline-viewer"
+
 
 export default function SearchPage() {
   const router = useRouter()
@@ -59,9 +59,9 @@ export default function SearchPage() {
     <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
       {/* Spline 3D Background */}
       <div className="absolute inset-0 z-0 opacity-60">
-        <SplineViewer 
-          url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode" 
-          fallbackImageUrl="/images/search-fallback.jpg"
+        <iframe 
+          src="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
+          className="w-full h-full border-0"
         />
       </div>
 

@@ -73,9 +73,9 @@ export default function SignupPage() {
     <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden">
       {/* Spline 3D Background */}
       <div className="absolute inset-0 z-0 opacity-60">
-        <spline-viewer 
-          url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
-          class="w-full h-full"
+        <iframe 
+          src="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
+          className="w-full h-full border-0"
         />
       </div>
 

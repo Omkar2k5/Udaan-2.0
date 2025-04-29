@@ -59,10 +59,10 @@ export default function PropertyTypePage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            <motion.div variants={itemVariants}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-8 max-w-6xl mx-auto grid-flow-row auto-rows-fr">
+            <motion.div variants={itemVariants} className="flex">
               <Card
-                className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl hover:border-blue-500/50 transition-all cursor-pointer overflow-hidden group"
+                className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl hover:border-blue-500/50 transition-all cursor-pointer overflow-hidden group w-full flex flex-col h-full"
                 onClick={() => handleSelectPropertyType("urban")}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -75,7 +75,7 @@ export default function PropertyTypePage() {
                     Search for properties in urban areas like cities and towns
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="text-center">
+                <CardContent className="text-center flex-1 flex flex-col justify-between">
                   <ul className="text-sm text-gray-300 space-y-2 mb-4">
                     <li className="flex items-center justify-center">
                       <span className="bg-blue-500/20 p-1 rounded-full mr-2">
@@ -96,14 +96,14 @@ export default function PropertyTypePage() {
                       City Planning & Zoning Information
                     </li>
                   </ul>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Select Urban Property</Button>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-auto">Select Urban Property</Button>
                 </CardContent>
               </Card>
             </motion.div>
 
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} className="flex">
               <Card
-                className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl hover:border-green-500/50 transition-all cursor-pointer overflow-hidden group"
+                className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl hover:border-green-500/50 transition-all cursor-pointer overflow-hidden group w-full flex flex-col h-full"
                 onClick={() => handleSelectPropertyType("rural")}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-green-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -116,7 +116,7 @@ export default function PropertyTypePage() {
                     Search for properties in rural areas like villages and farmlands
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="text-center">
+                <CardContent className="text-center flex-1 flex flex-col justify-between">
                   <ul className="text-sm text-gray-300 space-y-2 mb-4">
                     <li className="flex items-center justify-center">
                       <span className="bg-green-500/20 p-1 rounded-full mr-2">
@@ -137,14 +137,14 @@ export default function PropertyTypePage() {
                       Agricultural Subsidies & Rural Development
                     </li>
                   </ul>
-                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white">Select Rural Property</Button>
+                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white mt-auto">Select Rural Property</Button>
                 </CardContent>
               </Card>
             </motion.div>
 
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} className="flex">
               <Card
-                className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl hover:border-purple-500/50 transition-all cursor-pointer overflow-hidden group"
+                className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl hover:border-purple-500/50 transition-all cursor-pointer overflow-hidden group w-full flex flex-col h-full"
                 onClick={() => handleSelectPropertyType("encumbrance")}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -157,7 +157,7 @@ export default function PropertyTypePage() {
                     Search for property encumbrance and asset details
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="text-center">
+                <CardContent className="text-center flex-1 flex flex-col justify-between">
                   <ul className="text-sm text-gray-300 space-y-2 mb-4">
                     <li className="flex items-center justify-center">
                       <span className="bg-purple-500/20 p-1 rounded-full mr-2">
@@ -178,14 +178,14 @@ export default function PropertyTypePage() {
                       Detailed Asset Information
                     </li>
                   </ul>
-                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">View Encumbrance Details</Button>
+                  <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white mt-auto">View Encumbrance Details</Button>
                 </CardContent>
               </Card>
             </motion.div>
 
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} className="flex">
               <Card
-                className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl hover:border-blue-500/50 transition-all cursor-pointer overflow-hidden group"
+                className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl hover:border-blue-500/50 transition-all cursor-pointer overflow-hidden group w-full flex flex-col h-full"
                 onClick={() => handleSelectPropertyType("company")}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -198,7 +198,7 @@ export default function PropertyTypePage() {
                     Search for company/LLP details and property charges
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="text-center">
+                <CardContent className="text-center flex-1 flex flex-col justify-between">
                   <ul className="text-sm text-gray-300 space-y-2 mb-4">
                     <li className="flex items-center justify-center">
                       <span className="bg-blue-500/20 p-1 rounded-full mr-2">
@@ -219,7 +219,7 @@ export default function PropertyTypePage() {
                       Company Property Details
                     </li>
                   </ul>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">View Company Details</Button>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-auto">View Company Details</Button>
                 </CardContent>
               </Card>
             </motion.div>

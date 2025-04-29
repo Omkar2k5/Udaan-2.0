@@ -29,7 +29,7 @@ export default function RootLayout({
           id="spline-viewer-script"
         />
       </head>
-      <body className={`${inter.className} overflow-hidden`}>
+      <body className={`${inter.className}`}>
         <div className="fixed bottom-4 right-4 z-50 bg-black/80 backdrop-blur-sm p-2 rounded-lg">
           <Image
             src="/logo-Mit.png"

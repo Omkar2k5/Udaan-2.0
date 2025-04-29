@@ -162,50 +162,74 @@ export default function SearchPage() {
       });
       
       try {
-        console.log('Attempting to get data from Firebase ref: /urban/');
-        const urbanRef = ref(db, '/urban/');
+        // Default to fallback data
+        let completeData = { ...fallbackData };
         
-        // Race between the fetch operation and the timeout
-        const snapshot = await Promise.race([
-          get(urbanRef),
-          timeoutPromise
-        ]) as { exists: () => boolean, val: () => any } | undefined;
-        
-        if (snapshot && snapshot.exists()) {
-          const urbanData = snapshot.val();
-          console.log('Firebase urban data snapshot exists. Fetched data:', urbanData);
+        // Fetch urban data
+        try {
+          console.log('Attempting to get data from Firebase ref: /urban/');
+          const urbanRef = ref(db, '/urban/');
           
-          // Store the complete location data with rural part from fallback
-          const completeData = {
-            rural: fallbackData.rural,
-            urban: urbanData
-          };
-          setLocationData(completeData);
-
-          // Process urban data only
-          if (urbanData && typeof urbanData === 'object') {
-            const sros = Object.entries(urbanData).map(([key, value]: [string, any]) => ({
-              key: key,
-              name: value?.name || key
-            }));
-            console.log('Mapped SROs from Firebase:', sros);
-            setSroOptions(sros);
+          // Race against timeout
+          const urbanSnapshot = await Promise.race([
+            get(urbanRef),
+            timeoutPromise
+          ]) as any;
+          
+          if (urbanSnapshot && typeof urbanSnapshot === 'object' && typeof urbanSnapshot.exists === 'function' && urbanSnapshot.exists()) {
+            const urbanData = urbanSnapshot.val();
+            console.log('Firebase urban data snapshot exists:', urbanData);
+            completeData.urban = urbanData;
+            
+            // Process urban data
+            if (urbanData && typeof urbanData === 'object') {
+              const sros = Object.entries(urbanData).map(([key, value]: [string, any]) => ({
+                key: key,
+                name: value?.name || key
+              }));
+              console.log('Mapped SROs from Firebase:', sros);
+              setSroOptions(sros);
+            }
           } else {
-            console.warn('Urban SRO data not found or invalid format in Firebase.');
-            setError("Invalid SRO data structure. Using local data.");
-            setLocationData(fallbackData);
-            processFallbackData(fallbackData);
+            console.warn('Urban data not found in Firebase or timed out. Using fallback urban data.');
           }
-          
-          // Set rural districts from fallback since we're only fetching urban
-          setDelhiDistricts(fallbackData.rural.districts);
-          
-        } else {
-          console.error('Firebase snapshot does not exist at /urban/ or timed out. Using fallback data.');
-          setError("Using local data due to database connection timeout.");
-          setLocationData(fallbackData);
-          processFallbackData(fallbackData);
+        } catch (urbanError) {
+          console.error('Error fetching urban data:', urbanError);
+          console.warn('Using fallback urban data due to error.');
         }
+        
+        // Fetch rural data
+        try {
+          console.log('Attempting to get data from Firebase ref: /rural/');
+          const ruralRef = ref(db, '/rural/');
+          
+          // Race against timeout
+          const ruralSnapshot = await Promise.race([
+            get(ruralRef),
+            timeoutPromise
+          ]) as any;
+          
+          if (ruralSnapshot && typeof ruralSnapshot === 'object' && typeof ruralSnapshot.exists === 'function' && ruralSnapshot.exists()) {
+            const ruralData = ruralSnapshot.val();
+            console.log('Firebase rural data snapshot exists:', ruralData);
+            completeData.rural = ruralData;
+            
+            // Set Delhi districts from rural data
+            if (ruralData && Array.isArray(ruralData.districts)) {
+              setDelhiDistricts(ruralData.districts);
+            }
+          } else {
+            console.warn('Rural data not found in Firebase or timed out. Using fallback rural data.');
+          }
+        } catch (ruralError) {
+          console.error('Error fetching rural data:', ruralError);
+          console.warn('Using fallback rural data due to error.');
+        }
+        
+        // Set the complete location data
+        setLocationData(completeData);
+        console.log('Complete location data set:', completeData);
+        
       } catch (err) {
         console.error("Error during Firebase data fetch:", err);
         setError("Failed to load from database. Using local data.");
@@ -219,8 +243,30 @@ export default function SearchPage() {
     
     // Process the fallback data
     const processFallbackData = (data: any) => {
-      if (data.rural && Array.isArray(data.rural.districts)) {
-        setDelhiDistricts(data.rural.districts);
+      console.log('Processing fallback data:', data);
+      
+      if (data.rural) {
+        // Set districts
+        if (Array.isArray(data.rural.districts)) {
+          setDelhiDistricts(data.rural.districts);
+          console.log('Set districts from fallback:', data.rural.districts);
+        }
+        
+        // Initialize divisions if a district is already selected
+        if (selectedDistrict && data.rural.divisionsByDistrict && data.rural.divisionsByDistrict[selectedDistrict]) {
+          setDivisions(data.rural.divisionsByDistrict[selectedDistrict]);
+          console.log('Set divisions for district:', selectedDistrict, data.rural.divisionsByDistrict[selectedDistrict]);
+        }
+        
+        // Initialize villages if district and division are already selected
+        if (selectedDistrict && selectedDivision && 
+            data.rural.villagesByDivision && 
+            data.rural.villagesByDivision[selectedDistrict] && 
+            data.rural.villagesByDivision[selectedDistrict][selectedDivision]) {
+          setVillages(data.rural.villagesByDivision[selectedDistrict][selectedDivision]);
+          console.log('Set villages for division:', selectedDivision, 
+            data.rural.villagesByDivision[selectedDistrict][selectedDivision]);
+        }
       }
       
       if (data.urban && typeof data.urban === 'object') {

@@ -14,9 +14,9 @@ import { ArrowLeft, Search, LogOut, Building, Trees, AlertCircle, Loader2, Squar
 import { useAuth } from "@/context/auth-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ParticleBackground } from "@/components/ui/particle-background"
+import { SplineBackground } from "@/components/ui/spline-background"
 import { db } from "@/lib/firebase"
 import { ref, get } from "firebase/database"
-import { SplineBackground } from "@/app/components/SplineBackground"
 
 // --- Define Interfaces Directly Here ---
 interface RuralLocationData {
@@ -65,6 +65,7 @@ export default function SearchPage() {
   const [isDataLoading, setIsDataLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [locationData, setLocationData] = useState<LocationData | null>(null)
+  const [isMounted, setIsMounted] = useState(false)
 
   const propertyType = params.type as string
   const isUrban = propertyType === "urban"
@@ -104,48 +105,67 @@ export default function SearchPage() {
   })
 
   useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isMounted || !db) {
+      console.log('Effect skipped: Not mounted or db not available', { isMounted, dbExists: !!db })
+      return
+    }
+
+    console.log('Starting data fetch...')
     const fetchData = async () => {
-      setIsDataLoading(true);
-      setError(null);
+      setIsDataLoading(true)
+      setError(null)
       try {
-        console.log("Fetching location data...");
-        const locationsRef = ref(db, 'locations');
-        const snapshot = await get(locationsRef);
-        
+        console.log('Attempting to get data from Firebase ref: /')
+        const locationsRef = ref(db, '/')
+        const snapshot = await get(locationsRef)
+
         if (snapshot.exists()) {
-          const data = snapshot.val() as LocationData;
-          console.log("Raw location data:", data);
-          setLocationData(data);
+          const data = snapshot.val()
+          console.log('Firebase snapshot exists. Fetched data:', data)
+
+          setLocationData(data)
 
           if (data.rural && Array.isArray(data.rural.districts)) {
-            console.log("Found districts:", data.rural.districts);
-            setDelhiDistricts(data.rural.districts);
+            setDelhiDistricts(data.rural.districts)
           } else {
-            console.warn("No districts found in data:", data.rural);
-            setDelhiDistricts([]);
-            setError("No districts found in the database.");
+            console.warn('Rural districts data not found or invalid format in Firebase.')
+            setDelhiDistricts([])
           }
 
-          if (data.urban) {
-            const sros = Object.entries(data.urban).map(([key, value]) => ({
+          if (data.urban && typeof data.urban === 'object') {
+            const sros = Object.entries(data.urban).map(([key, value]: [string, any]) => ({
               key: key,
-              name: value.name
-            }));
-            setSroOptions(sros);
+              name: value?.name || key // Fallback to key if name is missing
+            }))
+            console.log('Mapped SROs:', sros)
+            setSroOptions(sros)
+          } else {
+            console.warn('Urban SRO data not found or invalid format in Firebase.')
+            setSroOptions([])
           }
         } else {
-          console.error("No data found in snapshot");
-          setError("No location data found in the database.");
+          console.error('Firebase snapshot does not exist at the root path ("/").')
+          setError("No location data found in the database. Check Firebase root path.")
+          setSroOptions([])
+          setDelhiDistricts([])
         }
       } catch (err) {
-        console.error("Error loading data:", err);
-        setError("Failed to load location data from the database.");
+        console.error("Error during Firebase data fetch:", err)
+        setError("Failed to load location data. Check console for error details.")
+        setSroOptions([])
+        setDelhiDistricts([])
       } finally {
-        setIsDataLoading(false);
+        console.log('Setting isDataLoading to false.')
+        setIsDataLoading(false)
       }
-    };
-    fetchData();
-  }, []); // Remove db dependency as it's stable
+    }
+
+    fetchData()
+  }, [isMounted])
 
   useEffect(() => {
     if (!isUrban && selectedDistrict && locationData?.rural?.divisionsByDistrict) {
@@ -164,7 +184,12 @@ export default function SearchPage() {
   useEffect(() => {
     if (isUrban && urbanFormData.sro && locationData?.urban) {
       const selectedSroData = locationData.urban[urbanFormData.sro]
-      setLocalityOptions(selectedSroData?.localities || [])
+      if (selectedSroData && Array.isArray(selectedSroData.localities)) {
+        setLocalityOptions(selectedSroData.localities)
+      } else {
+        console.warn(`Localities array not found or invalid for SRO: ${urbanFormData.sro}`)
+        setLocalityOptions([])
+      }
     } else {
       setLocalityOptions([])
     }
@@ -245,561 +270,56 @@ export default function SearchPage() {
     visible: { y: 0, opacity: 1 },
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
+        <SplineBackground />
+        <div className="absolute top-4 right-4 z-20">
+          <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
+            <LogOut className="h-4 w-4 mr-2" />
+            Logout
+          </Button>
+        </div>
+        <div className="relative z-10 flex items-center justify-center min-h-screen">
+          <div className="text-white text-center">
+            <AlertCircle className="h-8 w-8 text-red-500 mx-auto mb-4" />
+            <p className="text-red-500">{error}</p>
+            <Button 
+              variant="outline" 
+              className="mt-4 text-white border-white hover:bg-white/10"
+              onClick={() => window.location.reload()}
+            >
+              Retry
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (isDataLoading) {
     return (
       <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
-        {/* Spline 3D Background */}
         <SplineBackground />
-
-        {/* Logout Button */}
         <div className="absolute top-4 right-4 z-20">
           <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
             <LogOut className="h-4 w-4 mr-2" />
             Logout
           </Button>
         </div>
-
-        <div className="relative z-10">
-          <Button variant="ghost" className="text-white mb-6" onClick={() => router.push("/property-type")}>
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Property Type Selection
-          </Button>
-
-          <motion.div initial="hidden" animate="visible" variants={containerVariants} className="max-w-2xl mx-auto">
-            <motion.div variants={itemVariants}>
-              <Card className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl">
-                <CardHeader className="space-y-1">
-                  <div className="flex items-center justify-center mb-2">
-                    {isUrban ? (
-                      <div className="bg-blue-600/20 p-3 rounded-full">
-                        <Building className="h-6 w-6 text-blue-400" />
-                      </div>
-                    ) : (
-                      <div className="bg-green-600/20 p-3 rounded-full">
-                        <Trees className="h-6 w-6 text-green-400" />
-                      </div>
-                    )}
-                  </div>
-                  <CardTitle className="text-2xl text-white flex items-center justify-center">
-                    {isUrban ? "Urban" : "Rural"} Property Information Finder
-                  </CardTitle>
-                  <CardDescription className="text-gray-400 text-center">
-                    Enter {isUrban ? "urban" : "rural"} property details to retrieve comprehensive information
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Urban Fields */}
-                    {isUrban ? (
-                      <>
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="locality" className="text-white">Locality</Label>
-                          <Input
-                            id="locality"
-                            name="locality"
-                            value={urbanFormData.locality}
-                            onChange={handleUrbanChange}
-                            placeholder="Enter locality"
-                            className="bg-black/50 border-gray-800 text-white"
-                            required
-                          />
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="party_type" className="text-white">Select Party</Label>
-                          <Select
-                            name="party_type"
-                            value={urbanFormData.party_type}
-                            onValueChange={(value) => handleUrbanSelectChange("party_type", value as "first" | "second")}
-                          >
-                            <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                              <SelectValue placeholder="Select party type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="first">First Party</SelectItem>
-                              <SelectItem value="second">Second Party</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="party_name" className="text-white">
-                            {urbanFormData.party_type === "first" ? "First" : "Second"} Party Name
-                          </Label>
-                          <Input
-                            id="party_name"
-                            name="party_name"
-                            value={urbanFormData.party_name}
-                            onChange={handleUrbanChange}
-                            placeholder="Enter party name"
-                            className="bg-black/50 border-gray-800 text-white"
-                            required
-                          />
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="sro" className="text-white">SRO</Label>
-                          <Input
-                            id="sro"
-                            name="sro"
-                            value={urbanFormData.sro}
-                            onChange={handleUrbanChange}
-                            placeholder="Enter SRO"
-                            className="bg-black/50 border-gray-800 text-white"
-                            required
-                          />
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="reg_year" className="text-white">Registration Year</Label>
-                          <Input
-                            id="reg_year"
-                            name="reg_year"
-                            value={urbanFormData.reg_year}
-                            onChange={handleUrbanChange}
-                            placeholder="Enter registration year"
-                            className="bg-black/50 border-gray-800 text-white"
-                            type="number"
-                            min="1900"
-                            max={new Date().getFullYear()}
-                            required
-                          />
-                        </motion.div>
-                      </>
-                    ) : (
-                      // Rural Fields
-                      <>
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="state" className="text-white">State</Label>
-                          <Input
-                            id="state"
-                            name="state"
-                            value={ruralFormData.state}
-                            className="bg-black/50 border-gray-800 text-white"
-                            disabled
-                          />
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="district" className="text-white">District</Label>
-                          <Select
-                            name="district"
-                            value={ruralFormData.district}
-                            onValueChange={(value) => handleRuralSelectChange("district", value)}
-                          >
-                            <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                              <SelectValue placeholder={delhiDistricts.length ? "Select district" : "No districts available"} />
-                            </SelectTrigger>
-                            <SelectContent 
-                              className="bg-black/90 border-gray-800 text-white max-h-[300px] overflow-y-auto"
-                              position="popper"
-                            >
-                              {delhiDistricts.length > 0 ? (
-                                delhiDistricts.map((district) => (
-                                  <SelectItem 
-                                    key={district} 
-                                    value={district}
-                                    className="text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
-                                  >
-                                    {district}
-                                  </SelectItem>
-                                ))
-                              ) : (
-                                <SelectItem 
-                                  value="none" 
-                                  disabled 
-                                  className="text-gray-500"
-                                >
-                                  No districts available
-                                </SelectItem>
-                              )}
-                            </SelectContent>
-                          </Select>
-                          {error && (
-                            <p className="text-red-400 text-sm mt-1">{error}</p>
-                          )}
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="division" className="text-white">Division</Label>
-                          <Select
-                            name="division"
-                            value={ruralFormData.division}
-                            onValueChange={(value) => handleRuralSelectChange("division", value)}
-                            disabled={!selectedDistrict}
-                          >
-                            <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                              <SelectValue placeholder="Select division" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {divisions.map((division) => (
-                                <SelectItem key={division} value={division}>
-                                  {division}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="village" className="text-white">Village</Label>
-                          <Select
-                            name="village"
-                            value={ruralFormData.village}
-                            onValueChange={(value) => handleRuralSelectChange("village", value)}
-                            disabled={!selectedDivision}
-                          >
-                            <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                              <SelectValue placeholder="Select village" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {villages.map((village) => (
-                                <SelectItem key={village} value={village}>
-                                  {village}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="rectangle" className="text-white">Rectangle</Label>
-                          <Input
-                            id="rectangle"
-                            name="rectangle"
-                            value={ruralFormData.rectangle}
-                            onChange={handleRuralChange}
-                            placeholder="Enter rectangle"
-                            className="bg-black/50 border-gray-800 text-white"
-                            required
-                          />
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="khasra" className="text-white">Khasra</Label>
-                          <Input
-                            id="khasra"
-                            name="khasra"
-                            value={ruralFormData.khasra}
-                            onChange={handleRuralChange}
-                            placeholder="Enter khasra"
-                            className="bg-black/50 border-gray-800 text-white"
-                            required
-                          />
-                        </motion.div>
-                      </>
-                    )}
-                  </form>
-                </CardContent>
-                <CardFooter>
-                  <Button
-                    onClick={handleSubmit}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Search className="mr-2 h-4 w-4 animate-spin" />
-                        Searching...
-                      </>
-                    ) : (
-                      <>
-                        <Search className="mr-2 h-4 w-4" />
-                        Search Property
-                      </>
-                    )}
-                  </Button>
-                </CardFooter>
-              </Card>
-            </motion.div>
-          </motion.div>
+        <div className="relative z-10 flex items-center justify-center min-h-screen">
+          <div className="text-white text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p>Loading location data...</p>
+          </div>
         </div>
-
-        {/* Animated Particles */}
-        <ParticleBackground />
-      </div>
-    )
-  }
-
-  if (error && !locationData) {
-    return (
-      <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
-        {/* Spline 3D Background */}
-        <SplineBackground />
-
-        {/* Logout Button */}
-        <div className="absolute top-4 right-4 z-20">
-          <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-          </Button>
-        </div>
-
-        <div className="relative z-10">
-          <Button variant="ghost" className="text-white mb-6" onClick={() => router.push("/property-type")}>
-            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Property Type Selection
-          </Button>
-
-          <motion.div initial="hidden" animate="visible" variants={containerVariants} className="max-w-2xl mx-auto">
-            <motion.div variants={itemVariants}>
-              <Card className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl">
-                <CardHeader className="space-y-1">
-                  <div className="flex items-center justify-center mb-2">
-                    {isUrban ? (
-                      <div className="bg-blue-600/20 p-3 rounded-full">
-                        <Building className="h-6 w-6 text-blue-400" />
-                      </div>
-                    ) : (
-                      <div className="bg-green-600/20 p-3 rounded-full">
-                        <Trees className="h-6 w-6 text-green-400" />
-                      </div>
-                    )}
-                  </div>
-                  <CardTitle className="text-2xl text-white flex items-center justify-center">
-                    {isUrban ? "Urban" : "Rural"} Property Information Finder
-                  </CardTitle>
-                  <CardDescription className="text-gray-400 text-center">
-                    Enter {isUrban ? "urban" : "rural"} property details to retrieve comprehensive information
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Urban Fields */}
-                    {isUrban ? (
-                      <>
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="locality" className="text-white">Locality</Label>
-                          <Input
-                            id="locality"
-                            name="locality"
-                            value={urbanFormData.locality}
-                            onChange={handleUrbanChange}
-                            placeholder="Enter locality"
-                            className="bg-black/50 border-gray-800 text-white"
-                            required
-                          />
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="party_type" className="text-white">Select Party</Label>
-                          <Select
-                            name="party_type"
-                            value={urbanFormData.party_type}
-                            onValueChange={(value) => handleUrbanSelectChange("party_type", value as "first" | "second")}
-                          >
-                            <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                              <SelectValue placeholder="Select party type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="first">First Party</SelectItem>
-                              <SelectItem value="second">Second Party</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="party_name" className="text-white">
-                            {urbanFormData.party_type === "first" ? "First" : "Second"} Party Name
-                          </Label>
-                          <Input
-                            id="party_name"
-                            name="party_name"
-                            value={urbanFormData.party_name}
-                            onChange={handleUrbanChange}
-                            placeholder="Enter party name"
-                            className="bg-black/50 border-gray-800 text-white"
-                            required
-                          />
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="sro" className="text-white">SRO</Label>
-                          <Input
-                            id="sro"
-                            name="sro"
-                            value={urbanFormData.sro}
-                            onChange={handleUrbanChange}
-                            placeholder="Enter SRO"
-                            className="bg-black/50 border-gray-800 text-white"
-                            required
-                          />
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="reg_year" className="text-white">Registration Year</Label>
-                          <Input
-                            id="reg_year"
-                            name="reg_year"
-                            value={urbanFormData.reg_year}
-                            onChange={handleUrbanChange}
-                            placeholder="Enter registration year"
-                            className="bg-black/50 border-gray-800 text-white"
-                            type="number"
-                            min="1900"
-                            max={new Date().getFullYear()}
-                            required
-                          />
-                        </motion.div>
-                      </>
-                    ) : (
-                      // Rural Fields
-                      <>
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="state" className="text-white">State</Label>
-                          <Input
-                            id="state"
-                            name="state"
-                            value={ruralFormData.state}
-                            className="bg-black/50 border-gray-800 text-white"
-                            disabled
-                          />
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="district" className="text-white">District</Label>
-                          <Select
-                            name="district"
-                            value={ruralFormData.district}
-                            onValueChange={(value) => handleRuralSelectChange("district", value)}
-                          >
-                            <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                              <SelectValue placeholder={delhiDistricts.length ? "Select district" : "No districts available"} />
-                            </SelectTrigger>
-                            <SelectContent 
-                              className="bg-black/90 border-gray-800 text-white max-h-[300px] overflow-y-auto"
-                              position="popper"
-                            >
-                              {delhiDistricts.length > 0 ? (
-                                delhiDistricts.map((district) => (
-                                  <SelectItem 
-                                    key={district} 
-                                    value={district}
-                                    className="text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
-                                  >
-                                    {district}
-                                  </SelectItem>
-                                ))
-                              ) : (
-                                <SelectItem 
-                                  value="none" 
-                                  disabled 
-                                  className="text-gray-500"
-                                >
-                                  No districts available
-                                </SelectItem>
-                              )}
-                            </SelectContent>
-                          </Select>
-                          {error && (
-                            <p className="text-red-400 text-sm mt-1">{error}</p>
-                          )}
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="division" className="text-white">Division</Label>
-                          <Select
-                            name="division"
-                            value={ruralFormData.division}
-                            onValueChange={(value) => handleRuralSelectChange("division", value)}
-                            disabled={!selectedDistrict}
-                          >
-                            <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                              <SelectValue placeholder="Select division" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {divisions.map((division) => (
-                                <SelectItem key={division} value={division}>
-                                  {division}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="village" className="text-white">Village</Label>
-                          <Select
-                            name="village"
-                            value={ruralFormData.village}
-                            onValueChange={(value) => handleRuralSelectChange("village", value)}
-                            disabled={!selectedDivision}
-                          >
-                            <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                              <SelectValue placeholder="Select village" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {villages.map((village) => (
-                                <SelectItem key={village} value={village}>
-                                  {village}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="rectangle" className="text-white">Rectangle</Label>
-                          <Input
-                            id="rectangle"
-                            name="rectangle"
-                            value={ruralFormData.rectangle}
-                            onChange={handleRuralChange}
-                            placeholder="Enter rectangle"
-                            className="bg-black/50 border-gray-800 text-white"
-                            required
-                          />
-                        </motion.div>
-
-                        <motion.div variants={itemVariants} className="space-y-2">
-                          <Label htmlFor="khasra" className="text-white">Khasra</Label>
-                          <Input
-                            id="khasra"
-                            name="khasra"
-                            value={ruralFormData.khasra}
-                            onChange={handleRuralChange}
-                            placeholder="Enter khasra"
-                            className="bg-black/50 border-gray-800 text-white"
-                            required
-                          />
-                        </motion.div>
-                      </>
-                    )}
-                  </form>
-                </CardContent>
-                <CardFooter>
-                  <Button
-                    onClick={handleSubmit}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Search className="mr-2 h-4 w-4 animate-spin" />
-                        Searching...
-                      </>
-                    ) : (
-                      <>
-                        <Search className="mr-2 h-4 w-4" />
-                        Search Property
-                      </>
-                    )}
-                  </Button>
-                </CardFooter>
-              </Card>
-            </motion.div>
-          </motion.div>
-        </div>
-
-        {/* Animated Particles */}
-        <ParticleBackground />
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
-      {/* Spline 3D Background */}
       <SplineBackground />
-
       {/* Logout Button */}
       <div className="absolute top-4 right-4 z-20">
         <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
@@ -841,14 +361,58 @@ export default function SearchPage() {
                   {isUrban ? (
                     <>
                       <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="sro" className="text-white">SRO</Label>
+                        <Select
+                          name="sro"
+                          value={urbanFormData.sro}
+                          onValueChange={(value) => handleUrbanSelectChange("sro", value)}
+                        >
+                          <SelectTrigger className="bg-black/50 border-gray-800 text-white">
+                            <SelectValue placeholder="Select SRO" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {sroOptions.map((sro) => (
+                              <SelectItem key={sro.key} value={sro.key}>
+                                {sro.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </motion.div>
+
+                      <motion.div variants={itemVariants} className="space-y-2">
                         <Label htmlFor="locality" className="text-white">Locality</Label>
-                        <Input
-                          id="locality"
+                        <Select
                           name="locality"
                           value={urbanFormData.locality}
+                          onValueChange={(value) => handleUrbanSelectChange("locality", value)}
+                          disabled={!urbanFormData.sro}
+                        >
+                          <SelectTrigger className="bg-black/50 border-gray-800 text-white">
+                            <SelectValue placeholder="Select locality" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {localityOptions.map((locality) => (
+                              <SelectItem key={locality} value={locality}>
+                                {locality}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </motion.div>
+
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="reg_year" className="text-white">Registration Year</Label>
+                        <Input
+                          id="reg_year"
+                          name="reg_year"
+                          value={urbanFormData.reg_year}
                           onChange={handleUrbanChange}
-                          placeholder="Enter locality"
+                          placeholder="Enter registration year"
                           className="bg-black/50 border-gray-800 text-white"
+                          type="number"
+                          min="1900"
+                          max={new Date().getFullYear()}
                           required
                         />
                       </motion.div>
@@ -884,35 +448,6 @@ export default function SearchPage() {
                           required
                         />
                       </motion.div>
-
-                      <motion.div variants={itemVariants} className="space-y-2">
-                        <Label htmlFor="sro" className="text-white">SRO</Label>
-                        <Input
-                          id="sro"
-                          name="sro"
-                          value={urbanFormData.sro}
-                          onChange={handleUrbanChange}
-                          placeholder="Enter SRO"
-                          className="bg-black/50 border-gray-800 text-white"
-                          required
-                        />
-                      </motion.div>
-
-                      <motion.div variants={itemVariants} className="space-y-2">
-                        <Label htmlFor="reg_year" className="text-white">Registration Year</Label>
-                        <Input
-                          id="reg_year"
-                          name="reg_year"
-                          value={urbanFormData.reg_year}
-                          onChange={handleUrbanChange}
-                          placeholder="Enter registration year"
-                          className="bg-black/50 border-gray-800 text-white"
-                          type="number"
-                          min="1900"
-                          max={new Date().getFullYear()}
-                          required
-                        />
-                      </motion.div>
                     </>
                   ) : (
                     // Rural Fields
@@ -936,36 +471,16 @@ export default function SearchPage() {
                           onValueChange={(value) => handleRuralSelectChange("district", value)}
                         >
                           <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                            <SelectValue placeholder={delhiDistricts.length ? "Select district" : "No districts available"} />
+                            <SelectValue placeholder="Select district" />
                           </SelectTrigger>
-                          <SelectContent 
-                            className="bg-black/90 border-gray-800 text-white max-h-[300px] overflow-y-auto"
-                            position="popper"
-                          >
-                            {delhiDistricts.length > 0 ? (
-                              delhiDistricts.map((district) => (
-                                <SelectItem 
-                                  key={district} 
-                                  value={district}
-                                  className="text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
-                                >
-                                  {district}
-                                </SelectItem>
-                              ))
-                            ) : (
-                              <SelectItem 
-                                value="none" 
-                                disabled 
-                                className="text-gray-500"
-                              >
-                                No districts available
+                          <SelectContent>
+                            {delhiDistricts.map((district) => (
+                              <SelectItem key={district} value={district}>
+                                {district}
                               </SelectItem>
-                            )}
+                            ))}
                           </SelectContent>
                         </Select>
-                        {error && (
-                          <p className="text-red-400 text-sm mt-1">{error}</p>
-                        )}
                       </motion.div>
 
                       <motion.div variants={itemVariants} className="space-y-2">
@@ -1062,9 +577,6 @@ export default function SearchPage() {
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Animated Particles */}
-      <ParticleBackground />
     </div>
   )
 }

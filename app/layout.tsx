@@ -25,6 +25,8 @@ export default function RootLayout({
           type="module" 
           src="https://unpkg.com/@splinetool/viewer@1.9.89/build/spline-viewer.js"
           strategy="beforeInteractive"
+          crossOrigin="anonymous"
+          id="spline-viewer-script"
         />
       </head>
       <body className={`${inter.className} overflow-hidden`}>

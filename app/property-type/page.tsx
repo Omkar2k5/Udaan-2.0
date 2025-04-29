@@ -1,30 +1,18 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, Building, Home, LogOut, Trees } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
+import { SplineViewer } from "@/components/ui/spline-viewer"
+import { ParticleBackground } from "@/components/ui/particle-background"
 
 export default function PropertyTypePage() {
   const router = useRouter()
   const { logout } = useAuth()
-  const [isLoaded, setIsLoaded] = useState(false)
-
-  useEffect(() => {
-    // Add Spline script dynamically
-    const script = document.createElement("script")
-    script.type = "module"
-    script.src = "https://unpkg.com/@splinetool/viewer@1.9.89/build/spline-viewer.js"
-    script.onload = () => setIsLoaded(true)
-    document.body.appendChild(script)
-
-    return () => {
-      document.body.removeChild(script)
-    }
-  }, [])
 
   const handleSelectPropertyType = (type: "urban" | "rural") => {
     router.push(`/search/${type}`)
@@ -49,7 +37,10 @@ export default function PropertyTypePage() {
     <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
       {/* Spline 3D Background */}
       <div className="absolute inset-0 z-0 opacity-60">
-        {isLoaded && <spline-viewer url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"></spline-viewer>}
+        <spline-viewer 
+          url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
+          class="w-full h-full"
+        />
       </div>
 
       {/* Logout Button */}
@@ -160,38 +151,7 @@ export default function PropertyTypePage() {
       </div>
 
       {/* Animated Particles */}
-      <div className="absolute inset-0 z-0 opacity-30">
-        <ParticleBackground />
-      </div>
+      <ParticleBackground />
     </div>
   )
-}
-
-function ParticleBackground() {
-  const particles = Array.from({ length: 30 }).map((_, i) => (
-    <motion.div
-      key={i}
-      className="absolute w-2 h-2 bg-blue-400 rounded-full"
-      initial={{
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        opacity: Math.random() * 0.5 + 0.3,
-      }}
-      animate={{
-        y: [null, Math.random() * window.innerHeight],
-        x: [null, Math.random() * window.innerWidth],
-      }}
-      transition={{
-        duration: Math.random() * 20 + 10,
-        repeat: Number.POSITIVE_INFINITY,
-        repeatType: "reverse",
-      }}
-      style={{
-        width: `${Math.random() * 4 + 1}px`,
-        height: `${Math.random() * 4 + 1}px`,
-      }}
-    />
-  ))
-
-  return <>{particles}</>
 }

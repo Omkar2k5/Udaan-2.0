@@ -6,7 +6,6 @@ import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth-context"
 import { LogOut } from "lucide-react"
-import { SplineViewer } from "@/components/ui/spline-viewer"
 import { ParticleBackground } from "@/components/ui/particle-background"
 
 export default function HomePage() {
@@ -34,7 +33,10 @@ export default function HomePage() {
 
       {/* 3D Spline Object */}
       <div className="absolute inset-0 z-0">
-        <SplineViewer url="https://prod.spline.design/pY4CEJVxSZ9x753F/scene.splinecode" />
+        <spline-viewer 
+          url="https://prod.spline.design/pY4CEJVxSZ9x753F/scene.splinecode" 
+          class="w-full h-full"
+        />
       </div>
 
       {/* Content Overlay */}

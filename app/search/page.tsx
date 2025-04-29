@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -11,6 +10,8 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, Search, Database, LogOut } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
+import { ParticleBackground } from "@/components/ui/particle-background"
+import { SplineViewer } from "@/components/ui/spline-viewer"
 
 export default function SearchPage() {
   const router = useRouter()
@@ -22,20 +23,6 @@ export default function SearchPage() {
     registration_number: "",
   })
   const [isLoading, setIsLoading] = useState(false)
-  const [isLoaded, setIsLoaded] = useState(false)
-
-  useEffect(() => {
-    // Add Spline script dynamically
-    const script = document.createElement("script")
-    script.type = "module"
-    script.src = "https://unpkg.com/@splinetool/viewer@1.9.89/build/spline-viewer.js"
-    script.onload = () => setIsLoaded(true)
-    document.body.appendChild(script)
-
-    return () => {
-      document.body.removeChild(script)
-    }
-  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -48,12 +35,9 @@ export default function SearchPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulate web scraping delay
-    setTimeout(() => {
-      // Encode the form data to pass as URL parameters
-      const params = new URLSearchParams(formData as any).toString()
-      router.push(`/results?${params}`)
-    }, 2000)
+    // Encode the form data to pass as URL parameters
+    const params = new URLSearchParams(formData as any).toString()
+    router.push(`/results?${params}`)
   }
 
   const containerVariants = {
@@ -75,7 +59,10 @@ export default function SearchPage() {
     <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
       {/* Spline 3D Background */}
       <div className="absolute inset-0 z-0 opacity-60">
-        {isLoaded && <spline-viewer url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"></spline-viewer>}
+        <SplineViewer 
+          url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode" 
+          fallbackImageUrl="/images/search-fallback.jpg"
+        />
       </div>
 
       {/* Logout Button */}
@@ -209,38 +196,7 @@ export default function SearchPage() {
       </div>
 
       {/* Animated Particles */}
-      <div className="absolute inset-0 z-0 opacity-30">
-        <ParticleBackground />
-      </div>
+      <ParticleBackground />
     </div>
   )
-}
-
-function ParticleBackground() {
-  const particles = Array.from({ length: 30 }).map((_, i) => (
-    <motion.div
-      key={i}
-      className="absolute w-2 h-2 bg-blue-400 rounded-full"
-      initial={{
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        opacity: Math.random() * 0.5 + 0.3,
-      }}
-      animate={{
-        y: [null, Math.random() * window.innerHeight],
-        x: [null, Math.random() * window.innerWidth],
-      }}
-      transition={{
-        duration: Math.random() * 20 + 10,
-        repeat: Number.POSITIVE_INFINITY,
-        repeatType: "reverse",
-      }}
-      style={{
-        width: `${Math.random() * 4 + 1}px`,
-        height: `${Math.random() * 4 + 1}px`,
-      }}
-    />
-  ))
-
-  return <>{particles}</>
 }

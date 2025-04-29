@@ -12,13 +12,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react"
 import Link from "next/link"
 import { signUp } from "@/lib/firebase-auth"
+import { ParticleBackground } from "@/components/ui/particle-background"
 
 export default function SignupPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [showPassword, setShowPassword] = useState(false)
-  const [isLoaded, setIsLoaded] = useState(false)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -54,19 +54,6 @@ export default function SignupPage() {
     }
   }
 
-  // Load Spline script
-  useState(() => {
-    const script = document.createElement("script")
-    script.type = "module"
-    script.src = "https://unpkg.com/@splinetool/viewer@1.9.89/build/spline-viewer.js"
-    script.onload = () => setIsLoaded(true)
-    document.body.appendChild(script)
-
-    return () => {
-      document.body.removeChild(script)
-    }
-  })
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -86,7 +73,10 @@ export default function SignupPage() {
     <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden">
       {/* Spline 3D Background */}
       <div className="absolute inset-0 z-0 opacity-60">
-        {isLoaded && <spline-viewer url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"></spline-viewer>}
+        <spline-viewer 
+          url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
+          class="w-full h-full"
+        />
       </div>
 
       {/* Content */}
@@ -243,38 +233,7 @@ export default function SignupPage() {
       </motion.div>
 
       {/* Animated Particles */}
-      <div className="absolute inset-0 z-0 opacity-30">
-        <ParticleBackground />
-      </div>
+      <ParticleBackground />
     </div>
   )
-}
-
-function ParticleBackground() {
-  const particles = Array.from({ length: 30 }).map((_, i) => (
-    <motion.div
-      key={i}
-      className="absolute w-2 h-2 bg-blue-400 rounded-full"
-      initial={{
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        opacity: Math.random() * 0.5 + 0.3,
-      }}
-      animate={{
-        y: [null, Math.random() * window.innerHeight],
-        x: [null, Math.random() * window.innerWidth],
-      }}
-      transition={{
-        duration: Math.random() * 20 + 10,
-        repeat: Number.POSITIVE_INFINITY,
-        repeatType: "reverse",
-      }}
-      style={{
-        width: `${Math.random() * 4 + 1}px`,
-        height: `${Math.random() * 4 + 1}px`,
-      }}
-    />
-  ))
-
-  return <>{particles}</>
 }

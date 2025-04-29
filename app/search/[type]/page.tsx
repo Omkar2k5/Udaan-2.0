@@ -13,6 +13,7 @@ import { ArrowLeft, Search, LogOut, Building, Trees } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { SplineViewer } from "@/components/ui/spline-viewer"
+import { ParticleBackground } from "@/components/ui/particle-background"
 
 interface FormData {
   locality: string
@@ -100,7 +101,10 @@ export default function SearchPage() {
     <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
       {/* Spline 3D Background */}
       <div className="absolute inset-0 z-0 opacity-60">
-        <SplineViewer url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode" />
+        <spline-viewer 
+          url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
+          class="w-full h-full"
+        />
       </div>
 
       {/* Logout Button */}
@@ -241,38 +245,7 @@ export default function SearchPage() {
       </div>
 
       {/* Animated Particles */}
-      <div className="absolute inset-0 z-0 opacity-30">
-        <ParticleBackground />
-      </div>
+      <ParticleBackground />
     </div>
   )
-}
-
-function ParticleBackground() {
-  const particles = Array.from({ length: 30 }).map((_, i) => (
-    <motion.div
-      key={i}
-      className="absolute w-2 h-2 bg-blue-400 rounded-full"
-      initial={{
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        opacity: Math.random() * 0.5 + 0.3,
-      }}
-      animate={{
-        y: [null, Math.random() * window.innerHeight],
-        x: [null, Math.random() * window.innerWidth],
-      }}
-      transition={{
-        duration: Math.random() * 20 + 10,
-        repeat: Number.POSITIVE_INFINITY,
-        repeatType: "reverse",
-      }}
-      style={{
-        width: `${Math.random() * 4 + 1}px`,
-        height: `${Math.random() * 4 + 1}px`,
-      }}
-    />
-  ))
-
-  return <>{particles}</>
 }

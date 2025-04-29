@@ -88,7 +88,10 @@ export default function ResultsPage() {
     <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
       {/* Spline 3D Background */}
       <div className="absolute inset-0 z-0 opacity-60">
-        <SplineViewer url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode" />
+        <spline-viewer 
+          url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
+          class="w-full h-full"
+        />
       </div>
 
       {/* Logout Button */}

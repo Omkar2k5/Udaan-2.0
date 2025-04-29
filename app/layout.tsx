@@ -1,10 +1,16 @@
 import type React from "react"
 import "@/app/globals.css"
 import { Inter } from "next/font/google"
-import { ThemeProvider } from "@/components/theme-provider"
-import { AuthProvider } from "@/context/auth-context"
+import Script from "next/script"
+import { Providers } from "@/components/providers"
 
 const inter = Inter({ subsets: ["latin"] })
+
+export const metadata = {
+  title: "Property Info Finder",
+  description: "Property information finder with 3D visualization",
+  generator: "v0.dev"
+}
 
 export default function RootLayout({
   children,
@@ -14,18 +20,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <title>Property Info Finder</title>
-        <meta name="description" content="Property information finder with 3D visualization" />
+        <Script 
+          type="module" 
+          src="https://unpkg.com/@splinetool/viewer@1.9.89/build/spline-viewer.js"
+          strategy="beforeInteractive"
+        />
       </head>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
-          <AuthProvider>{children}</AuthProvider>
-        </ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
 }
-
-export const metadata = {
-      generator: 'v0.dev'
-    };

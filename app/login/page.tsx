@@ -11,7 +11,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Eye, EyeOff, Lock, Mail } from "lucide-react"
 import Link from "next/link"
 import { signIn } from "@/lib/firebase-auth"
-import { SplineViewer } from "@/components/ui/spline-viewer"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -64,7 +63,10 @@ export default function LoginPage() {
     <div className="min-h-screen bg-black flex items-center justify-center p-4 relative overflow-hidden">
       {/* Spline 3D Background */}
       <div className="absolute inset-0 z-0 opacity-60">
-        <SplineViewer url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode" />
+        <spline-viewer 
+          url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
+          class="w-full h-full"
+        />
       </div>
 
       {/* Content */}

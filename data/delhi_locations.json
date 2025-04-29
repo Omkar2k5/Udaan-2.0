@@ -1,0 +1,318 @@
+{
+  "rural": {
+    "districts": [
+      "Central Delhi",
+      "East Delhi",
+      "New Delhi",
+      "North Delhi",
+      "North East Delhi",
+      "North West Delhi",
+      "Shahdara",
+      "South Delhi",
+      "South East Delhi",
+      "South West Delhi",
+      "West Delhi"
+    ],
+    "divisionsByDistrict": {
+      "Central Delhi": ["Civil Lines", "Karol Bagh", "Kotwali"],
+      "East Delhi": ["Gandhi Nagar", "Preet Vihar", "Mayur Vihar"],
+      "New Delhi": ["Chanakyapuri", "Connaught Place", "Vasant Vihar"],
+      "North Delhi": ["Alipur", "Model Town", "Narela"],
+      "North East Delhi": ["Seelampur", "Shahdara", "Seemapuri"],
+      "North West Delhi": ["Saraswati Vihar", "Rohini", "Kanjhawala"],
+      "Shahdara": ["Shahdara", "Vivek Vihar", "Seemapuri"],
+      "South Delhi": ["Hauz Khas", "Saket", "Mehrauli"],
+      "South East Delhi": ["Defence Colony", "Kalkaji", "Sarita Vihar"],
+      "South West Delhi": ["Najafgarh", "Kapashera", "Dwarka"],
+      "West Delhi": ["Patel Nagar", "Rajouri Garden", "Punjabi Bagh"]
+    },
+    "villagesByDivision": {
+      "Central Delhi": {
+        "Civil Lines": ["Kamla Nagar", "Timarpur", "Maurice Nagar", "Malka Ganj"],
+        "Karol Bagh": ["Paharganj", "Rajinder Nagar", "Dev Nagar", "Bapa Nagar"],
+        "Kotwali": ["Daryaganj", "Chandni Chowk", "Jama Masjid", "Lal Kuan"]
+      },
+      "East Delhi": {
+        "Gandhi Nagar": ["Geeta Colony", "Kailash Nagar", "Raghubar Pura", "Shastri Nagar"],
+        "Preet Vihar": ["Nirman Vihar", "Anand Vihar", "Jagriti Enclave", "Surajmal Vihar"],
+        "Mayur Vihar": ["Patparganj", "Vasundhara Enclave", "Trilokpuri", "Kondli"]
+      },
+      "New Delhi": {
+        "Chanakyapuri": ["Diplomatic Enclave", "Moti Bagh", "Race Course", "Kautilya Marg"],
+        "Connaught Place": ["Janpath", "Barakhamba", "Kasturba Gandhi Marg", "Sansad Marg"],
+        "Vasant Vihar": ["Munirka", "Kishangarh", "Anant Lok", "Shanti Niketan"]
+      },
+      "North Delhi": {
+        "Alipur": ["Bakhtawarpur", "Akbarpur Majra", "Hamidpur", "Singhu"],
+        "Model Town": ["Rana Pratap Bagh", "Kamla Nagar", "Shakti Nagar", "GTB Nagar"],
+        "Narela": ["Holambi Kalan", "Pooth Khurd", "Bhorgarh", "Bankner"]
+      },
+      "North East Delhi": {
+        "Seelampur": ["Welcome", "Jafrabad", "Maujpur", "Babarpur"],
+        "Shahdara": ["Ram Nagar", "Farsh Bazar", "Bholanath Nagar", "Vishwas Nagar"],
+        "Seemapuri": ["New Seemapuri", "Old Seemapuri", "Dilshad Garden", "Janta Flats"]
+      },
+      "North West Delhi": {
+        "Saraswati Vihar": ["Pitampura", "Ashok Vihar", "Wazirpur", "Bharat Nagar"],
+        "Rohini": ["Sector 1-16", "Begumpur", "Kanjhawala", "Rithala"],
+        "Kanjhawala": ["Nizampur", "Qutabgarh", "Chandpur", "Karala"]
+      },
+      "Shahdara": {
+        "Shahdara": ["Ram Nagar", "Bholanath Nagar", "Gandhi Nagar", "Jhilmil"],
+        "Vivek Vihar": ["Shreshtha Vihar", "Karkardooma", "Surajmal Vihar", "Krishna Nagar"],
+        "Seemapuri": ["New Seemapuri", "Old Seemapuri", "Dilshad Garden", "Tahirpur"]
+      },
+      "South Delhi": {
+        "Hauz Khas": ["Green Park", "SDA", "Sarvapriya Vihar", "Panchsheel Park"],
+        "Saket": ["Malviya Nagar", "Pushp Vihar", "Sheikh Sarai", "Khirki Extension"],
+        "Mehrauli": ["Chattarpur", "Lado Sarai", "Sultanpur", "Gadaipur"]
+      },
+      "South East Delhi": {
+        "Defence Colony": ["Lajpat Nagar", "Jangpura", "Nizamuddin", "Andrews Ganj"],
+        "Kalkaji": ["Govindpuri", "CR Park", "GK II", "Alaknanda"],
+        "Sarita Vihar": ["Jasola", "Madanpur Khadar", "Okhla", "Khadar"]
+      },
+      "South West Delhi": {
+        "Najafgarh": ["Dichaon Kalan", "Mitraon", "Roshanpura", "Chhawla"],
+        "Kapashera": ["Bijwasan", "Samalkha", "Barthal", "Bajghera"],
+        "Dwarka": ["Sector 1-29", "Palam", "Dabri", "Mahavir Enclave"]
+      },
+      "West Delhi": {
+        "Patel Nagar": ["Karol Bagh", "Ranjit Nagar", "Baljit Nagar", "Anand Parbat"],
+        "Rajouri Garden": ["Tilak Nagar", "Tagore Garden", "Subhash Nagar", "Khyala"],
+        "Punjabi Bagh": ["Madipur", "Paschim Vihar", "Nangloi", "Rani Bagh"]
+      }
+    }
+  },
+  "urban": {
+    "SRI": {
+      "name": "Central-Kashmere Gate",
+      "localities": [
+        "Kashmere Gate",
+        "Ajmeri Gate*",
+        "Darya Ganj",
+        "Civil Lines*",
+        "British India Colony*",
+        "Curzon Road*",
+        "Bahadur Shah Zafar Marg*"
+      ]
+    },
+    "SRIII": {
+      "name": "Central-Asaf Ali Road",
+      "localities": [
+        "Asaf Ali Road*",
+        "Connaught Place Ext. C Zone",
+        "Copernicus Marg",
+        "Ajmal Khan Road",
+        "Baba Kharak Singh Marg*",
+        "Gole Market*"
+      ]
+    },
+    "SRVIII": {
+      "name": "East-Geeta Colony",
+      "localities": [
+        "Geeta Colony",
+        "Jhilmil",
+        "Jheel Kuranja",
+        "Shastri Nagar",
+        "Gandhi Nagar*",
+        "L.M. Bundh Complex*"
+      ]
+    },
+    "SRVIIIA": {
+      "name": "East-Preet Vihar",
+      "localities": [
+        "Preet Vihar",
+        "Vivek Vihar",
+        "Karkardooma",
+        "Dilshad Garden",
+        "Ramprastha",
+        "Mandoli"
+      ]
+    },
+    "SRVII": {
+      "name": "New Delhi-INA",
+      "localities": [
+        "INA Colony",
+        "Jorbagh",
+        "Lodhi Estate",
+        "Kidwai Nagar",
+        "Sarojini Nagar",
+        "Kasturba Gandhi Marg"
+      ]
+    },
+    "SRVIIA": {
+      "name": "New Delhi-Sarojini Nagar",
+      "localities": [
+        "Sarojini Nagar",
+        "Laxmi Bai Nagar",
+        "South Avenue",
+        "Palika Bhawan*",
+        "Vikas Sadan*"
+      ]
+    },
+    "SRVIE": {
+      "name": "North-Libaspur",
+      "localities": [
+        "Libaspur",
+        "G.T. Karnal Road",
+        "Alipur*",
+        "Bawana*",
+        "Narela*"
+      ]
+    },
+    "SRVIB": {
+      "name": "North-Narela",
+      "localities": [
+        "Narela",
+        "Alipur",
+        "Bawana",
+        "Singhu Border*",
+        "Kanjhawala*"
+      ]
+    },
+    "SRIV": {
+      "name": "North East-Seelampur",
+      "localities": [
+        "Seelampur",
+        "Yamuna Vihar",
+        "Gokal Puri",
+        "Babarpur*",
+        "Shahdara Market*"
+      ]
+    },
+    "SRVIA": {
+      "name": "North West-Model Town",
+      "localities": [
+        "Model Town",
+        "Pitampura",
+        "Kohat Enclave",
+        "Rohini*",
+        "Prashant Vihar*"
+      ]
+    },
+    "SRVID": {
+      "name": "North West-Khanjhawala",
+      "localities": [
+        "Khanjhawala",
+        "Kanjhawala",
+        "Nangloi*",
+        "Mundka*",
+        "Sultan Puri*"
+      ]
+    },
+    "SRVIC": {
+      "name": "North West-Rohini",
+      "localities": [
+        "Rohini",
+        "Sector 16*",
+        "Ambedkar Bhawan*",
+        "Rithala*",
+        "Peera Garhi*"
+      ]
+    },
+    "SRIVA": {
+      "name": "Shahdara",
+      "localities": [
+        "Nand Nagri",
+        "Gokal Puri",
+        "Babarpur",
+        "Shahdara Market",
+        "Yamuna Vihar*"
+      ]
+    },
+    "SRIVB": {
+      "name": "Shahdara-Vivek Vihar",
+      "localities": [
+        "Vivek Vihar",
+        "Dilshad Colony",
+        "Ramprastha",
+        "Mandoli",
+        "Loni Road*"
+      ]
+    },
+    "SRV(1)": {
+      "name": "South East-Defence Colony",
+      "localities": [
+        "Defence Colony",
+        "Lajpat Nagar",
+        "Alaknanda",
+        "East of Kailash",
+        "Kalkaji*",
+        "Greater Kailash*"
+      ]
+    },
+    "SRV": {
+      "name": "South East-Mehrauli",
+      "localities": [
+        "Mehrauli",
+        "Lado Sarai",
+        "Kalu Sarai",
+        "Kalkaji",
+        "Chattarpur*",
+        "Saket*"
+      ]
+    },
+    "SRVA": {
+      "name": "South-Hauz Khas",
+      "localities": [
+        "Hauz Khas",
+        "Adchini",
+        "Aurobindo Marg",
+        "Khirki",
+        "Malviya Nagar*",
+        "Safdarjung Enclave*"
+      ]
+    },
+    "SRII": {
+      "name": "West-Basai Darapur",
+      "localities": [
+        "Basai Darapur",
+        "Rajdhani College*",
+        "Paschim Vihar*",
+        "Moti Nagar*",
+        "Kirti Nagar*"
+      ]
+    },
+    "SRIIB": {
+      "name": "West-Janakpuri",
+      "localities": [
+        "Janakpuri",
+        "District Centre*",
+        "Tilak Nagar*",
+        "Uttam Nagar*",
+        "Dwarka*"
+      ]
+    },
+    "SRIIA": {
+      "name": "West-Punjabi Bagh",
+      "localities": [
+        "Punjabi Bagh",
+        "Nangloi",
+        "Shivaji Place*",
+        "Rajouri Garden*",
+        "Maya Puri*"
+      ]
+    },
+    "SRIX": {
+      "name": "South West-Sub Registrar IX",
+      "localities": [
+        "Kapashera",
+        "Vasant Kunj*",
+        "Mahipalpur*",
+        "Dwarka*",
+        "Najafgarh*"
+      ]
+    },
+    "SRIXA": {
+      "name": "South West-Sub Registrar IXA",
+      "localities": [
+        "Najafgarh",
+        "Tura Mandi*",
+        "Dhansa*",
+        "Mitraon*",
+        "Jharoda Kalan*"
+      ]
+    }
+  }
+} 

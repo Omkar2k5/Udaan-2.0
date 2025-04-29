@@ -2,139 +2,129 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 import { motion } from "framer-motion"
+import { Building, ChevronLeft, FileSearch, Globe, Home, Loader2, LogOut, MapPin, Send } from "lucide-react"
+
+// UI Components
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, LogOut, FileText, Search } from "lucide-react"
-import { useAuth } from "@/context/auth-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Separator } from "@/components/ui/separator"
 import { ParticleBackground } from "@/components/ui/particle-background"
 import { SplineBackground } from "@/app/components/SplineBackground"
+
+// Firebase
+import { useAuth } from "@/context/auth-context"
 import { db } from "@/lib/firebase"
 import { ref, get } from "firebase/database"
 
+// Form schema
+const formSchema = z.object({
+  assetCategory: z.literal("movable"),
+  assetType: z.enum(["residential", "commercial", "other"]),
+  surveyNumber: z.string().min(1, "Survey number is required"),
+  plotNumber: z.string().min(1, "Plot number is required"),
+  houseNumber: z.string().min(1, "House/flat number is required"),
+  floorNumber: z.string().min(1, "Floor number is required"),
+  projectName: z.string().min(1, "Project name is required"),
+  locality: z.string().min(1, "Locality is required"),
+  state: z.string().min(1, "State is required"),
+  district: z.string().min(1, "District is required"),
+  city: z.string().min(1, "City is required"),
+  pinCode: z.string().regex(/^\d{6}$/, "Pin code must be a 6-digit number"),
+});
+
+// Types
 interface LocationData {
   states: string[];
   districtsByState: Record<string, string[]>;
   citiesByDistrict: Record<string, Record<string, string[]>>;
 }
 
-interface EncumbranceFormData {
-  assetCategory: "movable";
-  assetType: "residential" | "commercial" | "other";
-  surveyNumber: string;
-  plotNumber: string;
-  houseNumber: string;
-  floorNumber: string;
-  projectName: string;
-  locality: string;
-  state: string;
-  district: string;
-  city: string;
-  pinCode: string;
-}
+type FormValues = z.infer<typeof formSchema>;
 
 export default function EncumbranceSearchPage() {
   const router = useRouter()
   const { logout } = useAuth()
-  const [isLoading, setIsLoading] = useState(false)
-  const [isMounted, setIsMounted] = useState(false)
   const [locationData, setLocationData] = useState<LocationData | null>(null)
-  const [error, setError] = useState<string | null>(null)
-
-  // Form state
-  const [formData, setFormData] = useState<EncumbranceFormData>({
-    assetCategory: "movable",
-    assetType: "residential",
-    surveyNumber: "",
-    plotNumber: "",
-    houseNumber: "",
-    floorNumber: "",
-    projectName: "",
-    locality: "",
-    state: "",
-    district: "",
-    city: "",
-    pinCode: "",
-  })
-
-  // Location options state
-  const [states, setStates] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [districts, setDistricts] = useState<string[]>([])
   const [cities, setCities] = useState<string[]>([])
 
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
+  // Initialize form
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      assetCategory: "movable",
+      assetType: "residential",
+      surveyNumber: "",
+      plotNumber: "",
+      houseNumber: "",
+      floorNumber: "",
+      projectName: "",
+      locality: "",
+      state: "",
+      district: "",
+      city: "",
+      pinCode: "",
+    },
+  })
 
-  useEffect(() => {
-    if (!isMounted || !db) {
-      return
-    }
+  // Watch for state/district changes to update dropdowns
+  const watchState = form.watch("state")
+  const watchDistrict = form.watch("district")
 
+  // Load location data from Firebase
+  useEffect(() => {
     const fetchLocationData = async () => {
       try {
         const locationsRef = ref(db, 'locations/encumbrance')
         const snapshot = await get(locationsRef)
 
         if (snapshot.exists()) {
-          const data = snapshot.val() as LocationData
-          setLocationData(data)
-          setStates(data.states || [])
+          setLocationData(snapshot.val() as LocationData)
         } else {
           console.warn('No location data found')
-          setStates([])
         }
       } catch (err) {
         console.error('Error fetching location data:', err)
-        setError('Failed to load location data')
       }
     }
 
     fetchLocationData()
-  }, [isMounted, db])
+  }, [db])
 
+  // Update districts when state changes
   useEffect(() => {
-    if (formData.state && locationData?.districtsByState) {
-      setDistricts(locationData.districtsByState[formData.state] || [])
+    if (watchState && locationData?.districtsByState) {
+      setDistricts(locationData.districtsByState[watchState] || [])
       setCities([])
-    } else {
-      setDistricts([])
-      setCities([])
+      form.setValue("district", "")
+      form.setValue("city", "")
     }
-  }, [formData.state, locationData])
+  }, [watchState, locationData, form])
 
+  // Update cities when district changes
   useEffect(() => {
-    if (formData.state && formData.district && locationData?.citiesByDistrict) {
-      setCities(locationData.citiesByDistrict[formData.state]?.[formData.district] || [])
-    } else {
-      setCities([])
+    if (watchState && watchDistrict && locationData?.citiesByDistrict) {
+      setCities(locationData.citiesByDistrict[watchState]?.[watchDistrict] || [])
+      form.setValue("city", "")
     }
-  }, [formData.state, formData.district, locationData])
+  }, [watchState, watchDistrict, locationData, form])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
-  }
-
-  const handleSelectChange = (name: keyof EncumbranceFormData, value: string) => {
-    setFormData({
-      ...formData,
-      [name]: value,
-    })
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  // Handle form submission
+  function onSubmit(data: FormValues) {
     setIsLoading(true)
-
+    
     // Encode the form data to pass as URL parameters
     const params = new URLSearchParams({
-      ...formData,
+      ...data,
       type: "encumbrance",
     }).toString()
 
@@ -142,267 +132,434 @@ export default function EncumbranceSearchPage() {
     router.push(`/results?${params}`)
   }
 
-  const containerVariants = {
+  // Animation variants
+  const containerAnimation = {
     hidden: { opacity: 0 },
-    visible: {
+    show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-      },
-    },
+        staggerChildren: 0.05
+      }
+    }
   }
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 },
+  const itemAnimation = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 }
   }
 
   return (
-    <div className="bg-black">
-      {/* Fixed elements */}
-      <div className="fixed inset-0 -z-10">
-        <SplineBackground />
-      </div>
+    <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
+    <SplineBackground />
+    {/* Logout Button */}
+    <div className="absolute top-4 right-4 z-20">
+      <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
+        <LogOut className="h-4 w-4 mr-2" />
+        Logout
+      </Button>
+    </div>
       
-      <div className="fixed top-4 right-4 z-50">
-        <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
-          <LogOut className="h-4 w-4 mr-2" />
-          Logout
-        </Button>
-      </div>
+      {/* Header */}
+      <header className="sticky top-0 z-50 w-full backdrop-blur-lg bg-black/30 border-b border-white/10">
+        <div className="container flex items-center justify-between h-16 px-4">
+          <Button 
+            variant="ghost" 
+            onClick={() => router.push("/property-type")}
+            className="text-white hover:bg-white/10"
+          >
+            <ChevronLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+          
+          <div className="text-lg font-medium">Encumbrance Search</div>
+          
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={logout}
+            className="text-white hover:bg-white/10"
+          >
+            <LogOut className="h-5 w-5" />
+          </Button>
+        </div>
+      </header>
       
-      {/* Scrollable content wrapper */}
-      <div className="py-4 px-4 md:px-8">
-        <Button variant="ghost" className="text-white mb-6" onClick={() => router.push("/property-type")}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Property Type Selection
-        </Button>
-        
-        <motion.div initial="hidden" animate="visible" variants={containerVariants} className="max-w-2xl mx-auto">
-          <motion.div variants={itemVariants}>
-            <Card className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl mb-20">
-              <CardHeader className="space-y-1">
-                <div className="flex items-center justify-center mb-2">
-                  <div className="bg-purple-600/20 p-3 rounded-full">
-                    <FileText className="h-6 w-6 text-purple-400" />
-                  </div>
-                </div>
-                <CardTitle className="text-2xl text-white text-center">Encumbrance Details Search</CardTitle>
-                <CardDescription className="text-gray-400 text-center">
-                  Enter property details to search for encumbrance information
+      {/* Main content */}
+      <main className="container px-4 py-8 max-w-3xl mx-auto">
+        <motion.div 
+          initial="hidden" 
+          animate="show" 
+          variants={containerAnimation}
+          className="space-y-8"
+        >
+          {/* Page title */}
+          <motion.div variants={itemAnimation} className="text-center space-y-2">
+            <div className="flex justify-center mb-4">
+              <div className="bg-indigo-600/20 p-4 rounded-full">
+                <FileSearch className="h-8 w-8 text-indigo-400" />
+              </div>
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight">Encumbrance Certificate</h1>
+            <p className="text-gray-400 max-w-md mx-auto">
+              Enter property details to search for encumbrance information and obtain a certificate
+            </p>
+          </motion.div>
+          
+          {/* Form card */}
+          <motion.div variants={itemAnimation}>
+            <Card className="border border-white/10 bg-black/40 backdrop-blur-xl shadow-xl overflow-hidden">
+              <CardHeader className="border-b border-white/10 bg-white/5">
+                <CardTitle>Property Information</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Fill in all details to search encumbrance records
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="assetCategory" className="text-white">Asset Category</Label>
-                    <Input
-                      id="assetCategory"
-                      name="assetCategory"
-                      value="movable"
-                      className="bg-black/50 border-gray-800 text-white"
-                      disabled
-                    />
-                  </motion.div>
-
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="assetType" className="text-white">Type of Asset</Label>
-                    <Select
-                      name="assetType"
-                      value={formData.assetType}
-                      onValueChange={(value) => handleSelectChange("assetType", value)}
-                    >
-                      <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                        <SelectValue placeholder="Select asset type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="residential">Residential</SelectItem>
-                        <SelectItem value="commercial">Commercial</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </motion.div>
-
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="surveyNumber" className="text-white">Survey Number / Municipal Number</Label>
-                    <Input
-                      id="surveyNumber"
-                      name="surveyNumber"
-                      value={formData.surveyNumber}
-                      onChange={handleInputChange}
-                      placeholder="Enter survey/municipal number"
-                      className="bg-black/50 border-gray-800 text-white"
-                      required
-                    />
-                  </motion.div>
-
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="plotNumber" className="text-white">Plot Number</Label>
-                    <Input
-                      id="plotNumber"
-                      name="plotNumber"
-                      value={formData.plotNumber}
-                      onChange={handleInputChange}
-                      placeholder="Enter plot number"
-                      className="bg-black/50 border-gray-800 text-white"
-                      required
-                    />
-                  </motion.div>
-
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="houseNumber" className="text-white">House/Flat Number</Label>
-                    <Input
-                      id="houseNumber"
-                      name="houseNumber"
-                      value={formData.houseNumber}
-                      onChange={handleInputChange}
-                      placeholder="Enter house/flat number"
-                      className="bg-black/50 border-gray-800 text-white"
-                      required
-                    />
-                  </motion.div>
-
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="floorNumber" className="text-white">Floor No.</Label>
-                    <Input
-                      id="floorNumber"
-                      name="floorNumber"
-                      value={formData.floorNumber}
-                      onChange={handleInputChange}
-                      placeholder="Enter floor number"
-                      className="bg-black/50 border-gray-800 text-white"
-                      required
-                    />
-                  </motion.div>
-
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="projectName" className="text-white">Name of the Project/Scheme/Society</Label>
-                    <Input
-                      id="projectName"
-                      name="projectName"
-                      value={formData.projectName}
-                      onChange={handleInputChange}
-                      placeholder="Enter project/scheme/society name"
-                      className="bg-black/50 border-gray-800 text-white"
-                      required
-                    />
-                  </motion.div>
-
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="locality" className="text-white">Locality/Sector</Label>
-                    <Input
-                      id="locality"
-                      name="locality"
-                      value={formData.locality}
-                      onChange={handleInputChange}
-                      placeholder="Enter locality/sector"
-                      className="bg-black/50 border-gray-800 text-white"
-                      required
-                    />
-                  </motion.div>
-
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="state" className="text-white">State</Label>
-                    <Select
-                      name="state"
-                      value={formData.state}
-                      onValueChange={(value) => handleSelectChange("state", value)}
-                    >
-                      <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                        <SelectValue placeholder="Select state" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {states.map((state) => (
-                          <SelectItem key={state} value={state}>
-                            {state}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </motion.div>
-
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="district" className="text-white">District</Label>
-                    <Select
-                      name="district"
-                      value={formData.district}
-                      onValueChange={(value) => handleSelectChange("district", value)}
-                      disabled={!formData.state}
-                    >
-                      <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                        <SelectValue placeholder="Select district" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {districts.map((district) => (
-                          <SelectItem key={district} value={district}>
-                            {district}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </motion.div>
-
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="city" className="text-white">City/Town/Village</Label>
-                    <Select
-                      name="city"
-                      value={formData.city}
-                      onValueChange={(value) => handleSelectChange("city", value)}
-                      disabled={!formData.district}
-                    >
-                      <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                        <SelectValue placeholder="Select city/town/village" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {cities.map((city) => (
-                          <SelectItem key={city} value={city}>
-                            {city}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </motion.div>
-
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="pinCode" className="text-white">Pin Code</Label>
-                    <Input
-                      id="pinCode"
-                      name="pinCode"
-                      value={formData.pinCode}
-                      onChange={handleInputChange}
-                      placeholder="Enter pin code"
-                      className="bg-black/50 border-gray-800 text-white"
-                      pattern="[0-9]{6}"
-                      maxLength={6}
-                      required
-                    />
-                  </motion.div>
-                </form>
+              
+              <CardContent className="pt-6">
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <Tabs defaultValue="basic" className="w-full">
+                      <TabsList className="w-full bg-black/50 border border-white/10">
+                        <TabsTrigger value="basic" className="flex-1">Basic Info</TabsTrigger>
+                        <TabsTrigger value="property" className="flex-1">Property Details</TabsTrigger>
+                        <TabsTrigger value="location" className="flex-1">Location</TabsTrigger>
+                      </TabsList>
+                      
+                      {/* Basic Info Tab */}
+                      <TabsContent value="basic" className="pt-4 space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Building className="text-indigo-400 h-5 w-5 flex-shrink-0" />
+                          <div className="text-lg font-medium">Asset Information</div>
+                        </div>
+                        <Separator className="bg-white/10" />
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="assetCategory"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Asset Category</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    disabled
+                                    className="bg-black/50 border-white/20 text-white/70"
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="assetType"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Asset Type</FormLabel>
+                                <Select 
+                                  onValueChange={field.onChange} 
+                                  defaultValue={field.value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger className="bg-black/50 border-white/20">
+                                      <SelectValue placeholder="Select type" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent className="bg-gray-950 border-white/20">
+                                    <SelectItem value="residential">Residential</SelectItem>
+                                    <SelectItem value="commercial">Commercial</SelectItem>
+                                    <SelectItem value="other">Other</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="surveyNumber"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Survey Number</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Enter survey number"
+                                    className="bg-black/50 border-white/20"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="plotNumber"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Plot Number</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Enter plot number"
+                                    className="bg-black/50 border-white/20"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </TabsContent>
+                      
+                      {/* Property Details Tab */}
+                      <TabsContent value="property" className="pt-4 space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Home className="text-indigo-400 h-5 w-5 flex-shrink-0" />
+                          <div className="text-lg font-medium">Property Specifics</div>
+                        </div>
+                        <Separator className="bg-white/10" />
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="houseNumber"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>House/Flat Number</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Enter house/flat number"
+                                    className="bg-black/50 border-white/20"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="floorNumber"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Floor Number</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Enter floor number"
+                                    className="bg-black/50 border-white/20"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        
+                        <div className="grid grid-cols-1 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="projectName"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Project/Society Name</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Enter project or society name"
+                                    className="bg-black/50 border-white/20"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="locality"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Locality/Sector</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    {...field}
+                                    placeholder="Enter locality or sector"
+                                    className="bg-black/50 border-white/20"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </TabsContent>
+                      
+                      {/* Location Tab */}
+                      <TabsContent value="location" className="pt-4 space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Globe className="text-indigo-400 h-5 w-5 flex-shrink-0" />
+                          <div className="text-lg font-medium">Geographic Location</div>
+                        </div>
+                        <Separator className="bg-white/10" />
+                        
+                        <div className="grid grid-cols-1 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="state"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>State</FormLabel>
+                                <Select 
+                                  onValueChange={field.onChange} 
+                                  value={field.value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger className="bg-black/50 border-white/20">
+                                      <SelectValue placeholder="Select state" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent className="bg-gray-950 border-white/20 max-h-[200px]">
+                                    {locationData?.states?.map((state) => (
+                                      <SelectItem key={state} value={state}>
+                                        {state}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="district"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>District</FormLabel>
+                                <Select 
+                                  onValueChange={field.onChange} 
+                                  value={field.value}
+                                  disabled={!watchState}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger className="bg-black/50 border-white/20">
+                                      <SelectValue placeholder="Select district" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent className="bg-gray-950 border-white/20 max-h-[200px]">
+                                    {districts.map((district) => (
+                                      <SelectItem key={district} value={district}>
+                                        {district}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="city"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>City/Town/Village</FormLabel>
+                                <Select 
+                                  onValueChange={field.onChange} 
+                                  value={field.value}
+                                  disabled={!watchDistrict}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger className="bg-black/50 border-white/20">
+                                      <SelectValue placeholder="Select city" />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent className="bg-gray-950 border-white/20 max-h-[200px]">
+                                    {cities.map((city) => (
+                                      <SelectItem key={city} value={city}>
+                                        {city}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        
+                        <div className="grid grid-cols-1 gap-4">
+                          <FormField
+                            control={form.control}
+                            name="pinCode"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>PIN Code</FormLabel>
+                                <FormControl>
+                                  <div className="relative">
+                                    <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                                    <Input
+                                      {...field}
+                                      placeholder="Enter 6-digit PIN code"
+                                      className="bg-black/50 border-white/20 pl-10"
+                                      maxLength={6}
+                                    />
+                                  </div>
+                                </FormControl>
+                                <FormDescription className="text-gray-400 text-xs">
+                                  Enter a valid 6-digit Indian postal code
+                                </FormDescription>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </TabsContent>
+                    </Tabs>
+                    
+                    <div className="pt-4">
+                      <Button 
+                        type="submit" 
+                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                        disabled={isLoading}
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            <Send className="mr-2 h-4 w-4" />
+                            Search Encumbrance Records
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
               </CardContent>
-              <CardFooter>
-                <Button
-                  onClick={handleSubmit}
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <Search className="mr-2 h-4 w-4 animate-spin" />
-                      Searching...
-                    </>
-                  ) : (
-                    <>
-                      <Search className="mr-2 h-4 w-4" />
-                      Search Encumbrance Details
-                    </>
-                  )}
-                </Button>
-              </CardFooter>
             </Card>
           </motion.div>
+          
+          {/* Footer */}
+          <motion.div variants={itemAnimation} className="text-center text-sm text-gray-500 py-4">
+            <p>© {new Date().getFullYear()} Uddan Property Services</p>
+          </motion.div>
         </motion.div>
-      </div>
-      
-      <ParticleBackground />
+      </main>
     </div>
   )
 } 

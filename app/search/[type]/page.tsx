@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useMemo, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -14,7 +14,7 @@ import { ArrowLeft, Search, LogOut, Building, Trees, AlertCircle, Loader2, Squar
 import { useAuth } from "@/context/auth-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ParticleBackground } from "@/components/ui/particle-background"
-import { SplineBackground } from "@/app/components/SplineBackground"
+import { SplineBackground } from "@/components/ui/spline-background"
 import { db } from "@/lib/firebase"
 import { ref, get } from "firebase/database"
 
@@ -104,28 +104,6 @@ export default function SearchPage() {
     khasra: "",
   })
 
-  // Memoize fallback data to prevent recreating it on every render
-  const fallbackData = useMemo(() => ({
-    rural: {
-      districts: ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", "North West Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi"],
-      divisionsByDistrict: {
-        "Central Delhi": ["Civil Lines", "Karol Bagh", "Kotwali"]
-        // Add other divisions as needed
-      },
-      villagesByDivision: {
-        // Add villages as needed
-      }
-    },
-    urban: {
-      "SRI": { name: "Central-Kashmere Gate", localities: ["Kashmere Gate", "Ajmeri Gate*", "Darya Ganj", "Civil Lines*", "British India Colony*", "Curzon Road*", "Bahadur Shah Zafar Marg*"] },
-      "SRIII": { name: "Central-Asaf Ali Road", localities: ["Asaf Ali Road*", "Connaught Place Ext. C Zone", "Copernicus Marg", "Ajmal Khan Road", "Baba Kharak Singh Marg*", "Gole Market*"] },
-      "SRVIII": { name: "East-Geeta Colony", localities: ["Geeta Colony", "Jhilmil", "Jheel Kuranja", "Shastri Nagar", "Gandhi Nagar*", "L.M. Bundh Complex*"] },
-      "SRVIIIA": { name: "East-Preet Vihar", localities: ["Preet Vihar", "Vivek Vihar", "Karkardooma", "Dilshad Garden", "Ramprastha", "Mandoli"] },
-      "SRVII": { name: "New Delhi-INA", localities: ["INA Colony", "Jorbagh", "Lodhi Estate", "Kidwai Nagar", "Sarojini Nagar", "Kasturba Gandhi Marg"] }
-      // Add other SROs as needed
-    }
-  }), []);
-
   useEffect(() => {
     setIsMounted(true)
   }, [])
@@ -140,7 +118,29 @@ export default function SearchPage() {
     console.log('Component mounted. Starting data fetch setup...');
     
     // Timeout to prevent hanging indefinitely
-    const fetchTimeoutMs = 8000; // 8 seconds timeout
+    const fetchTimeoutMs = 15000; // 15 seconds timeout
+    
+    // Initialize fallback data from delhi_locations.json
+    const fallbackData = {
+      rural: {
+        districts: ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", "North West Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi"],
+        divisionsByDistrict: {
+          "Central Delhi": ["Civil Lines", "Karol Bagh", "Kotwali"]
+          // Add other divisions as needed
+        },
+        villagesByDivision: {
+          // Add villages as needed
+        }
+      },
+      urban: {
+        "SRI": { name: "Central-Kashmere Gate", localities: ["Kashmere Gate", "Ajmeri Gate*", "Darya Ganj", "Civil Lines*", "British India Colony*", "Curzon Road*", "Bahadur Shah Zafar Marg*"] },
+        "SRIII": { name: "Central-Asaf Ali Road", localities: ["Asaf Ali Road*", "Connaught Place Ext. C Zone", "Copernicus Marg", "Ajmal Khan Road", "Baba Kharak Singh Marg*", "Gole Market*"] },
+        "SRVIII": { name: "East-Geeta Colony", localities: ["Geeta Colony", "Jhilmil", "Jheel Kuranja", "Shastri Nagar", "Gandhi Nagar*", "L.M. Bundh Complex*"] },
+        "SRVIIIA": { name: "East-Preet Vihar", localities: ["Preet Vihar", "Vivek Vihar", "Karkardooma", "Dilshad Garden", "Ramprastha", "Mandoli"] },
+        "SRVII": { name: "New Delhi-INA", localities: ["INA Colony", "Jorbagh", "Lodhi Estate", "Kidwai Nagar", "Sarojini Nagar", "Kasturba Gandhi Marg"] }
+        // Add other SROs as needed
+      }
+    };
     
     const fetchData = async () => {
       // Check for db instance availability right before fetching
@@ -166,29 +166,29 @@ export default function SearchPage() {
         let completeData = { ...fallbackData };
         
         // Fetch urban data
-        try {
-          console.log('Attempting to get data from Firebase ref: /urban/');
-          const urbanRef = ref(db, '/urban/');
-          
+      try {
+        console.log('Attempting to get data from Firebase ref: /urban/');
+        const urbanRef = ref(db, '/urban/');
+        
           // Race against timeout
           const urbanSnapshot = await Promise.race([
-            get(urbanRef),
-            timeoutPromise
+          get(urbanRef),
+          timeoutPromise
           ]) as any;
           
           if (urbanSnapshot && typeof urbanSnapshot === 'object' && typeof urbanSnapshot.exists === 'function' && urbanSnapshot.exists()) {
             const urbanData = urbanSnapshot.val();
             console.log('Firebase urban data snapshot exists:', urbanData);
             completeData.urban = urbanData;
-            
+
             // Process urban data
-            if (urbanData && typeof urbanData === 'object') {
-              const sros = Object.entries(urbanData).map(([key, value]: [string, any]) => ({
-                key: key,
-                name: value?.name || key
-              }));
-              console.log('Mapped SROs from Firebase:', sros);
-              setSroOptions(sros);
+          if (urbanData && typeof urbanData === 'object') {
+            const sros = Object.entries(urbanData).map(([key, value]: [string, any]) => ({
+              key: key,
+              name: value?.name || key
+            }));
+            console.log('Mapped SROs from Firebase:', sros);
+            setSroOptions(sros);
             }
           } else {
             console.warn('Urban data not found in Firebase or timed out. Using fallback urban data.');
@@ -218,7 +218,7 @@ export default function SearchPage() {
             if (ruralData && Array.isArray(ruralData.districts)) {
               setDelhiDistricts(ruralData.districts);
             }
-          } else {
+        } else {
             console.warn('Rural data not found in Firebase or timed out. Using fallback rural data.');
           }
         } catch (ruralError) {
@@ -242,13 +242,13 @@ export default function SearchPage() {
     };
     
     // Process the fallback data
-    const processFallbackData = useCallback((data: any) => {
+    const processFallbackData = (data: any) => {
       console.log('Processing fallback data:', data);
       
       if (data.rural) {
         // Set districts
         if (Array.isArray(data.rural.districts)) {
-          setDelhiDistricts(data.rural.districts);
+        setDelhiDistricts(data.rural.districts);
           console.log('Set districts from fallback:', data.rural.districts);
         }
         
@@ -277,7 +277,7 @@ export default function SearchPage() {
         console.log('Using fallback SROs:', sros);
         setSroOptions(sros);
       }
-    }, [selectedDistrict, selectedDivision]);
+    };
 
     fetchData();
   }, [isMounted]); // Depend only on isMounted
@@ -310,50 +310,50 @@ export default function SearchPage() {
     }
   }, [urbanFormData.sro, isUrban, locationData])
 
-  const handleUrbanChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setUrbanFormData(prev => ({
-      ...prev,
+  const handleUrbanChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setUrbanFormData({
+      ...urbanFormData,
       [e.target.name]: e.target.value,
-    }))
-  }, []);
+    })
+  }
 
-  const handleRuralChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setRuralFormData(prev => ({
-      ...prev,
+  const handleRuralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRuralFormData({
+      ...ruralFormData,
       [e.target.name]: e.target.value,
-    }))
-  }, []);
+    })
+  }
 
-  const handleUrbanSelectChange = useCallback((name: keyof UrbanFormData, value: string) => {
-    setUrbanFormData(prev => ({
-      ...prev,
+  const handleUrbanSelectChange = (name: keyof UrbanFormData, value: string) => {
+    setUrbanFormData({
+      ...urbanFormData,
       [name]: value,
-    }))
-  }, []);
+    })
+  }
 
-  const handleRuralSelectChange = useCallback((name: keyof RuralFormData, value: string) => {
+  const handleRuralSelectChange = (name: keyof RuralFormData, value: string) => {
     if (name === "district") {
       setSelectedDistrict(value)
-      setRuralFormData(prev => ({
-        ...prev,
+      setRuralFormData({
+        ...ruralFormData,
         [name]: value,
         division: "",
         village: "",
-      }))
+      })
     } else if (name === "division") {
       setSelectedDivision(value)
-      setRuralFormData(prev => ({
-        ...prev,
+      setRuralFormData({
+        ...ruralFormData,
         [name]: value,
         village: "",
-      }))
+      })
     } else {
-      setRuralFormData(prev => ({
-        ...prev,
+      setRuralFormData({
+        ...ruralFormData,
         [name]: value,
-      }))
+      })
     }
-  }, []);
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -370,28 +370,32 @@ export default function SearchPage() {
     router.push(`/results?${params}`)
   }
 
-  // Simplified animation variant
-  const fadeIn = {
+  const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
-      transition: { duration: 0.5 } 
+      transition: {
+        staggerChildren: 0.1,
+      },
     },
+  }
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1 },
   }
 
   if (error) {
     return (
-      <div className="bg-black min-h-screen">
-        <div className="fixed inset-0 -z-10">
-          <SplineBackground />
-        </div>
-        <div className="fixed top-4 right-4 z-50">
+      <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
+        <SplineBackground />
+        <div className="absolute top-4 right-4 z-20">
           <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
             <LogOut className="h-4 w-4 mr-2" />
             Logout
           </Button>
         </div>
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="relative z-10 flex items-center justify-center min-h-screen">
           <div className="text-white text-center">
             <AlertCircle className="h-8 w-8 text-red-500 mx-auto mb-4" />
             <p className="text-red-500">{error}</p>
@@ -410,17 +414,15 @@ export default function SearchPage() {
 
   if (isDataLoading) {
     return (
-      <div className="bg-black min-h-screen">
-        <div className="fixed inset-0 -z-10">
-          <SplineBackground />
-        </div>
-        <div className="fixed top-4 right-4 z-50">
+      <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
+        <SplineBackground />
+        <div className="absolute top-4 right-4 z-20">
           <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
             <LogOut className="h-4 w-4 mr-2" />
             Logout
           </Button>
         </div>
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="relative z-10 flex items-center justify-center min-h-screen">
           <div className="text-white text-center">
             <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
             <p>Loading location data...</p>
@@ -431,33 +433,24 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="bg-black">
-      {/* Fixed background */}
-      <div className="fixed inset-0 -z-10">
-        <SplineBackground />
-      </div>
-      
+    <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
+      <SplineBackground />
       {/* Logout Button */}
-      <div className="fixed top-4 right-4 z-50">
+      <div className="absolute top-4 right-4 z-20">
         <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
           <LogOut className="h-4 w-4 mr-2" />
           Logout
         </Button>
       </div>
 
-      {/* Scrollable content wrapper */}
-      <div className="py-4 px-4 md:px-8">
+      <div className="relative z-10">
         <Button variant="ghost" className="text-white mb-6" onClick={() => router.push("/property-type")}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Property Type Selection
         </Button>
 
-        <div className="max-w-2xl mx-auto">
-          <motion.div 
-            initial="hidden" 
-            animate="visible" 
-            variants={fadeIn}
-            className="w-full">
-            <Card className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl mb-20">
+        <motion.div initial="hidden" animate="visible" variants={containerVariants} className="max-w-2xl mx-auto">
+          <motion.div variants={itemVariants}>
+            <Card className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl">
               <CardHeader className="space-y-1">
                 <div className="flex items-center justify-center mb-2">
                   {isUrban ? (
@@ -482,7 +475,7 @@ export default function SearchPage() {
                   {/* Urban Fields */}
                   {isUrban ? (
                     <>
-                      <div className="space-y-2">
+                      <motion.div variants={itemVariants} className="space-y-2">
                         <Label htmlFor="sro" className="text-white">SRO</Label>
                         <Select
                           name="sro"
@@ -500,9 +493,9 @@ export default function SearchPage() {
                             ))}
                           </SelectContent>
                         </Select>
-                      </div>
+                      </motion.div>
 
-                      <div className="space-y-2">
+                      <motion.div variants={itemVariants} className="space-y-2">
                         <Label htmlFor="locality" className="text-white">Locality</Label>
                         <Select
                           name="locality"
@@ -521,9 +514,9 @@ export default function SearchPage() {
                             ))}
                           </SelectContent>
                         </Select>
-                      </div>
+                      </motion.div>
 
-                      <div className="space-y-2">
+                      <motion.div variants={itemVariants} className="space-y-2">
                         <Label htmlFor="reg_year" className="text-white">Registration Year</Label>
                         <Input
                           id="reg_year"
@@ -537,9 +530,9 @@ export default function SearchPage() {
                           max={new Date().getFullYear()}
                           required
                         />
-                      </div>
+                      </motion.div>
 
-                      <div className="space-y-2">
+                      <motion.div variants={itemVariants} className="space-y-2">
                         <Label htmlFor="party_type" className="text-white">Select Party</Label>
                         <Select
                           name="party_type"
@@ -554,9 +547,9 @@ export default function SearchPage() {
                             <SelectItem value="second">Second Party</SelectItem>
                           </SelectContent>
                         </Select>
-                      </div>
+                      </motion.div>
 
-                      <div className="space-y-2">
+                      <motion.div variants={itemVariants} className="space-y-2">
                         <Label htmlFor="party_name" className="text-white">
                           {urbanFormData.party_type === "first" ? "First" : "Second"} Party Name
                         </Label>
@@ -569,12 +562,12 @@ export default function SearchPage() {
                           className="bg-black/50 border-gray-800 text-white"
                           required
                         />
-                      </div>
+                      </motion.div>
                     </>
                   ) : (
                     // Rural Fields
                     <>
-                      <div className="space-y-2">
+                      <motion.div variants={itemVariants} className="space-y-2">
                         <Label htmlFor="state" className="text-white">State</Label>
                         <Input
                           id="state"
@@ -583,9 +576,9 @@ export default function SearchPage() {
                           className="bg-black/50 border-gray-800 text-white"
                           disabled
                         />
-                      </div>
+                      </motion.div>
 
-                      <div className="space-y-2">
+                      <motion.div variants={itemVariants} className="space-y-2">
                         <Label htmlFor="district" className="text-white">District</Label>
                         <Select
                           name="district"
@@ -603,9 +596,9 @@ export default function SearchPage() {
                             ))}
                           </SelectContent>
                         </Select>
-                      </div>
+                      </motion.div>
 
-                      <div className="space-y-2">
+                      <motion.div variants={itemVariants} className="space-y-2">
                         <Label htmlFor="division" className="text-white">Division</Label>
                         <Select
                           name="division"
@@ -624,9 +617,9 @@ export default function SearchPage() {
                             ))}
                           </SelectContent>
                         </Select>
-                      </div>
+                      </motion.div>
 
-                      <div className="space-y-2">
+                      <motion.div variants={itemVariants} className="space-y-2">
                         <Label htmlFor="village" className="text-white">Village</Label>
                         <Select
                           name="village"
@@ -645,9 +638,9 @@ export default function SearchPage() {
                             ))}
                           </SelectContent>
                         </Select>
-                      </div>
+                      </motion.div>
 
-                      <div className="space-y-2">
+                      <motion.div variants={itemVariants} className="space-y-2">
                         <Label htmlFor="rectangle" className="text-white">Rectangle</Label>
                         <Input
                           id="rectangle"
@@ -658,9 +651,9 @@ export default function SearchPage() {
                           className="bg-black/50 border-gray-800 text-white"
                           required
                         />
-                      </div>
+                      </motion.div>
 
-                      <div className="space-y-2">
+                      <motion.div variants={itemVariants} className="space-y-2">
                         <Label htmlFor="khasra" className="text-white">Khasra</Label>
                         <Input
                           id="khasra"
@@ -671,7 +664,7 @@ export default function SearchPage() {
                           className="bg-black/50 border-gray-800 text-white"
                           required
                         />
-                      </div>
+                      </motion.div>
                     </>
                   )}
                 </form>
@@ -697,7 +690,7 @@ export default function SearchPage() {
               </CardFooter>
             </Card>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
     </div>
   )

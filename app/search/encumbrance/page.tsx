@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -128,6 +129,16 @@ export default function EncumbranceSearchPage() {
     })
   }
 
+  const handleBackButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    console.log("Back button clicked, navigating to /property-type")
+    try {
+      router.push("/property-type")
+    } catch (error) {
+      console.error("Navigation error:", error)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -173,9 +184,11 @@ export default function EncumbranceSearchPage() {
       
       {/* Scrollable content wrapper */}
       <div className="py-4 px-4 md:px-8">
-        <Button variant="ghost" className="text-white mb-6" onClick={() => router.push("/property-type")}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Back to Property Type Selection
-        </Button>
+        <Link href="/property-type" className="inline-block">
+          <Button variant="ghost" className="text-white mb-6">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Back to Property Type Selection
+          </Button>
+        </Link>
         
         <motion.div initial="hidden" animate="visible" variants={containerVariants} className="max-w-2xl mx-auto">
           <motion.div variants={itemVariants}>

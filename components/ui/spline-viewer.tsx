@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useState } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface SplineViewerProps {
@@ -8,23 +8,18 @@ interface SplineViewerProps {
   className?: string
 }
 
-// Register the custom element with TypeScript
-if (typeof window !== "undefined") {
-  if (!customElements.get("spline-viewer")) {
-    class SplineViewerElement extends HTMLElement {
-      constructor() {
-        super()
-      }
-    }
-    customElements.define("spline-viewer", SplineViewerElement)
-  }
-}
+// Use useLayoutEffect on client side, useEffect on server side
+const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
 export function SplineViewer({ url, className = "" }: SplineViewerProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isClient, setIsClient] = useState(false)
 
-  useEffect(() => {
+  // Handle client-side initialization
+  useIsomorphicLayoutEffect(() => {
+    setIsClient(true)
+
     const loadSplineViewer = async () => {
       try {
         // Check if the script is already loaded
@@ -48,6 +43,14 @@ export function SplineViewer({ url, className = "" }: SplineViewerProps) {
     }
 
     loadSplineViewer()
+
+    // Cleanup function to remove the script when component unmounts
+    return () => {
+      const script = document.querySelector('script[src*="@splinetool/viewer"]')
+      if (script) {
+        document.body.removeChild(script)
+      }
+    }
   }, [])
 
   const handleError = () => {
@@ -59,25 +62,31 @@ export function SplineViewer({ url, className = "" }: SplineViewerProps) {
     setIsLoading(false)
   }
 
+  // Show nothing during SSR
+  if (!isClient) {
+    return <div className={`w-full h-full ${className}`} suppressHydrationWarning />
+  }
+
   if (error) {
     return (
-      <div className={`flex items-center justify-center h-full ${className}`}>
+      <div className={`flex items-center justify-center h-full ${className}`} suppressHydrationWarning>
         <p className="text-destructive">{error}</p>
       </div>
     )
   }
 
   if (isLoading) {
-    return <Skeleton className={`w-full h-full ${className}`} />
+    return <Skeleton className={`w-full h-full ${className}`} suppressHydrationWarning />
   }
 
   return (
-    // @ts-ignore - Custom element
+    // @ts-ignore - Custom element from Spline library
     <spline-viewer
       url={url}
       className={className}
       onError={handleError}
       onLoad={handleLoad}
+      suppressHydrationWarning
     />
   )
 } 

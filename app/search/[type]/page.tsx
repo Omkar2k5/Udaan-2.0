@@ -12,23 +12,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ArrowLeft, Search, LogOut, Building, Trees } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { SplineViewer } from "@/components/ui/spline-viewer"
 
 interface FormData {
-  // Common fields
-  owner_name: string
-  address: string
-  registration_number: string
-
-  // Urban specific fields
-  property_id?: string
-  building_type?: string
-  floor_number?: string
-
-  // Rural specific fields
-  khasra_number?: string
-  land_area?: string
-  land_type?: string
-  village_name?: string
+  locality: string
+  party_type: "first" | "second"
+  party_name: string
+  sro: string
+  reg_year: string
 }
 
 export default function SearchPage() {
@@ -42,16 +33,11 @@ export default function SearchPage() {
   const isUrban = propertyType === "urban"
 
   const [formData, setFormData] = useState<FormData>({
-    owner_name: "",
-    address: "",
-    registration_number: "",
-    property_id: "",
-    building_type: "",
-    floor_number: "",
-    khasra_number: "",
-    land_area: "",
-    land_type: "",
-    village_name: "",
+    locality: "",
+    party_type: "first",
+    party_name: "",
+    sro: "",
+    reg_year: "",
   })
 
   useEffect(() => {
@@ -74,7 +60,7 @@ export default function SearchPage() {
     })
   }
 
-  const handleSelectChange = (name: string, value: string) => {
+  const handleSelectChange = (name: keyof FormData, value: string) => {
     setFormData({
       ...formData,
       [name]: value,
@@ -85,15 +71,14 @@ export default function SearchPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulate web scraping delay
-    setTimeout(() => {
-      // Encode the form data to pass as URL parameters
-      const params = new URLSearchParams({
-        ...formData,
-        property_type: propertyType,
-      } as any).toString()
-      router.push(`/results?${params}`)
-    }, 2000)
+    // Encode the form data to pass as URL parameters
+    const params = new URLSearchParams({
+      ...formData,
+      property_type: propertyType,
+    }).toString()
+
+    // Navigate to results page with search parameters
+    router.push(`/results?${params}`)
   }
 
   const containerVariants = {
@@ -115,7 +100,7 @@ export default function SearchPage() {
     <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
       {/* Spline 3D Background */}
       <div className="absolute inset-0 z-0 opacity-60">
-        {isLoaded && <spline-viewer url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"></spline-viewer>}
+        <SplineViewer url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode" />
       </div>
 
       {/* Logout Button */}
@@ -157,213 +142,96 @@ export default function SearchPage() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Common Fields */}
                   <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="owner_name" className="text-white">
-                      Owner's Name
-                    </Label>
+                    <Label htmlFor="locality" className="text-white">Locality</Label>
                     <Input
-                      id="owner_name"
-                      name="owner_name"
-                      placeholder="Enter owner's full name"
-                      value={formData.owner_name}
+                      id="locality"
+                      name="locality"
+                      value={formData.locality}
                       onChange={handleChange}
+                      placeholder="Enter locality"
+                      className="bg-black/50 border-gray-800 text-white"
                       required
-                      className="bg-black/50 border-gray-700 text-white"
                     />
                   </motion.div>
 
                   <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="address" className="text-white">
-                      Address
+                    <Label htmlFor="party_type" className="text-white">Select Party</Label>
+                    <Select
+                      name="party_type"
+                      value={formData.party_type}
+                      onValueChange={(value) => handleSelectChange("party_type", value)}
+                    >
+                      <SelectTrigger className="bg-black/50 border-gray-800 text-white">
+                        <SelectValue placeholder="Select party type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="first">First Party</SelectItem>
+                        <SelectItem value="second">Second Party</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </motion.div>
+
+                  <motion.div variants={itemVariants} className="space-y-2">
+                    <Label htmlFor="party_name" className="text-white">
+                      {formData.party_type === "first" ? "First" : "Second"} Party Name
                     </Label>
                     <Input
-                      id="address"
-                      name="address"
-                      placeholder="Enter property address"
-                      value={formData.address}
+                      id="party_name"
+                      name="party_name"
+                      value={formData.party_name}
                       onChange={handleChange}
+                      placeholder="Enter party name"
+                      className="bg-black/50 border-gray-800 text-white"
                       required
-                      className="bg-black/50 border-gray-700 text-white"
                     />
                   </motion.div>
 
                   <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="registration_number" className="text-white">
-                      Registration Number
-                    </Label>
+                    <Label htmlFor="sro" className="text-white">SRO</Label>
                     <Input
-                      id="registration_number"
-                      name="registration_number"
-                      placeholder="Enter registration number"
-                      value={formData.registration_number}
+                      id="sro"
+                      name="sro"
+                      value={formData.sro}
                       onChange={handleChange}
+                      placeholder="Enter SRO"
+                      className="bg-black/50 border-gray-800 text-white"
                       required
-                      className="bg-black/50 border-gray-700 text-white"
                     />
                   </motion.div>
 
-                  {/* Urban-specific fields */}
-                  {isUrban && (
-                    <>
-                      <motion.div variants={itemVariants} className="space-y-2">
-                        <Label htmlFor="property_id" className="text-white">
-                          Property ID
-                        </Label>
-                        <Input
-                          id="property_id"
-                          name="property_id"
-                          placeholder="Enter property ID (e.g., 12345)"
-                          value={formData.property_id}
-                          onChange={handleChange}
-                          required
-                          className="bg-black/50 border-gray-700 text-white"
-                        />
-                      </motion.div>
-
-                      <motion.div variants={itemVariants} className="space-y-2">
-                        <Label htmlFor="building_type" className="text-white">
-                          Building Type
-                        </Label>
-                        <Select
-                          value={formData.building_type}
-                          onValueChange={(value) => handleSelectChange("building_type", value)}
-                        >
-                          <SelectTrigger className="bg-black/50 border-gray-700 text-white">
-                            <SelectValue placeholder="Select building type" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-900 border-gray-700 text-white">
-                            <SelectItem value="apartment">Apartment</SelectItem>
-                            <SelectItem value="commercial">Commercial</SelectItem>
-                            <SelectItem value="house">House</SelectItem>
-                            <SelectItem value="office">Office</SelectItem>
-                            <SelectItem value="mixed_use">Mixed Use</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </motion.div>
-
-                      <motion.div variants={itemVariants} className="space-y-2">
-                        <Label htmlFor="floor_number" className="text-white">
-                          Floor Number
-                        </Label>
-                        <Input
-                          id="floor_number"
-                          name="floor_number"
-                          placeholder="Enter floor number (if applicable)"
-                          value={formData.floor_number}
-                          onChange={handleChange}
-                          className="bg-black/50 border-gray-700 text-white"
-                        />
-                      </motion.div>
-                    </>
-                  )}
-
-                  {/* Rural-specific fields */}
-                  {!isUrban && (
-                    <>
-                      <motion.div variants={itemVariants} className="space-y-2">
-                        <Label htmlFor="khasra_number" className="text-white">
-                          Khasra Number
-                        </Label>
-                        <Input
-                          id="khasra_number"
-                          name="khasra_number"
-                          placeholder="Enter khasra number"
-                          value={formData.khasra_number}
-                          onChange={handleChange}
-                          required
-                          className="bg-black/50 border-gray-700 text-white"
-                        />
-                      </motion.div>
-
-                      <motion.div variants={itemVariants} className="space-y-2">
-                        <Label htmlFor="land_area" className="text-white">
-                          Land Area
-                        </Label>
-                        <Input
-                          id="land_area"
-                          name="land_area"
-                          placeholder="Enter land area (e.g., 2.5 acres)"
-                          value={formData.land_area}
-                          onChange={handleChange}
-                          required
-                          className="bg-black/50 border-gray-700 text-white"
-                        />
-                      </motion.div>
-
-                      <motion.div variants={itemVariants} className="space-y-2">
-                        <Label htmlFor="land_type" className="text-white">
-                          Land Type
-                        </Label>
-                        <Select
-                          value={formData.land_type}
-                          onValueChange={(value) => handleSelectChange("land_type", value)}
-                        >
-                          <SelectTrigger className="bg-black/50 border-gray-700 text-white">
-                            <SelectValue placeholder="Select land type" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-gray-900 border-gray-700 text-white">
-                            <SelectItem value="agricultural">Agricultural</SelectItem>
-                            <SelectItem value="residential">Residential</SelectItem>
-                            <SelectItem value="commercial">Commercial</SelectItem>
-                            <SelectItem value="forest">Forest</SelectItem>
-                            <SelectItem value="barren">Barren</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </motion.div>
-
-                      <motion.div variants={itemVariants} className="space-y-2">
-                        <Label htmlFor="village_name" className="text-white">
-                          Village Name
-                        </Label>
-                        <Input
-                          id="village_name"
-                          name="village_name"
-                          placeholder="Enter village name"
-                          value={formData.village_name}
-                          onChange={handleChange}
-                          required
-                          className="bg-black/50 border-gray-700 text-white"
-                        />
-                      </motion.div>
-                    </>
-                  )}
+                  <motion.div variants={itemVariants} className="space-y-2">
+                    <Label htmlFor="reg_year" className="text-white">Registration Year</Label>
+                    <Input
+                      id="reg_year"
+                      name="reg_year"
+                      value={formData.reg_year}
+                      onChange={handleChange}
+                      placeholder="Enter registration year"
+                      className="bg-black/50 border-gray-800 text-white"
+                      type="number"
+                      min="1900"
+                      max={new Date().getFullYear()}
+                      required
+                    />
+                  </motion.div>
                 </form>
               </CardContent>
               <CardFooter>
                 <Button
                   onClick={handleSubmit}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                   disabled={isLoading}
-                  className={`w-full ${
-                    isUrban ? "bg-blue-600 hover:bg-blue-700" : "bg-green-600 hover:bg-green-700"
-                  } text-white`}
                 >
                   {isLoading ? (
-                    <div className="flex items-center">
-                      <svg
-                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
-                      Searching Property Data...
-                    </div>
+                    <>
+                      <Search className="mr-2 h-4 w-4 animate-spin" />
+                      Searching...
+                    </>
                   ) : (
-                    <div className="flex items-center">
-                      <Search className="mr-2 h-4 w-4" /> Search Property
-                    </div>
+                    <>
+                      <Search className="mr-2 h-4 w-4" />
+                      Search Property
+                    </>
                   )}
                 </Button>
               </CardFooter>

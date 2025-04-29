@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth-context"
 import { LogOut } from "lucide-react"
 import { SplineViewer } from "@/components/ui/spline-viewer"
+import { ParticleBackground } from "@/components/ui/particle-background"
 
 export default function HomePage() {
   const router = useRouter()
@@ -57,38 +58,7 @@ export default function HomePage() {
       </div>
 
       {/* Animated Particles */}
-      <div className="absolute inset-0 z-0 opacity-30">
-        <ParticleBackground />
-      </div>
+      <ParticleBackground />
     </div>
   )
-}
-
-function ParticleBackground() {
-  const particles = Array.from({ length: 50 }).map((_, i) => (
-    <motion.div
-      key={i}
-      className="absolute w-2 h-2 bg-blue-400 rounded-full"
-      initial={{
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        opacity: Math.random() * 0.5 + 0.3,
-      }}
-      animate={{
-        y: [null, Math.random() * window.innerHeight],
-        x: [null, Math.random() * window.innerWidth],
-      }}
-      transition={{
-        duration: Math.random() * 20 + 10,
-        repeat: Number.POSITIVE_INFINITY,
-        repeatType: "reverse",
-      }}
-      style={{
-        width: `${Math.random() * 4 + 1}px`,
-        height: `${Math.random() * 4 + 1}px`,
-      }}
-    />
-  ))
-
-  return <>{particles}</>
 }

@@ -6,24 +6,11 @@ import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/context/auth-context"
 import { LogOut } from "lucide-react"
+import { SplineViewer } from "@/components/ui/spline-viewer"
 
 export default function HomePage() {
   const router = useRouter()
   const { user, logout } = useAuth()
-  const [isLoaded, setIsLoaded] = useState(false)
-
-  useEffect(() => {
-    // Add Spline script dynamically
-    const script = document.createElement("script")
-    script.type = "module"
-    script.src = "https://unpkg.com/@splinetool/viewer@1.9.89/build/spline-viewer.js"
-    script.onload = () => setIsLoaded(true)
-    document.body.appendChild(script)
-
-    return () => {
-      document.body.removeChild(script)
-    }
-  }, [])
 
   const handleGetStarted = () => {
     router.push("/property-type")
@@ -46,7 +33,7 @@ export default function HomePage() {
 
       {/* 3D Spline Object */}
       <div className="absolute inset-0 z-0">
-        {isLoaded && <spline-viewer url="https://prod.spline.design/pY4CEJVxSZ9x753F/scene.splinecode"></spline-viewer>}
+        <SplineViewer url="https://prod.spline.design/pY4CEJVxSZ9x753F/scene.splinecode" />
       </div>
 
       {/* Content Overlay */}

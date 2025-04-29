@@ -3,6 +3,7 @@ import "@/app/globals.css"
 import { Inter } from "next/font/google"
 import Script from "next/script"
 import { Providers } from "@/components/providers"
+import Image from "next/image"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -26,7 +27,16 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} overflow-hidden`}>
+        <div className="fixed bottom-4 right-4 z-50 bg-black/80 backdrop-blur-sm p-2 rounded-lg">
+          <Image
+            src="/logo-Mit.png"
+            alt="MIT Logo"
+            width={150}
+            height={90}
+            className="object-contain"
+          />
+        </div>
         <Providers>{children}</Providers>
       </body>
     </html>

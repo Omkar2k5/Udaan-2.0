@@ -14,6 +14,7 @@ import { getAnalytics } from "firebase/analytics"
 const firebaseConfig = {
   apiKey: "AIzaSyB9-4wIWdGheBldDEL6SixDNYPipLePKBw",
   authDomain: "uddan-2-0.firebaseapp.com",
+  databaseURL: "https://uddan-2-0-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "uddan-2-0",
   storageBucket: "uddan-2-0.firebasestorage.app",
   messagingSenderId: "264260034605",

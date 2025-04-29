@@ -109,63 +109,132 @@ export default function SearchPage() {
   }, [])
 
   useEffect(() => {
-    if (!isMounted || !db) {
-      console.log('Effect skipped: Not mounted or db not available', { isMounted, dbExists: !!db })
-      return
+    // Only run on the client after mounting
+    if (!isMounted) {
+      console.log('Effect skipped: Component not yet mounted.');
+      return;
     }
 
-    console.log('Starting data fetch...')
+    console.log('Component mounted. Starting data fetch setup...');
+    
+    // Timeout to prevent hanging indefinitely
+    const fetchTimeoutMs = 15000; // 15 seconds timeout
+    
+    // Initialize fallback data from delhi_locations.json
+    const fallbackData = {
+      rural: {
+        districts: ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", "North West Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi"],
+        divisionsByDistrict: {
+          "Central Delhi": ["Civil Lines", "Karol Bagh", "Kotwali"]
+          // Add other divisions as needed
+        },
+        villagesByDivision: {
+          // Add villages as needed
+        }
+      },
+      urban: {
+        "SRI": { name: "Central-Kashmere Gate", localities: ["Kashmere Gate", "Ajmeri Gate*", "Darya Ganj", "Civil Lines*", "British India Colony*", "Curzon Road*", "Bahadur Shah Zafar Marg*"] },
+        "SRIII": { name: "Central-Asaf Ali Road", localities: ["Asaf Ali Road*", "Connaught Place Ext. C Zone", "Copernicus Marg", "Ajmal Khan Road", "Baba Kharak Singh Marg*", "Gole Market*"] },
+        "SRVIII": { name: "East-Geeta Colony", localities: ["Geeta Colony", "Jhilmil", "Jheel Kuranja", "Shastri Nagar", "Gandhi Nagar*", "L.M. Bundh Complex*"] },
+        "SRVIIIA": { name: "East-Preet Vihar", localities: ["Preet Vihar", "Vivek Vihar", "Karkardooma", "Dilshad Garden", "Ramprastha", "Mandoli"] },
+        "SRVII": { name: "New Delhi-INA", localities: ["INA Colony", "Jorbagh", "Lodhi Estate", "Kidwai Nagar", "Sarojini Nagar", "Kasturba Gandhi Marg"] }
+        // Add other SROs as needed
+      }
+    };
+    
     const fetchData = async () => {
-      setIsDataLoading(true)
-      setError(null)
+      // Check for db instance availability right before fetching
+      if (!db) {
+        console.error('Firebase db instance is not available. Using fallback data.');
+        setError('Database connection failed. Using local data instead.');
+        setLocationData(fallbackData);
+        processFallbackData(fallbackData);
+        setIsDataLoading(false);
+        return;
+      }
+
+      setIsDataLoading(true);
+      setError(null);
+      
+      // Create a promise that resolves after fetchTimeoutMs
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error(`Firebase fetch timed out after ${fetchTimeoutMs}ms`)), fetchTimeoutMs);
+      });
+      
       try {
-        console.log('Attempting to get data from Firebase ref: /')
-        const locationsRef = ref(db, '/')
-        const snapshot = await get(locationsRef)
+        console.log('Attempting to get data from Firebase ref: /urban/');
+        const urbanRef = ref(db, '/urban/');
+        
+        // Race between the fetch operation and the timeout
+        const snapshot = await Promise.race([
+          get(urbanRef),
+          timeoutPromise
+        ]) as { exists: () => boolean, val: () => any } | undefined;
+        
+        if (snapshot && snapshot.exists()) {
+          const urbanData = snapshot.val();
+          console.log('Firebase urban data snapshot exists. Fetched data:', urbanData);
+          
+          // Store the complete location data with rural part from fallback
+          const completeData = {
+            rural: fallbackData.rural,
+            urban: urbanData
+          };
+          setLocationData(completeData);
 
-        if (snapshot.exists()) {
-          const data = snapshot.val()
-          console.log('Firebase snapshot exists. Fetched data:', data)
-
-          setLocationData(data)
-
-          if (data.rural && Array.isArray(data.rural.districts)) {
-            setDelhiDistricts(data.rural.districts)
-          } else {
-            console.warn('Rural districts data not found or invalid format in Firebase.')
-            setDelhiDistricts([])
-          }
-
-          if (data.urban && typeof data.urban === 'object') {
-            const sros = Object.entries(data.urban).map(([key, value]: [string, any]) => ({
+          // Process urban data only
+          if (urbanData && typeof urbanData === 'object') {
+            const sros = Object.entries(urbanData).map(([key, value]: [string, any]) => ({
               key: key,
-              name: value?.name || key // Fallback to key if name is missing
-            }))
-            console.log('Mapped SROs:', sros)
-            setSroOptions(sros)
+              name: value?.name || key
+            }));
+            console.log('Mapped SROs from Firebase:', sros);
+            setSroOptions(sros);
           } else {
-            console.warn('Urban SRO data not found or invalid format in Firebase.')
-            setSroOptions([])
+            console.warn('Urban SRO data not found or invalid format in Firebase.');
+            setError("Invalid SRO data structure. Using local data.");
+            setLocationData(fallbackData);
+            processFallbackData(fallbackData);
           }
+          
+          // Set rural districts from fallback since we're only fetching urban
+          setDelhiDistricts(fallbackData.rural.districts);
+          
         } else {
-          console.error('Firebase snapshot does not exist at the root path ("/").')
-          setError("No location data found in the database. Check Firebase root path.")
-          setSroOptions([])
-          setDelhiDistricts([])
+          console.error('Firebase snapshot does not exist at /urban/ or timed out. Using fallback data.');
+          setError("Using local data due to database connection timeout.");
+          setLocationData(fallbackData);
+          processFallbackData(fallbackData);
         }
       } catch (err) {
-        console.error("Error during Firebase data fetch:", err)
-        setError("Failed to load location data. Check console for error details.")
-        setSroOptions([])
-        setDelhiDistricts([])
+        console.error("Error during Firebase data fetch:", err);
+        setError("Failed to load from database. Using local data.");
+        setLocationData(fallbackData);
+        processFallbackData(fallbackData);
       } finally {
-        console.log('Setting isDataLoading to false.')
-        setIsDataLoading(false)
+        console.log('Setting isDataLoading to false.');
+        setIsDataLoading(false);
       }
-    }
+    };
+    
+    // Process the fallback data
+    const processFallbackData = (data: any) => {
+      if (data.rural && Array.isArray(data.rural.districts)) {
+        setDelhiDistricts(data.rural.districts);
+      }
+      
+      if (data.urban && typeof data.urban === 'object') {
+        const sros = Object.entries(data.urban).map(([key, value]: [string, any]) => ({
+          key: key,
+          name: value?.name || key
+        }));
+        console.log('Using fallback SROs:', sros);
+        setSroOptions(sros);
+      }
+    };
 
-    fetchData()
-  }, [isMounted])
+    fetchData();
+  }, [isMounted]); // Depend only on isMounted
 
   useEffect(() => {
     if (!isUrban && selectedDistrict && locationData?.rural?.divisionsByDistrict) {

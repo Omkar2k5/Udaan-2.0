@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ParticleBackground } from "@/components/ui/particle-background"
 import { db } from "@/lib/firebase"
 import { ref, get } from "firebase/database"
+import { SplineBackground } from "@/app/components/SplineBackground"
 
 // --- Define Interfaces Directly Here ---
 interface RuralLocationData {
@@ -107,15 +108,24 @@ export default function SearchPage() {
       setIsDataLoading(true);
       setError(null);
       try {
+        console.log("Fetching location data...");
         const locationsRef = ref(db, 'locations');
         const snapshot = await get(locationsRef);
+        
         if (snapshot.exists()) {
-          const data = snapshot.val() as LocationData; // Cast fetched data
+          const data = snapshot.val() as LocationData;
+          console.log("Raw location data:", data);
           setLocationData(data);
 
-          if (data.rural) {
-            setDelhiDistricts(data.rural.districts || []);
+          if (data.rural && Array.isArray(data.rural.districts)) {
+            console.log("Found districts:", data.rural.districts);
+            setDelhiDistricts(data.rural.districts);
+          } else {
+            console.warn("No districts found in data:", data.rural);
+            setDelhiDistricts([]);
+            setError("No districts found in the database.");
           }
+
           if (data.urban) {
             const sros = Object.entries(data.urban).map(([key, value]) => ({
               key: key,
@@ -123,18 +133,19 @@ export default function SearchPage() {
             }));
             setSroOptions(sros);
           }
-
         } else {
-          setError("Failed to load location configuration.");
+          console.error("No data found in snapshot");
+          setError("No location data found in the database.");
         }
       } catch (err) {
+        console.error("Error loading data:", err);
         setError("Failed to load location data from the database.");
       } finally {
         setIsDataLoading(false);
       }
     };
     fetchData();
-   }, [db]); // Removed locationData dependency as it causes loop
+  }, []); // Remove db dependency as it's stable
 
   useEffect(() => {
     if (!isUrban && selectedDistrict && locationData?.rural?.divisionsByDistrict) {
@@ -238,12 +249,7 @@ export default function SearchPage() {
     return (
       <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
         {/* Spline 3D Background */}
-        <div className="absolute inset-0 z-0 opacity-60">
-          <iframe 
-            src="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
-            className="w-full h-full border-0"
-          />
-        </div>
+        <SplineBackground />
 
         {/* Logout Button */}
         <div className="absolute top-4 right-4 z-20">
@@ -381,16 +387,36 @@ export default function SearchPage() {
                             onValueChange={(value) => handleRuralSelectChange("district", value)}
                           >
                             <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                              <SelectValue placeholder="Select district" />
+                              <SelectValue placeholder={delhiDistricts.length ? "Select district" : "No districts available"} />
                             </SelectTrigger>
-                            <SelectContent>
-                              {delhiDistricts.map((district) => (
-                                <SelectItem key={district} value={district}>
-                                  {district}
+                            <SelectContent 
+                              className="bg-black/90 border-gray-800 text-white max-h-[300px] overflow-y-auto"
+                              position="popper"
+                            >
+                              {delhiDistricts.length > 0 ? (
+                                delhiDistricts.map((district) => (
+                                  <SelectItem 
+                                    key={district} 
+                                    value={district}
+                                    className="text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                  >
+                                    {district}
+                                  </SelectItem>
+                                ))
+                              ) : (
+                                <SelectItem 
+                                  value="none" 
+                                  disabled 
+                                  className="text-gray-500"
+                                >
+                                  No districts available
                                 </SelectItem>
-                              ))}
+                              )}
                             </SelectContent>
                           </Select>
+                          {error && (
+                            <p className="text-red-400 text-sm mt-1">{error}</p>
+                          )}
                         </motion.div>
 
                         <motion.div variants={itemVariants} className="space-y-2">
@@ -498,12 +524,7 @@ export default function SearchPage() {
     return (
       <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
         {/* Spline 3D Background */}
-        <div className="absolute inset-0 z-0 opacity-60">
-          <iframe 
-            src="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
-            className="w-full h-full border-0"
-          />
-        </div>
+        <SplineBackground />
 
         {/* Logout Button */}
         <div className="absolute top-4 right-4 z-20">
@@ -641,16 +662,36 @@ export default function SearchPage() {
                             onValueChange={(value) => handleRuralSelectChange("district", value)}
                           >
                             <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                              <SelectValue placeholder="Select district" />
+                              <SelectValue placeholder={delhiDistricts.length ? "Select district" : "No districts available"} />
                             </SelectTrigger>
-                            <SelectContent>
-                              {delhiDistricts.map((district) => (
-                                <SelectItem key={district} value={district}>
-                                  {district}
+                            <SelectContent 
+                              className="bg-black/90 border-gray-800 text-white max-h-[300px] overflow-y-auto"
+                              position="popper"
+                            >
+                              {delhiDistricts.length > 0 ? (
+                                delhiDistricts.map((district) => (
+                                  <SelectItem 
+                                    key={district} 
+                                    value={district}
+                                    className="text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                  >
+                                    {district}
+                                  </SelectItem>
+                                ))
+                              ) : (
+                                <SelectItem 
+                                  value="none" 
+                                  disabled 
+                                  className="text-gray-500"
+                                >
+                                  No districts available
                                 </SelectItem>
-                              ))}
+                              )}
                             </SelectContent>
                           </Select>
+                          {error && (
+                            <p className="text-red-400 text-sm mt-1">{error}</p>
+                          )}
                         </motion.div>
 
                         <motion.div variants={itemVariants} className="space-y-2">
@@ -757,12 +798,7 @@ export default function SearchPage() {
   return (
     <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
       {/* Spline 3D Background */}
-      <div className="absolute inset-0 z-0 opacity-60">
-        <iframe 
-          src="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
-          className="w-full h-full border-0"
-        />
-      </div>
+      <SplineBackground />
 
       {/* Logout Button */}
       <div className="absolute top-4 right-4 z-20">
@@ -900,16 +936,36 @@ export default function SearchPage() {
                           onValueChange={(value) => handleRuralSelectChange("district", value)}
                         >
                           <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                            <SelectValue placeholder="Select district" />
+                            <SelectValue placeholder={delhiDistricts.length ? "Select district" : "No districts available"} />
                           </SelectTrigger>
-                          <SelectContent>
-                            {delhiDistricts.map((district) => (
-                              <SelectItem key={district} value={district}>
-                                {district}
+                          <SelectContent 
+                            className="bg-black/90 border-gray-800 text-white max-h-[300px] overflow-y-auto"
+                            position="popper"
+                          >
+                            {delhiDistricts.length > 0 ? (
+                              delhiDistricts.map((district) => (
+                                <SelectItem 
+                                  key={district} 
+                                  value={district}
+                                  className="text-white hover:bg-white/10 focus:bg-white/10 cursor-pointer"
+                                >
+                                  {district}
+                                </SelectItem>
+                              ))
+                            ) : (
+                              <SelectItem 
+                                value="none" 
+                                disabled 
+                                className="text-gray-500"
+                              >
+                                No districts available
                               </SelectItem>
-                            ))}
+                            )}
                           </SelectContent>
                         </Select>
+                        {error && (
+                          <p className="text-red-400 text-sm mt-1">{error}</p>
+                        )}
                       </motion.div>
 
                       <motion.div variants={itemVariants} className="space-y-2">

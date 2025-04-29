@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ArrowLeft, Building, Home, LogOut, Trees } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
-import { SplineViewer } from "@/components/ui/spline-viewer"
 import { ParticleBackground } from "@/components/ui/particle-background"
+import { SplineBackground } from "@/app/components/SplineBackground"
 
 export default function PropertyTypePage() {
   const router = useRouter()
@@ -36,12 +36,7 @@ export default function PropertyTypePage() {
   return (
     <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
       {/* Spline 3D Background */}
-      <div className="absolute inset-0 z-0 opacity-60">
-        <spline-viewer 
-          url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
-          class="w-full h-full"
-        />
-      </div>
+      <SplineBackground />
 
       {/* Logout Button */}
       <div className="absolute top-4 right-4 z-20">

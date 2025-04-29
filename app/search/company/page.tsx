@@ -10,7 +10,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ArrowLeft, LogOut, Building2, Search, Loader2 } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ParticleBackground } from "@/components/ui/particle-background"
 import { SplineBackground } from "@/components/ui/spline-background"
 
@@ -19,12 +18,7 @@ interface CompanyFormData {
   cinLlpin: string;
   state: string;
   activity: string;
-  searchType: "master" | "director" | "advanced";
-  directorName?: string;
-  fatherLastName?: string;
-  dateOfBirth?: string;
-  din?: string;
-  registrationNumber?: string;
+  searchType: "master";
 }
 
 export default function CompanySearchPage() {
@@ -48,12 +42,7 @@ export default function CompanySearchPage() {
     cinLlpin: "",
     state: "",
     activity: "",
-    searchType: "master",
-    directorName: "",
-    fatherLastName: "",
-    dateOfBirth: "",
-    din: "",
-    registrationNumber: ""
+    searchType: "master"
   })
 
   useEffect(() => {
@@ -71,13 +60,6 @@ export default function CompanySearchPage() {
     setFormData({
       ...formData,
       [name]: value,
-    })
-  }
-
-  const handleSearchTypeChange = (value: "master" | "director" | "advanced") => {
-    setFormData({
-      ...formData,
-      searchType: value,
     })
   }
 
@@ -151,189 +133,41 @@ export default function CompanySearchPage() {
                       Company Property Details
                     </CardTitle>
                     <CardDescription className="text-gray-400 text-center">
-                      Search for company information, charges, signatories, and director details
+                      Search for company information, charges, and property details
                     </CardDescription>
                   </CardHeader>
                   
                   <CardContent>
-                    <Tabs defaultValue="master" className="w-full" onValueChange={(value) => 
-                      handleSearchTypeChange(value as "master" | "director" | "advanced")
-                    }>
-                      <TabsList className="grid grid-cols-3 mb-6">
-                        <TabsTrigger value="master">Company & Charges</TabsTrigger>
-                        <TabsTrigger value="director">Directors</TabsTrigger>
-                        <TabsTrigger value="advanced">Advanced</TabsTrigger>
-                      </TabsList>
-                      
-                      {/* Company/LLP Master Data Search & Index of Charges */}
-                      <TabsContent value="master">
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                          <motion.div variants={itemVariants} className="space-y-2">
-                            <Label htmlFor="companyName" className="text-white">Company/LLP Name</Label>
-                            <Input
-                              id="companyName"
-                              name="companyName"
-                              value={formData.companyName}
-                              onChange={handleInputChange}
-                              placeholder="Enter company or LLP name"
-                              className="bg-black/50 border-gray-800 text-white"
-                              required
-                            />
-                          </motion.div>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="companyName" className="text-white">Company/LLP Name</Label>
+                        <Input
+                          id="companyName"
+                          name="companyName"
+                          value={formData.companyName}
+                          onChange={handleInputChange}
+                          placeholder="Enter company or LLP name"
+                          className="bg-black/50 border-gray-800 text-white"
+                          required
+                        />
+                      </motion.div>
 
-                          <motion.div variants={itemVariants} className="space-y-2">
-                            <Label htmlFor="cinLlpin" className="text-white">CIN/LLPIN (Optional)</Label>
-                            <Input
-                              id="cinLlpin"
-                              name="cinLlpin"
-                              value={formData.cinLlpin}
-                              onChange={handleInputChange}
-                              placeholder="Enter CIN or LLPIN number"
-                              className="bg-black/50 border-gray-800 text-white"
-                            />
-                          </motion.div>
-                          
-                          <div className="pt-2">
-                            <p className="text-sm text-gray-400 mb-4">Output will include: Company Name, CIN/LLPIN, Company Type, Date of Incorporation, Registered Address, Authorized Capital, Paid-up Capital, Company Status, and Property Charges Information</p>
-                          </div>
-                        </form>
-                      </TabsContent>
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="cinLlpin" className="text-white">CIN/LLPIN (Optional)</Label>
+                        <Input
+                          id="cinLlpin"
+                          name="cinLlpin"
+                          value={formData.cinLlpin}
+                          onChange={handleInputChange}
+                          placeholder="Enter CIN or LLPIN number"
+                          className="bg-black/50 border-gray-800 text-white"
+                        />
+                      </motion.div>
                       
-                      {/* Director Master Data */}
-                      <TabsContent value="director">
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                          <motion.div variants={itemVariants} className="space-y-2">
-                            <Label htmlFor="din" className="text-white">DIN (Preferred)</Label>
-                            <Input
-                              id="din"
-                              name="din"
-                              value={formData.din}
-                              onChange={handleInputChange}
-                              placeholder="Enter Director Identification Number"
-                              className="bg-black/50 border-gray-800 text-white"
-                            />
-                          </motion.div>
-
-                          <motion.div variants={itemVariants} className="space-y-2">
-                            <Label htmlFor="directorName" className="text-white">Director Name (Optional)</Label>
-                            <Input
-                              id="directorName"
-                              name="directorName"
-                              value={formData.directorName}
-                              onChange={handleInputChange}
-                              placeholder="Enter director's full name"
-                              className="bg-black/50 border-gray-800 text-white"
-                            />
-                          </motion.div>
-                          
-                          <motion.div variants={itemVariants} className="space-y-2">
-                            <Label htmlFor="fatherLastName" className="text-white">Father's Last Name (Optional)</Label>
-                            <Input
-                              id="fatherLastName"
-                              name="fatherLastName"
-                              value={formData.fatherLastName}
-                              onChange={handleInputChange}
-                              placeholder="Enter father's last name"
-                              className="bg-black/50 border-gray-800 text-white"
-                            />
-                          </motion.div>
-                          
-                          <motion.div variants={itemVariants} className="space-y-2">
-                            <Label htmlFor="dateOfBirth" className="text-white">Date of Birth (Optional)</Label>
-                            <Input
-                              id="dateOfBirth"
-                              name="dateOfBirth"
-                              value={formData.dateOfBirth}
-                              onChange={handleInputChange}
-                              placeholder="YYYY-MM-DD"
-                              className="bg-black/50 border-gray-800 text-white"
-                              type="date"
-                            />
-                          </motion.div>
-                          
-                          <div className="pt-2">
-                            <p className="text-sm text-gray-400 mb-4">Output will include: Director Name, DIN, Associated Companies/LLPs, Date of Appointment, Designation</p>
-                          </div>
-                        </form>
-                      </TabsContent>
-                      
-                      {/* Advanced Search */}
-                      <TabsContent value="advanced">
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                          <motion.div variants={itemVariants} className="space-y-2">
-                            <Label htmlFor="companyName" className="text-white">Company/LLP Name</Label>
-                            <Input
-                              id="companyName"
-                              name="companyName"
-                              value={formData.companyName}
-                              onChange={handleInputChange}
-                              placeholder="Enter company or LLP name"
-                              className="bg-black/50 border-gray-800 text-white"
-                            />
-                          </motion.div>
-
-                          <motion.div variants={itemVariants} className="space-y-2">
-                            <Label htmlFor="cinLlpin" className="text-white">CIN/LLPIN</Label>
-                            <Input
-                              id="cinLlpin"
-                              name="cinLlpin"
-                              value={formData.cinLlpin}
-                              onChange={handleInputChange}
-                              placeholder="Enter CIN or LLPIN number"
-                              className="bg-black/50 border-gray-800 text-white"
-                            />
-                          </motion.div>
-                          
-                          <motion.div variants={itemVariants} className="space-y-2">
-                            <Label htmlFor="registrationNumber" className="text-white">Registration Number</Label>
-                            <Input
-                              id="registrationNumber"
-                              name="registrationNumber"
-                              value={formData.registrationNumber}
-                              onChange={handleInputChange}
-                              placeholder="Enter registration number"
-                              className="bg-black/50 border-gray-800 text-white"
-                            />
-                          </motion.div>
-                          
-                          <motion.div variants={itemVariants} className="space-y-2">
-                            <Label htmlFor="state" className="text-white">State of Registration</Label>
-                            <Select
-                              name="state"
-                              value={formData.state}
-                              onValueChange={(value) => handleSelectChange("state", value)}
-                            >
-                              <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                                <SelectValue placeholder="Select state" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {stateOptions.map((state) => (
-                                  <SelectItem key={state} value={state}>
-                                    {state}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </motion.div>
-                          
-                          <motion.div variants={itemVariants} className="space-y-2">
-                            <Label htmlFor="activity" className="text-white">Business Activity</Label>
-                            <Input
-                              id="activity"
-                              name="activity"
-                              value={formData.activity}
-                              onChange={handleInputChange}
-                              placeholder="Enter business activity or industry"
-                              className="bg-black/50 border-gray-800 text-white"
-                            />
-                          </motion.div>
-                          
-                          <div className="pt-2">
-                            <p className="text-sm text-gray-400 mb-4">Advanced search will provide comprehensive results from all available data sources.</p>
-                          </div>
-                        </form>
-                      </TabsContent>
-                    </Tabs>
+                      <div className="pt-2">
+                        <p className="text-sm text-gray-400 mb-4">Output will include: Company Name, CIN/LLPIN, Company Type, Date of Incorporation, Registered Address, Authorized Capital, Paid-up Capital, Company Status, and Property Charges Information</p>
+                      </div>
+                    </form>
                   </CardContent>
                   
                   <CardFooter>

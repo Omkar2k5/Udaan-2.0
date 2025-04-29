@@ -1,0 +1,2464 @@
+{
+  "input": {
+    "rural": {
+      "districts": [
+        "Central Delhi",
+        "East Delhi",
+        "New Delhi",
+        "North Delhi",
+        "North East Delhi",
+        "North West Delhi",
+        "Shahdara",
+        "South Delhi",
+        "South East Delhi",
+        "South West Delhi",
+        "West Delhi"
+      ],
+      "divisionsByDistrict": {
+        "Central Delhi": [
+          "Civil Lines",
+          "Karol Bagh",
+          "Kotwali"
+        ],
+        "East Delhi": [
+          "Gandhi Nagar",
+          "Preet Vihar",
+          "Mayur Vihar"
+        ],
+        "New Delhi": [
+          "Chanakyapuri",
+          "Connaught Place",
+          "Vasant Vihar"
+        ],
+        "North Delhi": [
+          "Alipur",
+          "Model Town",
+          "Narela"
+        ],
+        "North East Delhi": [
+          "Seelampur",
+          "Shahdara",
+          "Seemapuri"
+        ],
+        "North West Delhi": [
+          "Saraswati Vihar",
+          "Rohini",
+          "Kanjhawala"
+        ],
+        "Shahdara": [
+          "Shahdara",
+          "Vivek Vihar",
+          "Seemapuri"
+        ],
+        "South Delhi": [
+          "Hauz Khas",
+          "Saket",
+          "Mehrauli"
+        ],
+        "South East Delhi": [
+          "Defence Colony",
+          "Kalkaji",
+          "Sarita Vihar"
+        ],
+        "South West Delhi": [
+          "Najafgarh",
+          "Kapashera",
+          "Dwarka"
+        ],
+        "West Delhi": [
+          "Patel Nagar",
+          "Rajouri Garden",
+          "Punjabi Bagh"
+        ]
+      },
+      "villagesByDivision": {
+        "Central Delhi": {
+          "Civil Lines": [
+            "Kamla Nagar",
+            "Timarpur",
+            "Maurice Nagar",
+            "Malka Ganj"
+          ],
+          "Karol Bagh": [
+            "Paharganj",
+            "Rajinder Nagar",
+            "Dev Nagar",
+            "Bapa Nagar"
+          ],
+          "Kotwali": [
+            "Daryaganj",
+            "Chandni Chowk",
+            "Jama Masjid",
+            "Lal Kuan"
+          ]
+        },
+        "East Delhi": {
+          "Gandhi Nagar": [
+            "Geeta Colony",
+            "Kailash Nagar",
+            "Raghubar Pura",
+            "Shastri Nagar"
+          ],
+          "Mayur Vihar": [
+            "Patparganj",
+            "Vasundhara Enclave",
+            "Trilokpuri",
+            "Kondli"
+          ],
+          "Preet Vihar": [
+            "Nirman Vihar",
+            "Anand Vihar",
+            "Jagriti Enclave",
+            "Surajmal Vihar"
+          ]
+        },
+        "New Delhi": {
+          "Chanakyapuri": [
+            "Diplomatic Enclave",
+            "Moti Bagh",
+            "Race Course",
+            "Kautilya Marg"
+          ],
+          "Connaught Place": [
+            "Janpath",
+            "Barakhamba",
+            "Kasturba Gandhi Marg",
+            "Sansad Marg"
+          ],
+          "Vasant Vihar": [
+            "Munirka",
+            "Kishangarh",
+            "Anant Lok",
+            "Shanti Niketan"
+          ]
+        },
+        "North Delhi": {
+          "Alipur": [
+            "Bakhtawarpur",
+            "Akbarpur Majra",
+            "Hamidpur",
+            "Singhu"
+          ],
+          "Model Town": [
+            "Rana Pratap Bagh",
+            "Kamla Nagar",
+            "Shakti Nagar",
+            "GTB Nagar"
+          ],
+          "Narela": [
+            "Holambi Kalan",
+            "Pooth Khurd",
+            "Bhorgarh",
+            "Bankner"
+          ]
+        },
+        "North East Delhi": {
+          "Seelampur": [
+            "Welcome",
+            "Jafrabad",
+            "Maujpur",
+            "Babarpur"
+          ],
+          "Seemapuri": [
+            "New Seemapuri",
+            "Old Seemapuri",
+            "Dilshad Garden",
+            "Janta Flats"
+          ],
+          "Shahdara": [
+            "Ram Nagar",
+            "Farsh Bazar",
+            "Bholanath Nagar",
+            "Vishwas Nagar"
+          ]
+        },
+        "North West Delhi": {
+          "Kanjhawala": [
+            "Nizampur",
+            "Qutabgarh",
+            "Chandpur",
+            "Karala"
+          ],
+          "Rohini": [
+            "Sector 1-16",
+            "Begumpur",
+            "Kanjhawala",
+            "Rithala"
+          ],
+          "Saraswati Vihar": [
+            "Pitampura",
+            "Ashok Vihar",
+            "Wazirpur",
+            "Bharat Nagar"
+          ]
+        },
+        "Shahdara": {
+          "Seemapuri": [
+            "New Seemapuri",
+            "Old Seemapuri",
+            "Dilshad Garden",
+            "Tahirpur"
+          ],
+          "Shahdara": [
+            "Ram Nagar",
+            "Bholanath Nagar",
+            "Gandhi Nagar",
+            "Jhilmil"
+          ],
+          "Vivek Vihar": [
+            "Shreshtha Vihar",
+            "Karkardooma",
+            "Surajmal Vihar",
+            "Krishna Nagar"
+          ]
+        },
+        "South Delhi": {
+          "Hauz Khas": [
+            "Green Park",
+            "SDA",
+            "Sarvapriya Vihar",
+            "Panchsheel Park"
+          ],
+          "Mehrauli": [
+            "Chattarpur",
+            "Lado Sarai",
+            "Sultanpur",
+            "Gadaipur"
+          ],
+          "Saket": [
+            "Malviya Nagar",
+            "Pushp Vihar",
+            "Sheikh Sarai",
+            "Khirki Extension"
+          ]
+        },
+        "South East Delhi": {
+          "Defence Colony": [
+            "Lajpat Nagar",
+            "Jangpura",
+            "Nizamuddin",
+            "Andrews Ganj"
+          ],
+          "Kalkaji": [
+            "Govindpuri",
+            "CR Park",
+            "GK II",
+            "Alaknanda"
+          ],
+          "Sarita Vihar": [
+            "Jasola",
+            "Madanpur Khadar",
+            "Okhla",
+            "Khadar"
+          ]
+        },
+        "South West Delhi": {
+          "Dwarka": [
+            "Sector 1-29",
+            "Palam",
+            "Dabri",
+            "Mahavir Enclave"
+          ],
+          "Kapashera": [
+            "Bijwasan",
+            "Samalkha",
+            "Barthal",
+            "Bajghera"
+          ],
+          "Najafgarh": [
+            "Dichaon Kalan",
+            "Mitraon",
+            "Roshanpura",
+            "Chhawla"
+          ]
+        },
+        "West Delhi": {
+          "Patel Nagar": [
+            "Karol Bagh",
+            "Ranjit Nagar",
+            "Baljit Nagar",
+            "Anand Parbat"
+          ],
+          "Punjabi Bagh": [
+            "Madipur",
+            "Paschim Vihar",
+            "Nangloi",
+            "Rani Bagh"
+          ],
+          "Rajouri Garden": [
+            "Tilak Nagar",
+            "Tagore Garden",
+            "Subhash Nagar",
+            "Khyala"
+          ]
+        }
+      }
+    },
+    "urban": {
+      "SRI": {
+        "localities": [
+          "Kashmere Gate",
+          "Ajmeri Gate*",
+          "Darya Ganj",
+          "Civil Lines*",
+          "British India Colony*",
+          "Curzon Road*",
+          "Bahadur Shah Zafar Marg*"
+        ],
+        "name": "Central-Kashmere Gate"
+      },
+      "SRII": {
+        "localities": [
+          "Basai Darapur",
+          "Rajdhani College*",
+          "Paschim Vihar*",
+          "Moti Nagar*",
+          "Kirti Nagar*"
+        ],
+        "name": "West-Basai Darapur"
+      },
+      "SRIIA": {
+        "localities": [
+          "Punjabi Bagh",
+          "Nangloi",
+          "Shivaji Place*",
+          "Rajouri Garden*",
+          "Maya Puri*"
+        ],
+        "name": "West-Punjabi Bagh"
+      },
+      "SRIIB": {
+        "localities": [
+          "Janakpuri",
+          "District Centre*",
+          "Tilak Nagar*",
+          "Uttam Nagar*",
+          "Dwarka*"
+        ],
+        "name": "West-Janakpuri"
+      },
+      "SRIII": {
+        "localities": [
+          "Asaf Ali Road*",
+          "Connaught Place Ext. C Zone",
+          "Copernicus Marg",
+          "Ajmal Khan Road",
+          "Baba Kharak Singh Marg*",
+          "Gole Market*"
+        ],
+        "name": "Central-Asaf Ali Road"
+      },
+      "SRIV": {
+        "localities": [
+          "Seelampur",
+          "Yamuna Vihar",
+          "Gokal Puri",
+          "Babarpur*",
+          "Shahdara Market*"
+        ],
+        "name": "North East-Seelampur"
+      },
+      "SRIVA": {
+        "localities": [
+          "Nand Nagri",
+          "Gokal Puri",
+          "Babarpur",
+          "Shahdara Market",
+          "Yamuna Vihar*"
+        ],
+        "name": "Shahdara"
+      },
+      "SRIVB": {
+        "localities": [
+          "Vivek Vihar",
+          "Dilshad Colony",
+          "Ramprastha",
+          "Mandoli",
+          "Loni Road*"
+        ],
+        "name": "Shahdara-Vivek Vihar"
+      },
+      "SRIX": {
+        "localities": [
+          "Kapashera",
+          "Vasant Kunj*",
+          "Mahipalpur*",
+          "Dwarka*",
+          "Najafgarh*"
+        ],
+        "name": "South West-Sub Registrar IX"
+      },
+      "SRIXA": {
+        "localities": [
+          "Najafgarh",
+          "Tura Mandi*",
+          "Dhansa*",
+          "Mitraon*",
+          "Jharoda Kalan*"
+        ],
+        "name": "South West-Sub Registrar IXA"
+      },
+      "SRV": {
+        "localities": [
+          "Mehrauli",
+          "Lado Sarai",
+          "Kalu Sarai",
+          "Kalkaji",
+          "Chattarpur*",
+          "Saket*"
+        ],
+        "name": "South East-Mehrauli"
+      },
+      "SRV(1)": {
+        "localities": [
+          "Defence Colony",
+          "Lajpat Nagar",
+          "Alaknanda",
+          "East of Kailash",
+          "Kalkaji*",
+          "Greater Kailash*"
+        ],
+        "name": "South East-Defence Colony"
+      },
+      "SRVA": {
+        "localities": [
+          "Hauz Khas",
+          "Adchini",
+          "Aurobindo Marg",
+          "Khirki",
+          "Malviya Nagar*",
+          "Safdarjung Enclave*"
+        ],
+        "name": "South-Hauz Khas"
+      },
+      "SRVIA": {
+        "localities": [
+          "Model Town",
+          "Pitampura",
+          "Kohat Enclave",
+          "Rohini*",
+          "Prashant Vihar*"
+        ],
+        "name": "North West-Model Town"
+      },
+      "SRVIB": {
+        "localities": [
+          "Narela",
+          "Alipur",
+          "Bawana",
+          "Singhu Border*",
+          "Kanjhawala*"
+        ],
+        "name": "North-Narela"
+      },
+      "SRVIC": {
+        "localities": [
+          "Rohini",
+          "Sector 16*",
+          "Ambedkar Bhawan*",
+          "Rithala*",
+          "Peera Garhi*"
+        ],
+        "name": "North West-Rohini"
+      },
+      "SRVID": {
+        "localities": [
+          "Khanjhawala",
+          "Kanjhawala",
+          "Nangloi*",
+          "Mundka*",
+          "Sultan Puri*"
+        ],
+        "name": "North West-Khanjhawala"
+      },
+      "SRVIE": {
+        "localities": [
+          "Libaspur",
+          "G.T. Karnal Road",
+          "Alipur*",
+          "Bawana*",
+          "Narela*"
+        ],
+        "name": "North-Libaspur"
+      },
+      "SRVII": {
+        "localities": [
+          "INA Colony",
+          "Jorbagh",
+          "Lodhi Estate",
+          "Kidwai Nagar",
+          "Sarojini Nagar",
+          "Kasturba Gandhi Marg"
+        ],
+        "name": "New Delhi-INA"
+      },
+      "SRVIIA": {
+        "localities": [
+          "Sarojini Nagar",
+          "Laxmi Bai Nagar",
+          "South Avenue",
+          "Palika Bhawan*",
+          "Vikas Sadan*"
+        ],
+        "name": "New Delhi-Sarojini Nagar"
+      },
+      "SRVIII": {
+        "localities": [
+          "Geeta Colony",
+          "Jhilmil",
+          "Jheel Kuranja",
+          "Shastri Nagar",
+          "Gandhi Nagar*",
+          "L.M. Bundh Complex*"
+        ],
+        "name": "East-Geeta Colony"
+      },
+      "SRVIIIA": {
+        "localities": [
+          "Preet Vihar",
+          "Vivek Vihar",
+          "Karkardooma",
+          "Dilshad Garden",
+          "Ramprastha",
+          "Mandoli"
+        ],
+        "name": "East-Preet Vihar"
+      }
+    }
+  },
+  "output": {
+    "urban-outout": [
+      {
+        "S_No_": 1,
+        "Reg_No": 809,
+        "Reg_Date": "02-12-2022",
+        "First Party Name": "NICOLE BURGESS",
+        "Second Party Name": "ANNA HUMPHREY",
+        "Property Address": "House No. 106-B, Sector 21",
+        "Area": "222 Sq. Feet",
+        "Deed Type": "GIFT, GIFT WITH IN MC AREA",
+        "Property Type": "Industrial",
+        "SRO": "SRO2",
+        "Locality": "Sector 21",
+        "Registration Year": 2022,
+        "Property ID": "23809039"
+      },
+      {
+        "S_No_": 2,
+        "Reg_No": 764,
+        "Reg_Date": "20-05-2023",
+        "First Party Name": "MORGAN HOGAN",
+        "Second Party Name": "MICHAEL PETERSON",
+        "Property Address": "House No. 205-C, Arjun Nagar",
+        "Area": "154 Sq. Yard",
+        "Deed Type": "LEASE, LEASE UPTO 5 YEARS",
+        "Property Type": "Commercial",
+        "SRO": "SRO2",
+        "Locality": "Rajpur",
+        "Registration Year": 2023,
+        "Property ID": "31058920"
+      },
+      {
+        "S_No_": 3,
+        "Reg_No": 939,
+        "Reg_Date": "14-10-2020",
+        "First Party Name": "SUZANNE BROWN",
+        "Second Party Name": "LISA PAYNE",
+        "Property Address": "House No. 214-D, Rajpur",
+        "Area": "76 Sq. Yard",
+        "Deed Type": "SALE, SALE WITHIN MC AREA",
+        "Property Type": "Residential",
+        "SRO": "SRO3",
+        "Locality": "Rajpur",
+        "Registration Year": 2020,
+        "Property ID": "43685243"
+      },
+      {
+        "S_No_": 4,
+        "Reg_No": 722,
+        "Reg_Date": "09-05-2021",
+        "First Party Name": "ROY GRIFFIN",
+        "Second Party Name": "JILL JONES",
+        "Property Address": "House No. 45-B, Sector 21",
+        "Area": "125 Sq. Meter",
+        "Deed Type": "LEASE, LEASE UPTO 5 YEARS",
+        "Property Type": "Residential",
+        "SRO": "SRO1",
+        "Locality": "Arjun Nagar",
+        "Registration Year": 2021,
+        "Property ID": "99445112"
+      },
+      {
+        "S_No_": 5,
+        "Reg_No": 757,
+        "Reg_Date": "05-01-2021",
+        "First Party Name": "DAVID GILMORE DVM",
+        "Second Party Name": "DR. AMANDA MAY",
+        "Property Address": "House No. 51-D, Rajpur",
+        "Area": "44 Sq. Yard",
+        "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+        "Property Type": "Agricultural",
+        "SRO": "SRO3",
+        "Locality": "Arjun Nagar",
+        "Registration Year": 2021,
+        "Property ID": "66587625"
+      },
+      {
+        "S_No_": 6,
+        "Reg_No": 852,
+        "Reg_Date": "26-01-2021",
+        "First Party Name": "JOSHUA FULLER",
+        "Second Party Name": "CHRISTINE MITCHELL",
+        "Property Address": "House No. 18-B, Sector 21",
+        "Area": "217 Sq. Yard",
+        "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+        "Property Type": "Residential",
+        "SRO": "SRO1",
+        "Locality": "Sector 21",
+        "Registration Year": 2021,
+        "Property ID": "53165305"
+      },
+      {
+        "S_No_": 7,
+        "Reg_No": 675,
+        "Reg_Date": "22-03-2025",
+        "First Party Name": "THOMAS ROSS",
+        "Second Party Name": "NATHAN CAMPBELL",
+        "Property Address": "House No. 69-D, Rajpur",
+        "Area": "167 Sq. Meter",
+        "Deed Type": "GIFT, GIFT WITH IN MC AREA",
+        "Property Type": "Agricultural",
+        "SRO": "SRO2",
+        "Locality": "Rajpur",
+        "Registration Year": 2025,
+        "Property ID": "79451629"
+      },
+      {
+        "S_No_": 8,
+        "Reg_No": 230,
+        "Reg_Date": "18-08-2021",
+        "First Party Name": "BLAKE WALKER",
+        "Second Party Name": "JOSEPH WILLIAMS",
+        "Property Address": "House No. 15-A, Green Park",
+        "Area": "144 Sq. Yard",
+        "Deed Type": "GIFT, GIFT WITH IN MC AREA",
+        "Property Type": "Commercial",
+        "SRO": "SRO2",
+        "Locality": "Rajpur",
+        "Registration Year": 2021,
+        "Property ID": "86033552"
+      },
+      {
+        "S_No_": 9,
+        "Reg_No": 437,
+        "Reg_Date": "15-05-2020",
+        "First Party Name": "REBECCA GIBSON",
+        "Second Party Name": "ANTHONY WRIGHT",
+        "Property Address": "House No. 100-C, Arjun Nagar",
+        "Area": "157 Sq. Feet",
+        "Deed Type": "LEASE, LEASE UPTO 5 YEARS",
+        "Property Type": "Residential",
+        "SRO": "SRO3",
+        "Locality": "Rajpur",
+        "Registration Year": 2020,
+        "Property ID": "91880424"
+      },
+      {
+        "S_No_": 10,
+        "Reg_No": 302,
+        "Reg_Date": "08-03-2022",
+        "First Party Name": "BRANDY STUART",
+        "Second Party Name": "TAYLOR LOVE",
+        "Property Address": "House No. 78-B, Rajpur",
+        "Area": "83 Sq. Meter",
+        "Deed Type": "LEASE, LEASE UPTO 5 YEARS",
+        "Property Type": "Commercial",
+        "SRO": "SRO1",
+        "Locality": "Rajpur",
+        "Registration Year": 2022,
+        "Property ID": "10759947"
+      },
+      {
+        "S_No_": 11,
+        "Reg_No": 322,
+        "Reg_Date": "14-09-2020",
+        "First Party Name": "RYAN BELL",
+        "Second Party Name": "KATHRYN FORD",
+        "Property Address": "House No. 78-A, Green Park",
+        "Area": "242 Sq. Feet",
+        "Deed Type": "LEASE, LEASE UPTO 5 YEARS",
+        "Property Type": "Industrial",
+        "SRO": "SRO3",
+        "Locality": "Green Park",
+        "Registration Year": 2020,
+        "Property ID": "13474537"
+      },
+      {
+        "S_No_": 12,
+        "Reg_No": 797,
+        "Reg_Date": "14-01-2021",
+        "First Party Name": "CARLOS WELCH",
+        "Second Party Name": "AUDREY KENNEDY",
+        "Property Address": "House No. 150-B, Rajpur",
+        "Area": "101 Sq. Meter",
+        "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+        "Property Type": "Residential",
+        "SRO": "SRO3",
+        "Locality": "Green Park",
+        "Registration Year": 2021,
+        "Property ID": "30846795"
+      },
+      {
+        "S_No_": 13,
+        "Reg_No": 338,
+        "Reg_Date": "23-07-2023",
+        "First Party Name": "SHARON ROBINSON",
+        "Second Party Name": "MARC CONTRERAS",
+        "Property Address": "House No. 17-A, Arjun Nagar",
+        "Area": "241 Sq. Yard",
+        "Deed Type": "LEASE, LEASE UPTO 5 YEARS",
+        "Property Type": "Agricultural",
+        "SRO": "SRO3",
+        "Locality": "Arjun Nagar",
+        "Registration Year": 2023,
+        "Property ID": "54200413"
+      },
+      {
+        "S_No_": 14,
+        "Reg_No": 648,
+        "Reg_Date": "26-11-2023",
+        "First Party Name": "JAMES JENSEN",
+        "Second Party Name": "WILLIAM LOGAN",
+        "Property Address": "House No. 261-A, Sector 21",
+        "Area": "160 Sq. Meter",
+        "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+        "Property Type": "Industrial",
+        "SRO": "SRO4",
+        "Locality": "Sector 21",
+        "Registration Year": 2023,
+        "Property ID": "89277555"
+      },
+      {
+        "S_No_": 15,
+        "Reg_No": 710,
+        "Reg_Date": "22-06-2020",
+        "First Party Name": "KAREN KELLEY",
+        "Second Party Name": "AMY WHITE",
+        "Property Address": "House No. 241-A, Rajpur",
+        "Area": "105 Sq. Yard",
+        "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+        "Property Type": "Residential",
+        "SRO": "SRO4",
+        "Locality": "Sector 21",
+        "Registration Year": 2020,
+        "Property ID": "49521685"
+      },
+      {
+        "S_No_": 16,
+        "Reg_No": 168,
+        "Reg_Date": "08-02-2025",
+        "First Party Name": "KEVIN HERNANDEZ",
+        "Second Party Name": "JILLIAN OLSON",
+        "Property Address": "House No. 274-A, Green Park",
+        "Area": "228 Sq. Meter",
+        "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+        "Property Type": "Industrial",
+        "SRO": "SRO1",
+        "Locality": "Rajpur",
+        "Registration Year": 2025,
+        "Property ID": "13899638"
+      },
+      {
+        "S_No_": 17,
+        "Reg_No": 60,
+        "Reg_Date": "04-02-2023",
+        "First Party Name": "ASHLEY RICHARDSON",
+        "Second Party Name": "CHARLES SCOTT",
+        "Property Address": "House No. 281-B, Rajpur",
+        "Area": "90 Sq. Meter",
+        "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+        "Property Type": "Industrial",
+        "SRO": "SRO2",
+        "Locality": "Green Park",
+        "Registration Year": 2023,
+        "Property ID": "41701095"
+      },
+      {
+        "S_No_": 18,
+        "Reg_No": 740,
+        "Reg_Date": "15-10-2022",
+        "First Party Name": "CHAD WOLFE",
+        "Second Party Name": "HUNTER REYES",
+        "Property Address": "House No. 245-A, Sector 21",
+        "Area": "97 Sq. Yard",
+        "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+        "Property Type": "Agricultural",
+        "SRO": "SRO3",
+        "Locality": "Green Park",
+        "Registration Year": 2022,
+        "Property ID": "73565403"
+      },
+      {
+        "S_No_": 19,
+        "Reg_No": 323,
+        "Reg_Date": "12-03-2025",
+        "First Party Name": "DAVID MONTOYA",
+        "Second Party Name": "WILLIAM HUDSON",
+        "Property Address": "House No. 285-D, Sector 21",
+        "Area": "62 Sq. Meter",
+        "Deed Type": "SALE, SALE WITHIN MC AREA",
+        "Property Type": "Commercial",
+        "SRO": "SRO1",
+        "Locality": "Green Park",
+        "Registration Year": 2025,
+        "Property ID": "49813375"
+      },
+      {
+        "S_No_": 20,
+        "Reg_No": 104,
+        "Reg_Date": "02-08-2024",
+        "First Party Name": "LAUREN JACKSON",
+        "Second Party Name": "DANIELLE POPE",
+        "Property Address": "House No. 51-C, Green Park",
+        "Area": "68 Sq. Feet",
+        "Deed Type": "GIFT, GIFT WITH IN MC AREA",
+        "Property Type": "Industrial",
+        "SRO": "SRO4",
+        "Locality": "Sector 21",
+        "Registration Year": 2024,
+        "Property ID": "94269301"
+      }
+    ],
+    "rural-output": [
+      {
+        "ID": "32672352",
+        "S_No_": 1,
+        "State": "Delhi",
+        "District": "South East Delhi",
+        "Division": "Greater Kailash",
+        "Village": "Alaknanda",
+        "Khasra No": "41",
+        "Area": "2656 sq.ft.",
+        "Property Value": "\u20b911,00,000",
+        "Encumbrance Status": "Under Dispute",
+        "Name": "Vikram, son of Pratap",
+        "Address": "Alaknanda village, Part-4/12",
+        "Property ID": "32672352"
+      },
+      {
+        "ID": "77791310",
+        "S_No_": 2,
+        "State": "Delhi",
+        "District": "Shahdara",
+        "Division": "Shahdara",
+        "Village": "Dilshad Garden",
+        "Khasra No": "129",
+        "Property Type": "Mixed Use",
+        "Registration Date": "21-01-2021",
+        "Area": "4224 sq.ft.",
+        "Property Value": "\u20b937,00,000",
+        "Encumbrance Status": "Under Dispute",
+        "Name": "Vikram, son of Pratap",
+        "Address": "Dilshad Garden village, Part-4/12",
+        "Property ID": "77791310"
+      },
+      {
+        "ID": "23761559",
+        "S_No_": 3,
+        "State": "Delhi",
+        "District": "New Delhi",
+        "Division": "Connaught Place",
+        "Village": "Janpath",
+        "Khasra No": "14",
+        "Property Type": "Agricultural",
+        "Registration Date": "03-03-2011",
+        "Area": "2335 sq.ft.",
+        "Property Value": "\u20b911,00,000",
+        "Encumbrance Status": "Government Lien",
+        "Name": "Hatkesh, Pemraj son of Gurgul",
+        "Address": "Janpath village, Part-2/9",
+        "Property ID": "23761559"
+      },
+      {
+        "ID": "97061225",
+        "S_No_": 4,
+        "State": "Delhi",
+        "District": "East Delhi",
+        "Division": "Vivek Vihar",
+        "Village": "Krishna Nagar",
+        "Khasra No": "63",
+        "Property Type": "Agricultural",
+        "Registration Date": "14-05-2014",
+        "Area": "4467 sq.ft.",
+        "Property Value": "\u20b912,00,000",
+        "Encumbrance Status": "Government Lien",
+        "Name": "Hatkesh, Pemraj son of Gurgul",
+        "Address": "Krishna Nagar village, Part-2/9",
+        "Property ID": "97061225"
+      },
+      {
+        "ID": "35132735",
+        "S_No_": 5,
+        "State": "Delhi",
+        "District": "West Delhi",
+        "Division": "Rajouri Garden",
+        "Village": "Tagore Garden",
+        "Khasra No": "132",
+        "Property Type": "Commercial",
+        "Registration Date": "17-05-2013",
+        "Area": "4224 sq.ft.",
+        "Property Value": "\u20b944,00,000",
+        "Encumbrance Status": "Partially Encumbered",
+        "Name": "Bhija, son of Inder",
+        "Address": "Tagore Garden village, Part-1/3",
+        "Property ID": "35132735"
+      },
+      {
+        "ID": "96014706",
+        "S_No_": 6,
+        "State": "Delhi",
+        "District": "South Delhi",
+        "Division": "Defence Colony",
+        "Village": "Jangpura",
+        "Khasra No": "33",
+        "Property Type": "Mixed Use",
+        "Registration Date": "31-12-2014",
+        "Area": "2583 sq.ft.",
+        "Property Value": "\u20b911,00,000",
+        "Encumbrance Status": "Partially Encumbered",
+        "Name": "Anil, Sunil, sons of Rajendra",
+        "Address": "Jangpura village, Part-2/6",
+        "Property ID": "96014706"
+      },
+      {
+        "ID": "37818450",
+        "S_No_": 7,
+        "State": "Delhi",
+        "District": "South East Delhi",
+        "Division": "Jamia Nagar",
+        "Village": "Okhla",
+        "Khasra No": "132",
+        "Property Type": "Commercial",
+        "Registration Date": "24-08-2018",
+        "Area": "359 sq.ft.",
+        "Property Value": "\u20b938,00,000",
+        "Name": "Hatkesh, Pemraj son of Gurgul",
+        "Address": "Okhla village, Part-2/9",
+        "Property ID": "37818450"
+      },
+      {
+        "ID": "56744133",
+        "S_No_": 8,
+        "State": "Delhi",
+        "District": "East Delhi",
+        "Division": "Vivek Vihar",
+        "Village": "Krishna Nagar",
+        "Khasra No": "124",
+        "Property Type": "Agricultural",
+        "Registration Date": "17-07-2010",
+        "Area": "2335 sq.ft.",
+        "Property Value": "\u20b911,00,000",
+        "Encumbrance Status": "Mortgaged",
+        "Name": "Vikram, son of Pratap",
+        "Address": "Krishna Nagar village, Part-4/12",
+        "Property ID": "56744133"
+      },
+      {
+        "ID": "63930718",
+        "S_No_": 9,
+        "State": "Delhi",
+        "District": "North East Delhi",
+        "Division": "Karawal Nagar",
+        "Village": "Khajuri Khas",
+        "Khasra No": "21",
+        "Property Type": "Industrial",
+        "Registration Date": "20-02-2012",
+        "Area": "4470 sq.ft.",
+        "Property Value": "\u20b938,00,000",
+        "Encumbrance Status": "Government Lien",
+        "Name": "Ramesh, Suresh sons of Mahesh",
+        "Address": "Khajuri Khas village, Part-3/9",
+        "Property ID": "63930718"
+      },
+      {
+        "ID": "24850721",
+        "S_No_": 10,
+        "State": "Delhi",
+        "District": "Central Delhi",
+        "Division": "Paharganj",
+        "Village": "Ram Nagar",
+        "Khasra No": "123",
+        "Property Type": "Residential",
+        "Registration Date": "05-06-2020",
+        "Area": "4470 sq.ft.",
+        "Property Value": "\u20b916,00,000",
+        "Encumbrance Status": "Under Dispute",
+        "Name": "Prakash, Aakash, sons of Ramesh",
+        "Address": "Ram Nagar village, Part-3/8",
+        "Property ID": "24850721"
+      },
+      {
+        "ID": "71997163",
+        "S_No_": 11,
+        "State": "Delhi",
+        "District": "West Delhi",
+        "Division": "Tilak Nagar",
+        "Village": "Vikaspuri",
+        "Khasra No": "44",
+        "Property Type": "Agricultural",
+        "Registration Date": "03-04-2016",
+        "Area": "2656 sq.ft.",
+        "Property Value": "\u20b911,00,000",
+        "Encumbrance Status": "Government Lien",
+        "Name": "Prakash, Aakash, sons of Ramesh",
+        "Address": "Vikaspuri village, Part-3/8",
+        "Property ID": "71997163"
+      },
+      {
+        "ID": "52635278",
+        "S_No_": 12,
+        "State": "Delhi",
+        "District": "West Delhi",
+        "Division": "Rajouri Garden",
+        "Village": "Subhash Nagar",
+        "Khasra No": "133",
+        "Property Type": "Agricultural",
+        "Registration Date": "15-03-2022",
+        "Area": "853 sq.ft.",
+        "Property Value": "\u20b911,00,000",
+        "Name": "Kishan, Suryan, sons of Chandan",
+        "Address": "Subhash Nagar village, Part-1/3",
+        "Property ID": "52635278"
+      },
+      {
+        "ID": "45376658",
+        "S_No_": 13,
+        "State": "Delhi",
+        "District": "New Delhi",
+        "Division": "Chanakyapuri",
+        "Village": "Moti Bagh",
+        "Khasra No": "47",
+        "Property Type": "Commercial",
+        "Registration Date": "03-07-2021",
+        "Area": "359 sq.ft.",
+        "Property Value": "\u20b948,00,000",
+        "Encumbrance Status": "Partially Encumbered",
+        "Name": "Vikram, son of Pratap",
+        "Address": "Moti Bagh village, Part-4/12",
+        "Property ID": "45376658"
+      },
+      {
+        "ID": "54418607",
+        "S_No_": 14,
+        "State": "Delhi",
+        "District": "South East Delhi",
+        "Division": "Greater Kailash",
+        "Village": "East of Kailash",
+        "Khasra No": "143",
+        "Property Type": "Commercial",
+        "Registration Date": "13-09-2023",
+        "Area": "4224 sq.ft.",
+        "Property Value": "\u20b911,00,000",
+        "Encumbrance Status": "Mortgaged",
+        "Name": "Prakash, Aakash, sons of Ramesh",
+        "Address": "East of Kailash village, Part-3/8",
+        "Property ID": "54418607"
+      },
+      {
+        "ID": "37153378",
+        "S_No_": 15,
+        "State": "Delhi",
+        "District": "North East Delhi",
+        "Division": "Seelampur",
+        "Village": "Jafrabad",
+        "Khasra No": "148",
+        "Property Type": "Mixed Use",
+        "Registration Date": "27-06-2013",
+        "Area": "2656 sq.ft.",
+        "Property Value": "\u20b948,00,000",
+        "Encumbrance Status": "Partially Encumbered",
+        "Name": "Prakash, Aakash, sons of Ramesh",
+        "Address": "Jafrabad village, Part-3/8",
+        "Property ID": "37153378"
+      },
+      {
+        "ID": "83631638",
+        "S_No_": 16,
+        "State": "Delhi",
+        "District": "East Delhi",
+        "Division": "Shahdara",
+        "Village": "Dilshad Garden",
+        "Khasra No": "40",
+        "Property Type": "Residential",
+        "Registration Date": "12-05-2015",
+        "Area": "853 sq.ft.",
+        "Property Value": "\u20b937,00,000",
+        "Name": "Gopichand, Hemchand, sons of Kishori",
+        "Address": "Dilshad Garden village",
+        "Property ID": "83631638"
+      },
+      {
+        "ID": "35909512",
+        "S_No_": 17,
+        "State": "Delhi",
+        "District": "Central Delhi",
+        "Division": "Paharganj",
+        "Village": "Minto Road",
+        "Khasra No": "27",
+        "Property Type": "Commercial",
+        "Registration Date": "16-11-2017",
+        "Area": "3197 sq.ft.",
+        "Property Value": "\u20b912,00,000",
+        "Encumbrance Status": "Government Lien",
+        "Name": "Anil, Sunil, sons of Rajendra",
+        "Address": "Minto Road village, Part-2/6",
+        "Property ID": "35909512"
+      },
+      {
+        "ID": "25147661",
+        "S_No_": 18,
+        "State": "Delhi",
+        "District": "East Delhi",
+        "Division": "Shahdara",
+        "Village": "Kondli",
+        "Khasra No": "50",
+        "Property Type": "Commercial",
+        "Registration Date": "28-11-2019",
+        "Area": "2656 sq.ft.",
+        "Property Value": "\u20b948,00,000",
+        "Encumbrance Status": "Partially Encumbered",
+        "Name": "Deepak, son of Jagdish",
+        "Address": "Kondli village, Part-5/15",
+        "Property ID": "25147661"
+      },
+      {
+        "ID": "83902735",
+        "S_No_": 19,
+        "State": "Delhi",
+        "District": "New Delhi",
+        "Division": "Chanakyapuri",
+        "Village": "Moti Bagh",
+        "Khasra No": "130",
+        "Property Type": "Mixed Use",
+        "Registration Date": "06-07-2016",
+        "Area": "4467 sq.ft.",
+        "Property Value": "\u20b948,00,000",
+        "Encumbrance Status": "Under Dispute",
+        "Name": "Gopichand, Hemchand, sons of Kishori",
+        "Address": "Moti Bagh village",
+        "Property ID": "83902735"
+      },
+      {
+        "ID": "84546611",
+        "S_No_": 20,
+        "State": "Delhi",
+        "District": "South Delhi",
+        "Division": "Mehrauli",
+        "Village": "Vasant Kunj",
+        "Khasra No": "97",
+        "Property Type": "Residential",
+        "Registration Date": "01-05-2018",
+        "Area": "4470 sq.ft.",
+        "Property Value": "\u20b911,00,000",
+        "Name": "Deepak, son of Jagdish",
+        "Address": "Vasant Kunj village, Part-5/15",
+        "Property ID": "84546611"
+      }
+    ],
+    "Enumbrance&companydata": {
+      "L20999MH1663": {
+        "encumbrance": {
+          "Operating Revenue": "Over \u20b9691 crore",
+          "Authorized Share Capital": "\u20b93572 crore",
+          "Paid-up Capital": "\u20b91364 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "Zensar Technologies",
+          "CIN": "L20999MH1663",
+          "Property ID": "68014896"
+        },
+        "company_details": {
+          "Name": "Zensar Technologies",
+          "CIN": "L20999MH1663",
+          "Company Type": "Public, Non-Government Company",
+          "Registrar of Companies": "RoC-Chennai",
+          "Stock Listings": "NSE & BSE (Ticker: Group)",
+          "Property ID": "68014896"
+        }
+      },
+      "U59665TN6671": {
+        "encumbrance": {
+          "Operating Revenue": "Over \u20b9788 crore",
+          "Authorized Share Capital": "\u20b92812 crore",
+          "Paid-up Capital": "\u20b94565 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "Capgemini",
+          "CIN": "U59665TN6671",
+          "Property ID": "55493702"
+        },
+        "company_details": {
+          "Name": "Capgemini",
+          "CIN": "U59665TN6671",
+          "Company Type": "Public, Non-Government Company",
+          "Registrar of Companies": "RoC-Hyderabad",
+          "Stock Listings": "NSE & BSE (Ticker: PLC)",
+          "Property ID": "55493702"
+        }
+      },
+      "U84604KA9255": {
+        "encumbrance": {
+          "Operating Revenue": "Over \u20b9577 crore",
+          "Authorized Share Capital": "\u20b92043 crore",
+          "Paid-up Capital": "\u20b91489 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "IBM India",
+          "CIN": "U84604KA9255",
+          "Property ID": "20686166"
+        },
+        "company_details": {
+          "Name": "IBM India",
+          "CIN": "U84604KA9255",
+          "Company Type": "Private, Non-Government Company",
+          "Registrar of Companies": "RoC-Bangalore",
+          "Stock Listings": "NSE & BSE (Ticker: PLC)",
+          "Property ID": "20686166"
+        }
+      },
+      "U93509TN5588": {
+        "encumbrance": {
+          "Operating Revenue": "Over \u20b9872 crore",
+          "Authorized Share Capital": "\u20b93980 crore",
+          "Paid-up Capital": "\u20b94363 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "L&T Infotech",
+          "CIN": "U93509TN5588",
+          "Property ID": "50438906"
+        },
+        "company_details": {
+          "Name": "L&T Infotech",
+          "CIN": "U93509TN5588",
+          "Company Type": "Public, Non-Government Company",
+          "Registrar of Companies": "RoC-Hyderabad",
+          "Stock Listings": "NSE & BSE (Ticker: and Sons)",
+          "Property ID": "50438906"
+        }
+      },
+      "U36377KA6571": {
+        "encumbrance": {
+          "Operating Revenue": "Over \u20b9510 crore",
+          "Authorized Share Capital": "\u20b92565 crore",
+          "Paid-up Capital": "\u20b93112 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "HCL Technologies",
+          "CIN": "U36377KA6571",
+          "Property ID": "82527939"
+        },
+        "company_details": {
+          "Name": "HCL Technologies",
+          "CIN": "U36377KA6571",
+          "Company Type": "Public, Non-Government Company",
+          "Registrar of Companies": "RoC-Chennai",
+          "Stock Listings": "NSE & BSE (Ticker: Ltd)",
+          "Property ID": "82527939"
+        }
+      },
+      "U59931DL7704": {
+        "encumbrance": {
+          "Operating Revenue": "Over \u20b9634 crore",
+          "Authorized Share Capital": "\u20b93720 crore",
+          "Paid-up Capital": "\u20b91533 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "Infosys Limited",
+          "CIN": "U59931DL7704",
+          "Property ID": "60642161"
+        },
+        "company_details": {
+          "Name": "Infosys Limited",
+          "CIN": "U59931DL7704",
+          "Company Type": "Public, Non-Government Company",
+          "Registrar of Companies": "RoC-Mumbai",
+          "Stock Listings": "NSE & BSE (Ticker: and Sons)",
+          "Property ID": "60642161"
+        }
+      },
+      "U18587TN7662": {
+        "encumbrance": {
+          "Operating Revenue": "Over \u20b9994 crore",
+          "Authorized Share Capital": "\u20b94524 crore",
+          "Paid-up Capital": "\u20b93504 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "Tech Mahindra",
+          "CIN": "U18587TN7662",
+          "Property ID": "34184162"
+        },
+        "company_details": {
+          "Name": "Tech Mahindra",
+          "CIN": "U18587TN7662",
+          "Company Type": "Public, Non-Government Company",
+          "Registrar of Companies": "RoC-Hyderabad",
+          "Stock Listings": "NSE & BSE (Ticker: PLC)",
+          "Property ID": "34184162"
+        }
+      },
+      "L43658MH8874": {
+        "encumbrance": {
+          "Operating Revenue": "Over \u20b9739 crore",
+          "Authorized Share Capital": "\u20b94521 crore",
+          "Paid-up Capital": "\u20b93811 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "Oracle India",
+          "CIN": "L43658MH8874",
+          "Property ID": "13245851"
+        },
+        "company_details": {
+          "Name": "Oracle India",
+          "CIN": "L43658MH8874",
+          "Company Type": "Public, Non-Government Company",
+          "Registrar of Companies": "RoC-Mumbai",
+          "Stock Listings": "NSE & BSE (Ticker: Group)",
+          "Property ID": "13245851"
+        }
+      },
+      "L99713MH9151": {
+        "encumbrance": {
+          "Operating Revenue": "Over \u20b9611 crore",
+          "Authorized Share Capital": "\u20b92955 crore",
+          "Paid-up Capital": "\u20b92781 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "Tech Mahindra",
+          "CIN": "L99713MH9151",
+          "Property ID": "38482607"
+        },
+        "company_details": {
+          "Name": "Tech Mahindra",
+          "CIN": "L99713MH9151",
+          "Company Type": "Private, Non-Government Company",
+          "Registrar of Companies": "RoC-Chennai",
+          "Stock Listings": "NSE & BSE (Ticker: Inc)",
+          "Property ID": "38482607"
+        }
+      }
+    }
+  },
+  "Datalink": {
+    "property_id_map": {
+      "23809039": {
+        "source": "urban",
+        "data": {
+          "S_No_": 1,
+          "Reg_No": 809,
+          "Reg_Date": "02-12-2022",
+          "First Party Name": "NICOLE BURGESS",
+          "Second Party Name": "ANNA HUMPHREY",
+          "Property Address": "House No. 106-B, Sector 21",
+          "Area": "222 Sq. Feet",
+          "Deed Type": "GIFT, GIFT WITH IN MC AREA",
+          "Property Type": "Industrial",
+          "SRO": "SRO2",
+          "Locality": "Sector 21",
+          "Registration Year": 2022,
+          "Property ID": "23809039"
+        }
+      },
+      "31058920": {
+        "source": "urban",
+        "data": {
+          "S_No_": 2,
+          "Reg_No": 764,
+          "Reg_Date": "20-05-2023",
+          "First Party Name": "MORGAN HOGAN",
+          "Second Party Name": "MICHAEL PETERSON",
+          "Property Address": "House No. 205-C, Arjun Nagar",
+          "Area": "154 Sq. Yard",
+          "Deed Type": "LEASE, LEASE UPTO 5 YEARS",
+          "Property Type": "Commercial",
+          "SRO": "SRO2",
+          "Locality": "Rajpur",
+          "Registration Year": 2023,
+          "Property ID": "31058920"
+        }
+      },
+      "43685243": {
+        "source": "urban",
+        "data": {
+          "S_No_": 3,
+          "Reg_No": 939,
+          "Reg_Date": "14-10-2020",
+          "First Party Name": "SUZANNE BROWN",
+          "Second Party Name": "LISA PAYNE",
+          "Property Address": "House No. 214-D, Rajpur",
+          "Area": "76 Sq. Yard",
+          "Deed Type": "SALE, SALE WITHIN MC AREA",
+          "Property Type": "Residential",
+          "SRO": "SRO3",
+          "Locality": "Rajpur",
+          "Registration Year": 2020,
+          "Property ID": "43685243"
+        }
+      },
+      "99445112": {
+        "source": "urban",
+        "data": {
+          "S_No_": 4,
+          "Reg_No": 722,
+          "Reg_Date": "09-05-2021",
+          "First Party Name": "ROY GRIFFIN",
+          "Second Party Name": "JILL JONES",
+          "Property Address": "House No. 45-B, Sector 21",
+          "Area": "125 Sq. Meter",
+          "Deed Type": "LEASE, LEASE UPTO 5 YEARS",
+          "Property Type": "Residential",
+          "SRO": "SRO1",
+          "Locality": "Arjun Nagar",
+          "Registration Year": 2021,
+          "Property ID": "99445112"
+        }
+      },
+      "66587625": {
+        "source": "urban",
+        "data": {
+          "S_No_": 5,
+          "Reg_No": 757,
+          "Reg_Date": "05-01-2021",
+          "First Party Name": "DAVID GILMORE DVM",
+          "Second Party Name": "DR. AMANDA MAY",
+          "Property Address": "House No. 51-D, Rajpur",
+          "Area": "44 Sq. Yard",
+          "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+          "Property Type": "Agricultural",
+          "SRO": "SRO3",
+          "Locality": "Arjun Nagar",
+          "Registration Year": 2021,
+          "Property ID": "66587625"
+        }
+      },
+      "53165305": {
+        "source": "urban",
+        "data": {
+          "S_No_": 6,
+          "Reg_No": 852,
+          "Reg_Date": "26-01-2021",
+          "First Party Name": "JOSHUA FULLER",
+          "Second Party Name": "CHRISTINE MITCHELL",
+          "Property Address": "House No. 18-B, Sector 21",
+          "Area": "217 Sq. Yard",
+          "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+          "Property Type": "Residential",
+          "SRO": "SRO1",
+          "Locality": "Sector 21",
+          "Registration Year": 2021,
+          "Property ID": "53165305"
+        }
+      },
+      "79451629": {
+        "source": "urban",
+        "data": {
+          "S_No_": 7,
+          "Reg_No": 675,
+          "Reg_Date": "22-03-2025",
+          "First Party Name": "THOMAS ROSS",
+          "Second Party Name": "NATHAN CAMPBELL",
+          "Property Address": "House No. 69-D, Rajpur",
+          "Area": "167 Sq. Meter",
+          "Deed Type": "GIFT, GIFT WITH IN MC AREA",
+          "Property Type": "Agricultural",
+          "SRO": "SRO2",
+          "Locality": "Rajpur",
+          "Registration Year": 2025,
+          "Property ID": "79451629"
+        }
+      },
+      "86033552": {
+        "source": "urban",
+        "data": {
+          "S_No_": 8,
+          "Reg_No": 230,
+          "Reg_Date": "18-08-2021",
+          "First Party Name": "BLAKE WALKER",
+          "Second Party Name": "JOSEPH WILLIAMS",
+          "Property Address": "House No. 15-A, Green Park",
+          "Area": "144 Sq. Yard",
+          "Deed Type": "GIFT, GIFT WITH IN MC AREA",
+          "Property Type": "Commercial",
+          "SRO": "SRO2",
+          "Locality": "Rajpur",
+          "Registration Year": 2021,
+          "Property ID": "86033552"
+        }
+      },
+      "91880424": {
+        "source": "urban",
+        "data": {
+          "S_No_": 9,
+          "Reg_No": 437,
+          "Reg_Date": "15-05-2020",
+          "First Party Name": "REBECCA GIBSON",
+          "Second Party Name": "ANTHONY WRIGHT",
+          "Property Address": "House No. 100-C, Arjun Nagar",
+          "Area": "157 Sq. Feet",
+          "Deed Type": "LEASE, LEASE UPTO 5 YEARS",
+          "Property Type": "Residential",
+          "SRO": "SRO3",
+          "Locality": "Rajpur",
+          "Registration Year": 2020,
+          "Property ID": "91880424"
+        }
+      },
+      "10759947": {
+        "source": "urban",
+        "data": {
+          "S_No_": 10,
+          "Reg_No": 302,
+          "Reg_Date": "08-03-2022",
+          "First Party Name": "BRANDY STUART",
+          "Second Party Name": "TAYLOR LOVE",
+          "Property Address": "House No. 78-B, Rajpur",
+          "Area": "83 Sq. Meter",
+          "Deed Type": "LEASE, LEASE UPTO 5 YEARS",
+          "Property Type": "Commercial",
+          "SRO": "SRO1",
+          "Locality": "Rajpur",
+          "Registration Year": 2022,
+          "Property ID": "10759947"
+        }
+      },
+      "13474537": {
+        "source": "urban",
+        "data": {
+          "S_No_": 11,
+          "Reg_No": 322,
+          "Reg_Date": "14-09-2020",
+          "First Party Name": "RYAN BELL",
+          "Second Party Name": "KATHRYN FORD",
+          "Property Address": "House No. 78-A, Green Park",
+          "Area": "242 Sq. Feet",
+          "Deed Type": "LEASE, LEASE UPTO 5 YEARS",
+          "Property Type": "Industrial",
+          "SRO": "SRO3",
+          "Locality": "Green Park",
+          "Registration Year": 2020,
+          "Property ID": "13474537"
+        }
+      },
+      "30846795": {
+        "source": "urban",
+        "data": {
+          "S_No_": 12,
+          "Reg_No": 797,
+          "Reg_Date": "14-01-2021",
+          "First Party Name": "CARLOS WELCH",
+          "Second Party Name": "AUDREY KENNEDY",
+          "Property Address": "House No. 150-B, Rajpur",
+          "Area": "101 Sq. Meter",
+          "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+          "Property Type": "Residential",
+          "SRO": "SRO3",
+          "Locality": "Green Park",
+          "Registration Year": 2021,
+          "Property ID": "30846795"
+        }
+      },
+      "54200413": {
+        "source": "urban",
+        "data": {
+          "S_No_": 13,
+          "Reg_No": 338,
+          "Reg_Date": "23-07-2023",
+          "First Party Name": "SHARON ROBINSON",
+          "Second Party Name": "MARC CONTRERAS",
+          "Property Address": "House No. 17-A, Arjun Nagar",
+          "Area": "241 Sq. Yard",
+          "Deed Type": "LEASE, LEASE UPTO 5 YEARS",
+          "Property Type": "Agricultural",
+          "SRO": "SRO3",
+          "Locality": "Arjun Nagar",
+          "Registration Year": 2023,
+          "Property ID": "54200413"
+        }
+      },
+      "89277555": {
+        "source": "urban",
+        "data": {
+          "S_No_": 14,
+          "Reg_No": 648,
+          "Reg_Date": "26-11-2023",
+          "First Party Name": "JAMES JENSEN",
+          "Second Party Name": "WILLIAM LOGAN",
+          "Property Address": "House No. 261-A, Sector 21",
+          "Area": "160 Sq. Meter",
+          "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+          "Property Type": "Industrial",
+          "SRO": "SRO4",
+          "Locality": "Sector 21",
+          "Registration Year": 2023,
+          "Property ID": "89277555"
+        }
+      },
+      "49521685": {
+        "source": "urban",
+        "data": {
+          "S_No_": 15,
+          "Reg_No": 710,
+          "Reg_Date": "22-06-2020",
+          "First Party Name": "KAREN KELLEY",
+          "Second Party Name": "AMY WHITE",
+          "Property Address": "House No. 241-A, Rajpur",
+          "Area": "105 Sq. Yard",
+          "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+          "Property Type": "Residential",
+          "SRO": "SRO4",
+          "Locality": "Sector 21",
+          "Registration Year": 2020,
+          "Property ID": "49521685"
+        }
+      },
+      "13899638": {
+        "source": "urban",
+        "data": {
+          "S_No_": 16,
+          "Reg_No": 168,
+          "Reg_Date": "08-02-2025",
+          "First Party Name": "KEVIN HERNANDEZ",
+          "Second Party Name": "JILLIAN OLSON",
+          "Property Address": "House No. 274-A, Green Park",
+          "Area": "228 Sq. Meter",
+          "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+          "Property Type": "Industrial",
+          "SRO": "SRO1",
+          "Locality": "Rajpur",
+          "Registration Year": 2025,
+          "Property ID": "13899638"
+        }
+      },
+      "41701095": {
+        "source": "urban",
+        "data": {
+          "S_No_": 17,
+          "Reg_No": 60,
+          "Reg_Date": "04-02-2023",
+          "First Party Name": "ASHLEY RICHARDSON",
+          "Second Party Name": "CHARLES SCOTT",
+          "Property Address": "House No. 281-B, Rajpur",
+          "Area": "90 Sq. Meter",
+          "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+          "Property Type": "Industrial",
+          "SRO": "SRO2",
+          "Locality": "Green Park",
+          "Registration Year": 2023,
+          "Property ID": "41701095"
+        }
+      },
+      "73565403": {
+        "source": "urban",
+        "data": {
+          "S_No_": 18,
+          "Reg_No": 740,
+          "Reg_Date": "15-10-2022",
+          "First Party Name": "CHAD WOLFE",
+          "Second Party Name": "HUNTER REYES",
+          "Property Address": "House No. 245-A, Sector 21",
+          "Area": "97 Sq. Yard",
+          "Deed Type": "RECTIFICATION DEED, RECTIFICATION DEED IMMOVABLE",
+          "Property Type": "Agricultural",
+          "SRO": "SRO3",
+          "Locality": "Green Park",
+          "Registration Year": 2022,
+          "Property ID": "73565403"
+        }
+      },
+      "49813375": {
+        "source": "urban",
+        "data": {
+          "S_No_": 19,
+          "Reg_No": 323,
+          "Reg_Date": "12-03-2025",
+          "First Party Name": "DAVID MONTOYA",
+          "Second Party Name": "WILLIAM HUDSON",
+          "Property Address": "House No. 285-D, Sector 21",
+          "Area": "62 Sq. Meter",
+          "Deed Type": "SALE, SALE WITHIN MC AREA",
+          "Property Type": "Commercial",
+          "SRO": "SRO1",
+          "Locality": "Green Park",
+          "Registration Year": 2025,
+          "Property ID": "49813375"
+        }
+      },
+      "94269301": {
+        "source": "urban",
+        "data": {
+          "S_No_": 20,
+          "Reg_No": 104,
+          "Reg_Date": "02-08-2024",
+          "First Party Name": "LAUREN JACKSON",
+          "Second Party Name": "DANIELLE POPE",
+          "Property Address": "House No. 51-C, Green Park",
+          "Area": "68 Sq. Feet",
+          "Deed Type": "GIFT, GIFT WITH IN MC AREA",
+          "Property Type": "Industrial",
+          "SRO": "SRO4",
+          "Locality": "Sector 21",
+          "Registration Year": 2024,
+          "Property ID": "94269301"
+        }
+      },
+      "32672352": {
+        "source": "rural",
+        "data": {
+          "ID": "32672352",
+          "S_No_": 1,
+          "State": "Delhi",
+          "District": "South East Delhi",
+          "Division": "Greater Kailash",
+          "Village": "Alaknanda",
+          "Khasra No": "41",
+          "Area": "2656 sq.ft.",
+          "Property Value": "\u20b911,00,000",
+          "Encumbrance Status": "Under Dispute",
+          "Name": "Vikram, son of Pratap",
+          "Address": "Alaknanda village, Part-4/12",
+          "Property ID": "32672352"
+        }
+      },
+      "77791310": {
+        "source": "rural",
+        "data": {
+          "ID": "77791310",
+          "S_No_": 2,
+          "State": "Delhi",
+          "District": "Shahdara",
+          "Division": "Shahdara",
+          "Village": "Dilshad Garden",
+          "Khasra No": "129",
+          "Property Type": "Mixed Use",
+          "Registration Date": "21-01-2021",
+          "Area": "4224 sq.ft.",
+          "Property Value": "\u20b937,00,000",
+          "Encumbrance Status": "Under Dispute",
+          "Name": "Vikram, son of Pratap",
+          "Address": "Dilshad Garden village, Part-4/12",
+          "Property ID": "77791310"
+        }
+      },
+      "23761559": {
+        "source": "rural",
+        "data": {
+          "ID": "23761559",
+          "S_No_": 3,
+          "State": "Delhi",
+          "District": "New Delhi",
+          "Division": "Connaught Place",
+          "Village": "Janpath",
+          "Khasra No": "14",
+          "Property Type": "Agricultural",
+          "Registration Date": "03-03-2011",
+          "Area": "2335 sq.ft.",
+          "Property Value": "\u20b911,00,000",
+          "Encumbrance Status": "Government Lien",
+          "Name": "Hatkesh, Pemraj son of Gurgul",
+          "Address": "Janpath village, Part-2/9",
+          "Property ID": "23761559"
+        }
+      },
+      "97061225": {
+        "source": "rural",
+        "data": {
+          "ID": "97061225",
+          "S_No_": 4,
+          "State": "Delhi",
+          "District": "East Delhi",
+          "Division": "Vivek Vihar",
+          "Village": "Krishna Nagar",
+          "Khasra No": "63",
+          "Property Type": "Agricultural",
+          "Registration Date": "14-05-2014",
+          "Area": "4467 sq.ft.",
+          "Property Value": "\u20b912,00,000",
+          "Encumbrance Status": "Government Lien",
+          "Name": "Hatkesh, Pemraj son of Gurgul",
+          "Address": "Krishna Nagar village, Part-2/9",
+          "Property ID": "97061225"
+        }
+      },
+      "35132735": {
+        "source": "rural",
+        "data": {
+          "ID": "35132735",
+          "S_No_": 5,
+          "State": "Delhi",
+          "District": "West Delhi",
+          "Division": "Rajouri Garden",
+          "Village": "Tagore Garden",
+          "Khasra No": "132",
+          "Property Type": "Commercial",
+          "Registration Date": "17-05-2013",
+          "Area": "4224 sq.ft.",
+          "Property Value": "\u20b944,00,000",
+          "Encumbrance Status": "Partially Encumbered",
+          "Name": "Bhija, son of Inder",
+          "Address": "Tagore Garden village, Part-1/3",
+          "Property ID": "35132735"
+        }
+      },
+      "96014706": {
+        "source": "rural",
+        "data": {
+          "ID": "96014706",
+          "S_No_": 6,
+          "State": "Delhi",
+          "District": "South Delhi",
+          "Division": "Defence Colony",
+          "Village": "Jangpura",
+          "Khasra No": "33",
+          "Property Type": "Mixed Use",
+          "Registration Date": "31-12-2014",
+          "Area": "2583 sq.ft.",
+          "Property Value": "\u20b911,00,000",
+          "Encumbrance Status": "Partially Encumbered",
+          "Name": "Anil, Sunil, sons of Rajendra",
+          "Address": "Jangpura village, Part-2/6",
+          "Property ID": "96014706"
+        }
+      },
+      "37818450": {
+        "source": "rural",
+        "data": {
+          "ID": "37818450",
+          "S_No_": 7,
+          "State": "Delhi",
+          "District": "South East Delhi",
+          "Division": "Jamia Nagar",
+          "Village": "Okhla",
+          "Khasra No": "132",
+          "Property Type": "Commercial",
+          "Registration Date": "24-08-2018",
+          "Area": "359 sq.ft.",
+          "Property Value": "\u20b938,00,000",
+          "Name": "Hatkesh, Pemraj son of Gurgul",
+          "Address": "Okhla village, Part-2/9",
+          "Property ID": "37818450"
+        }
+      },
+      "56744133": {
+        "source": "rural",
+        "data": {
+          "ID": "56744133",
+          "S_No_": 8,
+          "State": "Delhi",
+          "District": "East Delhi",
+          "Division": "Vivek Vihar",
+          "Village": "Krishna Nagar",
+          "Khasra No": "124",
+          "Property Type": "Agricultural",
+          "Registration Date": "17-07-2010",
+          "Area": "2335 sq.ft.",
+          "Property Value": "\u20b911,00,000",
+          "Encumbrance Status": "Mortgaged",
+          "Name": "Vikram, son of Pratap",
+          "Address": "Krishna Nagar village, Part-4/12",
+          "Property ID": "56744133"
+        }
+      },
+      "63930718": {
+        "source": "rural",
+        "data": {
+          "ID": "63930718",
+          "S_No_": 9,
+          "State": "Delhi",
+          "District": "North East Delhi",
+          "Division": "Karawal Nagar",
+          "Village": "Khajuri Khas",
+          "Khasra No": "21",
+          "Property Type": "Industrial",
+          "Registration Date": "20-02-2012",
+          "Area": "4470 sq.ft.",
+          "Property Value": "\u20b938,00,000",
+          "Encumbrance Status": "Government Lien",
+          "Name": "Ramesh, Suresh sons of Mahesh",
+          "Address": "Khajuri Khas village, Part-3/9",
+          "Property ID": "63930718"
+        }
+      },
+      "24850721": {
+        "source": "rural",
+        "data": {
+          "ID": "24850721",
+          "S_No_": 10,
+          "State": "Delhi",
+          "District": "Central Delhi",
+          "Division": "Paharganj",
+          "Village": "Ram Nagar",
+          "Khasra No": "123",
+          "Property Type": "Residential",
+          "Registration Date": "05-06-2020",
+          "Area": "4470 sq.ft.",
+          "Property Value": "\u20b916,00,000",
+          "Encumbrance Status": "Under Dispute",
+          "Name": "Prakash, Aakash, sons of Ramesh",
+          "Address": "Ram Nagar village, Part-3/8",
+          "Property ID": "24850721"
+        }
+      },
+      "71997163": {
+        "source": "rural",
+        "data": {
+          "ID": "71997163",
+          "S_No_": 11,
+          "State": "Delhi",
+          "District": "West Delhi",
+          "Division": "Tilak Nagar",
+          "Village": "Vikaspuri",
+          "Khasra No": "44",
+          "Property Type": "Agricultural",
+          "Registration Date": "03-04-2016",
+          "Area": "2656 sq.ft.",
+          "Property Value": "\u20b911,00,000",
+          "Encumbrance Status": "Government Lien",
+          "Name": "Prakash, Aakash, sons of Ramesh",
+          "Address": "Vikaspuri village, Part-3/8",
+          "Property ID": "71997163"
+        }
+      },
+      "52635278": {
+        "source": "rural",
+        "data": {
+          "ID": "52635278",
+          "S_No_": 12,
+          "State": "Delhi",
+          "District": "West Delhi",
+          "Division": "Rajouri Garden",
+          "Village": "Subhash Nagar",
+          "Khasra No": "133",
+          "Property Type": "Agricultural",
+          "Registration Date": "15-03-2022",
+          "Area": "853 sq.ft.",
+          "Property Value": "\u20b911,00,000",
+          "Name": "Kishan, Suryan, sons of Chandan",
+          "Address": "Subhash Nagar village, Part-1/3",
+          "Property ID": "52635278"
+        }
+      },
+      "45376658": {
+        "source": "rural",
+        "data": {
+          "ID": "45376658",
+          "S_No_": 13,
+          "State": "Delhi",
+          "District": "New Delhi",
+          "Division": "Chanakyapuri",
+          "Village": "Moti Bagh",
+          "Khasra No": "47",
+          "Property Type": "Commercial",
+          "Registration Date": "03-07-2021",
+          "Area": "359 sq.ft.",
+          "Property Value": "\u20b948,00,000",
+          "Encumbrance Status": "Partially Encumbered",
+          "Name": "Vikram, son of Pratap",
+          "Address": "Moti Bagh village, Part-4/12",
+          "Property ID": "45376658"
+        }
+      },
+      "54418607": {
+        "source": "rural",
+        "data": {
+          "ID": "54418607",
+          "S_No_": 14,
+          "State": "Delhi",
+          "District": "South East Delhi",
+          "Division": "Greater Kailash",
+          "Village": "East of Kailash",
+          "Khasra No": "143",
+          "Property Type": "Commercial",
+          "Registration Date": "13-09-2023",
+          "Area": "4224 sq.ft.",
+          "Property Value": "\u20b911,00,000",
+          "Encumbrance Status": "Mortgaged",
+          "Name": "Prakash, Aakash, sons of Ramesh",
+          "Address": "East of Kailash village, Part-3/8",
+          "Property ID": "54418607"
+        }
+      },
+      "37153378": {
+        "source": "rural",
+        "data": {
+          "ID": "37153378",
+          "S_No_": 15,
+          "State": "Delhi",
+          "District": "North East Delhi",
+          "Division": "Seelampur",
+          "Village": "Jafrabad",
+          "Khasra No": "148",
+          "Property Type": "Mixed Use",
+          "Registration Date": "27-06-2013",
+          "Area": "2656 sq.ft.",
+          "Property Value": "\u20b948,00,000",
+          "Encumbrance Status": "Partially Encumbered",
+          "Name": "Prakash, Aakash, sons of Ramesh",
+          "Address": "Jafrabad village, Part-3/8",
+          "Property ID": "37153378"
+        }
+      },
+      "83631638": {
+        "source": "rural",
+        "data": {
+          "ID": "83631638",
+          "S_No_": 16,
+          "State": "Delhi",
+          "District": "East Delhi",
+          "Division": "Shahdara",
+          "Village": "Dilshad Garden",
+          "Khasra No": "40",
+          "Property Type": "Residential",
+          "Registration Date": "12-05-2015",
+          "Area": "853 sq.ft.",
+          "Property Value": "\u20b937,00,000",
+          "Name": "Gopichand, Hemchand, sons of Kishori",
+          "Address": "Dilshad Garden village",
+          "Property ID": "83631638"
+        }
+      },
+      "35909512": {
+        "source": "rural",
+        "data": {
+          "ID": "35909512",
+          "S_No_": 17,
+          "State": "Delhi",
+          "District": "Central Delhi",
+          "Division": "Paharganj",
+          "Village": "Minto Road",
+          "Khasra No": "27",
+          "Property Type": "Commercial",
+          "Registration Date": "16-11-2017",
+          "Area": "3197 sq.ft.",
+          "Property Value": "\u20b912,00,000",
+          "Encumbrance Status": "Government Lien",
+          "Name": "Anil, Sunil, sons of Rajendra",
+          "Address": "Minto Road village, Part-2/6",
+          "Property ID": "35909512"
+        }
+      },
+      "25147661": {
+        "source": "rural",
+        "data": {
+          "ID": "25147661",
+          "S_No_": 18,
+          "State": "Delhi",
+          "District": "East Delhi",
+          "Division": "Shahdara",
+          "Village": "Kondli",
+          "Khasra No": "50",
+          "Property Type": "Commercial",
+          "Registration Date": "28-11-2019",
+          "Area": "2656 sq.ft.",
+          "Property Value": "\u20b948,00,000",
+          "Encumbrance Status": "Partially Encumbered",
+          "Name": "Deepak, son of Jagdish",
+          "Address": "Kondli village, Part-5/15",
+          "Property ID": "25147661"
+        }
+      },
+      "83902735": {
+        "source": "rural",
+        "data": {
+          "ID": "83902735",
+          "S_No_": 19,
+          "State": "Delhi",
+          "District": "New Delhi",
+          "Division": "Chanakyapuri",
+          "Village": "Moti Bagh",
+          "Khasra No": "130",
+          "Property Type": "Mixed Use",
+          "Registration Date": "06-07-2016",
+          "Area": "4467 sq.ft.",
+          "Property Value": "\u20b948,00,000",
+          "Encumbrance Status": "Under Dispute",
+          "Name": "Gopichand, Hemchand, sons of Kishori",
+          "Address": "Moti Bagh village",
+          "Property ID": "83902735"
+        }
+      },
+      "84546611": {
+        "source": "rural",
+        "data": {
+          "ID": "84546611",
+          "S_No_": 20,
+          "State": "Delhi",
+          "District": "South Delhi",
+          "Division": "Mehrauli",
+          "Village": "Vasant Kunj",
+          "Khasra No": "97",
+          "Property Type": "Residential",
+          "Registration Date": "01-05-2018",
+          "Area": "4470 sq.ft.",
+          "Property Value": "\u20b911,00,000",
+          "Name": "Deepak, son of Jagdish",
+          "Address": "Vasant Kunj village, Part-5/15",
+          "Property ID": "84546611"
+        }
+      },
+      "68014896": {
+        "source": "encumbrance",
+        "data": {
+          "Operating Revenue": "Over \u20b9691 crore",
+          "Authorized Share Capital": "\u20b93572 crore",
+          "Paid-up Capital": "\u20b91364 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "Zensar Technologies",
+          "CIN": "L20999MH1663",
+          "Property ID": "68014896"
+        }
+      },
+      "55493702": {
+        "source": "encumbrance",
+        "data": {
+          "Operating Revenue": "Over \u20b9788 crore",
+          "Authorized Share Capital": "\u20b92812 crore",
+          "Paid-up Capital": "\u20b94565 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "Capgemini",
+          "CIN": "U59665TN6671",
+          "Property ID": "55493702"
+        }
+      },
+      "20686166": {
+        "source": "encumbrance",
+        "data": {
+          "Operating Revenue": "Over \u20b9577 crore",
+          "Authorized Share Capital": "\u20b92043 crore",
+          "Paid-up Capital": "\u20b91489 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "IBM India",
+          "CIN": "U84604KA9255",
+          "Property ID": "20686166"
+        }
+      },
+      "50438906": {
+        "source": "encumbrance",
+        "data": {
+          "Operating Revenue": "Over \u20b9872 crore",
+          "Authorized Share Capital": "\u20b93980 crore",
+          "Paid-up Capital": "\u20b94363 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "L&T Infotech",
+          "CIN": "U93509TN5588",
+          "Property ID": "50438906"
+        }
+      },
+      "82527939": {
+        "source": "encumbrance",
+        "data": {
+          "Operating Revenue": "Over \u20b9510 crore",
+          "Authorized Share Capital": "\u20b92565 crore",
+          "Paid-up Capital": "\u20b93112 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "HCL Technologies",
+          "CIN": "U36377KA6571",
+          "Property ID": "82527939"
+        }
+      },
+      "60642161": {
+        "source": "encumbrance",
+        "data": {
+          "Operating Revenue": "Over \u20b9634 crore",
+          "Authorized Share Capital": "\u20b93720 crore",
+          "Paid-up Capital": "\u20b91533 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "Infosys Limited",
+          "CIN": "U59931DL7704",
+          "Property ID": "60642161"
+        }
+      },
+      "34184162": {
+        "source": "encumbrance",
+        "data": {
+          "Operating Revenue": "Over \u20b9994 crore",
+          "Authorized Share Capital": "\u20b94524 crore",
+          "Paid-up Capital": "\u20b93504 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "Tech Mahindra",
+          "CIN": "U18587TN7662",
+          "Property ID": "34184162"
+        }
+      },
+      "13245851": {
+        "source": "encumbrance",
+        "data": {
+          "Operating Revenue": "Over \u20b9739 crore",
+          "Authorized Share Capital": "\u20b94521 crore",
+          "Paid-up Capital": "\u20b93811 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "Oracle India",
+          "CIN": "L43658MH8874",
+          "Property ID": "13245851"
+        }
+      },
+      "38482607": {
+        "source": "encumbrance",
+        "data": {
+          "Operating Revenue": "Over \u20b9611 crore",
+          "Authorized Share Capital": "\u20b92955 crore",
+          "Paid-up Capital": "\u20b92781 crore",
+          "Debut Loan Remaining": "\u20b90",
+          "Name": "Tech Mahindra",
+          "CIN": "L99713MH9151",
+          "Property ID": "38482607"
+        }
+      }
+    },
+    "address_map": {
+      "house no_ 106-b, sector 21": [
+        "23809039"
+      ],
+      "house no_ 205-c, arjun nagar": [
+        "31058920"
+      ],
+      "house no_ 214-d, rajpur": [
+        "43685243"
+      ],
+      "house no_ 45-b, sector 21": [
+        "99445112"
+      ],
+      "house no_ 51-d, rajpur": [
+        "66587625"
+      ],
+      "house no_ 18-b, sector 21": [
+        "53165305"
+      ],
+      "house no_ 69-d, rajpur": [
+        "79451629"
+      ],
+      "house no_ 15-a, green park": [
+        "86033552"
+      ],
+      "house no_ 100-c, arjun nagar": [
+        "91880424"
+      ],
+      "house no_ 78-b, rajpur": [
+        "10759947"
+      ],
+      "house no_ 78-a, green park": [
+        "13474537"
+      ],
+      "house no_ 150-b, rajpur": [
+        "30846795"
+      ],
+      "house no_ 17-a, arjun nagar": [
+        "54200413"
+      ],
+      "house no_ 261-a, sector 21": [
+        "89277555"
+      ],
+      "house no_ 241-a, rajpur": [
+        "49521685"
+      ],
+      "house no_ 274-a, green park": [
+        "13899638"
+      ],
+      "house no_ 281-b, rajpur": [
+        "41701095"
+      ],
+      "house no_ 245-a, sector 21": [
+        "73565403"
+      ],
+      "house no_ 285-d, sector 21": [
+        "49813375"
+      ],
+      "house no_ 51-c, green park": [
+        "94269301"
+      ],
+      "alaknanda village, part-4_12": [
+        "32672352"
+      ],
+      "dilshad garden village, part-4_12": [
+        "77791310"
+      ],
+      "janpath village, part-2_9": [
+        "23761559"
+      ],
+      "krishna nagar village, part-2_9": [
+        "97061225"
+      ],
+      "tagore garden village, part-1_3": [
+        "35132735"
+      ],
+      "jangpura village, part-2_6": [
+        "96014706"
+      ],
+      "okhla village, part-2_9": [
+        "37818450"
+      ],
+      "krishna nagar village, part-4_12": [
+        "56744133"
+      ],
+      "khajuri khas village, part-3_9": [
+        "63930718"
+      ],
+      "ram nagar village, part-3_8": [
+        "24850721"
+      ],
+      "vikaspuri village, part-3_8": [
+        "71997163"
+      ],
+      "subhash nagar village, part-1_3": [
+        "52635278"
+      ],
+      "moti bagh village, part-4_12": [
+        "45376658"
+      ],
+      "east of kailash village, part-3_8": [
+        "54418607"
+      ],
+      "jafrabad village, part-3_8": [
+        "37153378"
+      ],
+      "dilshad garden village": [
+        "83631638"
+      ],
+      "minto road village, part-2_6": [
+        "35909512"
+      ],
+      "kondli village, part-5_15": [
+        "25147661"
+      ],
+      "moti bagh village": [
+        "83902735"
+      ],
+      "vasant kunj village, part-5_15": [
+        "84546611"
+      ]
+    },
+    "name_map": {
+      "nicole burgess": [
+        "23809039"
+      ],
+      "morgan hogan": [
+        "31058920"
+      ],
+      "suzanne brown": [
+        "43685243"
+      ],
+      "roy griffin": [
+        "99445112"
+      ],
+      "david gilmore dvm": [
+        "66587625"
+      ],
+      "joshua fuller": [
+        "53165305"
+      ],
+      "thomas ross": [
+        "79451629"
+      ],
+      "blake walker": [
+        "86033552"
+      ],
+      "rebecca gibson": [
+        "91880424"
+      ],
+      "brandy stuart": [
+        "10759947"
+      ],
+      "ryan bell": [
+        "13474537"
+      ],
+      "carlos welch": [
+        "30846795"
+      ],
+      "sharon robinson": [
+        "54200413"
+      ],
+      "james jensen": [
+        "89277555"
+      ],
+      "karen kelley": [
+        "49521685"
+      ],
+      "kevin hernandez": [
+        "13899638"
+      ],
+      "ashley richardson": [
+        "41701095"
+      ],
+      "chad wolfe": [
+        "73565403"
+      ],
+      "david montoya": [
+        "49813375"
+      ],
+      "lauren jackson": [
+        "94269301"
+      ],
+      "vikram, son of pratap": [
+        "32672352",
+        "77791310",
+        "56744133",
+        "45376658"
+      ],
+      "hatkesh, pemraj son of gurgul": [
+        "23761559",
+        "97061225",
+        "37818450"
+      ],
+      "bhija, son of inder": [
+        "35132735"
+      ],
+      "anil, sunil, sons of rajendra": [
+        "96014706",
+        "35909512"
+      ],
+      "ramesh, suresh sons of mahesh": [
+        "63930718"
+      ],
+      "prakash, aakash, sons of ramesh": [
+        "24850721",
+        "71997163",
+        "54418607",
+        "37153378"
+      ],
+      "kishan, suryan, sons of chandan": [
+        "52635278"
+      ],
+      "gopichand, hemchand, sons of kishori": [
+        "83631638",
+        "83902735"
+      ],
+      "deepak, son of jagdish": [
+        "25147661",
+        "84546611"
+      ],
+      "zensar technologies": [
+        "68014896",
+        "68014896"
+      ],
+      "capgemini": [
+        "55493702",
+        "55493702"
+      ],
+      "ibm india": [
+        "20686166",
+        "20686166"
+      ],
+      "l&t infotech": [
+        "50438906",
+        "50438906"
+      ],
+      "hcl technologies": [
+        "82527939",
+        "82527939"
+      ],
+      "infosys limited": [
+        "60642161",
+        "60642161"
+      ],
+      "tech mahindra": [
+        "34184162",
+        "34184162",
+        "38482607",
+        "38482607"
+      ],
+      "oracle india": [
+        "13245851",
+        "13245851"
+      ]
+    }
+  }
+}

@@ -1,10 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Bot, ChevronLeft, LogOut, MessageSquare } from "lucide-react"
-import { GoogleGenerativeAI } from "@google/generative-ai"
 
 // UI Components
 import { Button } from "@/components/ui/button"
@@ -15,8 +14,8 @@ import { SplineBackground } from "@/app/components/SplineBackground"
 // Firebase
 import { useAuth } from "@/context/auth-context"
 
-// Initialize Google Gemini API
-const genAI = new GoogleGenerativeAI("AIzaSyCGcOxCt0kgHNSaqOnBGsGA9LiNEfnEWZs");
+// Gemini API Key
+const GEMINI_API_KEY = "AIzaSyCGcOxCt0kgHNSaqOnBGsGA9LiNEfnEWZs";
 
 export default function PropBotPage() {
   const router = useRouter()
@@ -24,18 +23,7 @@ export default function PropBotPage() {
   const [message, setMessage] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [chatHistory, setChatHistory] = useState<Array<{type: 'user' | 'bot', content: string}>>([])
-  const [model, setModel] = useState<any>(null)
-
-  useEffect(() => {
-    // Initialize the Gemini model when component mounts
-    const initModel = async () => {
-      const geminiModel = genAI.getGenerativeModel({ model: "gemini-pro" });
-      setModel(geminiModel);
-    }
-    
-    initModel();
-  }, []);
-
+  
   // Animation variants
   const containerAnimation = {
     hidden: { opacity: 0 },
@@ -53,26 +41,44 @@ export default function PropBotPage() {
   }
 
   const handleSendMessage = async () => {
-    if (!message.trim() || !model) return;
+    if (!message.trim()) return;
     
     // Add user message to chat
     setChatHistory([...chatHistory, { type: 'user', content: message }]);
     setIsLoading(true);
     
     try {
-      // Define the prompt with context about property legal consultancy
-      const prompt = `You are a property legal consultant. Please provide accurate information about property laws, regulations, and legal advice regarding: ${message}
-      Focus on providing helpful information about property matters, real estate laws, ownership rights, and relevant legal considerations.`;
+      // Prepare the request payload
+      const payload = {
+        contents: [{
+          parts: [{
+            text: `You are a property legal consultant. Please provide accurate information about property laws, regulations, and legal advice regarding: ${message}. Focus on providing helpful information about property matters, real estate laws, ownership rights, and relevant legal considerations.`
+          }]
+        }]
+      };
       
-      // Send to Gemini API
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const textResponse = response.text();
+      // Make the API call directly
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload)
+        }
+      );
+      
+      const data = await response.json();
+      
+      // Extract the response text
+      const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 
+        "Sorry, I couldn't generate a response. Please try again.";
       
       // Add AI response to chat
       setChatHistory(prev => [...prev, { 
         type: 'bot', 
-        content: textResponse 
+        content: botResponse 
       }]);
     } catch (error) {
       console.error("Error getting response from Gemini:", error);

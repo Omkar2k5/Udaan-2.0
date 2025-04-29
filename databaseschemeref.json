@@ -1,0 +1,92 @@
+{
+    "input": {
+      "rural": {
+        "districts": [ "District Name", ... ],
+        "divisionsByDistrict": {
+          "District Name": [ "Division Name", ... ]
+        },
+        "villagesByDivision": {
+          "District Name": {
+            "Division Name": [ "Village Name", ... ]
+          }
+        }
+      },
+      "urban": {
+        "SRO_ID": {
+          "name": "Region Name",
+          "localities": [ "Locality Name", ... ]
+        }
+      }
+    },
+    "output": {
+      "urban_outout": [
+        {
+          "S.No.": Number,
+          "Reg.No": Number,
+          "Reg.Date": "DD-MM-YYYY",
+          "First Party Name": "Person Name",
+          "Second Party Name": "Person Name",
+          "Property Address": "Full Address",
+          "Area": "Measurement (e.g., 125 Sq. Yard)",
+          "Deed Type": "Type of Deed",
+          "Property Type": "Type (Residential, Commercial, etc.)",
+          "SRO": "Sub-Registrar Office ID",
+          "Locality": "Area Name",
+          "Registration Year": Year,
+          "Property ID": "8-digit ID"
+        },
+        ...
+      ],
+      "rural_output": [
+        {
+          "ID": "Property ID",
+          "S.No.": Number,
+          "State": "State Name",
+          "District": "District Name",
+          "Division": "Division Name",
+          "Village": "Village Name",
+          "Khasra No": "Plot Identifier",
+          "Area": "Measurement (e.g., sq.ft.)",
+          "Property Type": "Usage Type",
+          "Registration Date": "DD-MM-YYYY",
+          "Property Value": "₹Amount",
+          "Encumbrance Status": "Status",
+          "Name": "Owner Name or Description",
+          "Address": "Formatted Address",
+          "Property ID": "8-digit ID"
+        },
+        ...
+      ],
+      "Enumbrance_companydata": {
+        "CIN": {
+          "encumbrance": {
+            "Operating Revenue": "Revenue Range",
+            "Authorized Share Capital": "₹Amount",
+            "Paid-up Capital": "₹Amount",
+            "Debut Loan Remaining": "₹Amount",
+            "Name": "Company Name",
+            "CIN": "Company Identifier",
+            "Property ID": "8-digit ID"
+          },
+          "company_details": {
+            "Name": "Company Name",
+            "CIN": "Company Identifier",
+            "Company Type": "Private/Public, Govt/Non-Govt",
+            "Registrar of Companies": "Registrar Info",
+            "Stock Listings": "NSE/BSE Info",
+            "Property ID": "8-digit ID"
+          }
+        },
+        ...
+      }
+    },
+    "Datalink": {
+      "property_id_map": {
+        "Property ID": {
+          "source": "urban | rural | company | encumbrance",
+          "data": { ...matching full data record... }
+        }
+      }
+    }
+  }
+  

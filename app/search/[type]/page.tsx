@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo, useCallback } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
@@ -14,7 +14,7 @@ import { ArrowLeft, Search, LogOut, Building, Trees, AlertCircle, Loader2, Squar
 import { useAuth } from "@/context/auth-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ParticleBackground } from "@/components/ui/particle-background"
-import { SplineBackground } from "@/components/ui/spline-background"
+import { SplineBackground } from "@/app/components/SplineBackground"
 import { db } from "@/lib/firebase"
 import { ref, get } from "firebase/database"
 
@@ -104,6 +104,28 @@ export default function SearchPage() {
     khasra: "",
   })
 
+  // Memoize fallback data to prevent recreating it on every render
+  const fallbackData = useMemo(() => ({
+    rural: {
+      districts: ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", "North West Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi"],
+      divisionsByDistrict: {
+        "Central Delhi": ["Civil Lines", "Karol Bagh", "Kotwali"]
+        // Add other divisions as needed
+      },
+      villagesByDivision: {
+        // Add villages as needed
+      }
+    },
+    urban: {
+      "SRI": { name: "Central-Kashmere Gate", localities: ["Kashmere Gate", "Ajmeri Gate*", "Darya Ganj", "Civil Lines*", "British India Colony*", "Curzon Road*", "Bahadur Shah Zafar Marg*"] },
+      "SRIII": { name: "Central-Asaf Ali Road", localities: ["Asaf Ali Road*", "Connaught Place Ext. C Zone", "Copernicus Marg", "Ajmal Khan Road", "Baba Kharak Singh Marg*", "Gole Market*"] },
+      "SRVIII": { name: "East-Geeta Colony", localities: ["Geeta Colony", "Jhilmil", "Jheel Kuranja", "Shastri Nagar", "Gandhi Nagar*", "L.M. Bundh Complex*"] },
+      "SRVIIIA": { name: "East-Preet Vihar", localities: ["Preet Vihar", "Vivek Vihar", "Karkardooma", "Dilshad Garden", "Ramprastha", "Mandoli"] },
+      "SRVII": { name: "New Delhi-INA", localities: ["INA Colony", "Jorbagh", "Lodhi Estate", "Kidwai Nagar", "Sarojini Nagar", "Kasturba Gandhi Marg"] }
+      // Add other SROs as needed
+    }
+  }), []);
+
   useEffect(() => {
     setIsMounted(true)
   }, [])
@@ -118,29 +140,7 @@ export default function SearchPage() {
     console.log('Component mounted. Starting data fetch setup...');
     
     // Timeout to prevent hanging indefinitely
-    const fetchTimeoutMs = 15000; // 15 seconds timeout
-    
-    // Initialize fallback data from delhi_locations.json
-    const fallbackData = {
-      rural: {
-        districts: ["Central Delhi", "East Delhi", "New Delhi", "North Delhi", "North East Delhi", "North West Delhi", "Shahdara", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi"],
-        divisionsByDistrict: {
-          "Central Delhi": ["Civil Lines", "Karol Bagh", "Kotwali"]
-          // Add other divisions as needed
-        },
-        villagesByDivision: {
-          // Add villages as needed
-        }
-      },
-      urban: {
-        "SRI": { name: "Central-Kashmere Gate", localities: ["Kashmere Gate", "Ajmeri Gate*", "Darya Ganj", "Civil Lines*", "British India Colony*", "Curzon Road*", "Bahadur Shah Zafar Marg*"] },
-        "SRIII": { name: "Central-Asaf Ali Road", localities: ["Asaf Ali Road*", "Connaught Place Ext. C Zone", "Copernicus Marg", "Ajmal Khan Road", "Baba Kharak Singh Marg*", "Gole Market*"] },
-        "SRVIII": { name: "East-Geeta Colony", localities: ["Geeta Colony", "Jhilmil", "Jheel Kuranja", "Shastri Nagar", "Gandhi Nagar*", "L.M. Bundh Complex*"] },
-        "SRVIIIA": { name: "East-Preet Vihar", localities: ["Preet Vihar", "Vivek Vihar", "Karkardooma", "Dilshad Garden", "Ramprastha", "Mandoli"] },
-        "SRVII": { name: "New Delhi-INA", localities: ["INA Colony", "Jorbagh", "Lodhi Estate", "Kidwai Nagar", "Sarojini Nagar", "Kasturba Gandhi Marg"] }
-        // Add other SROs as needed
-      }
-    };
+    const fetchTimeoutMs = 8000; // 8 seconds timeout
     
     const fetchData = async () => {
       // Check for db instance availability right before fetching
@@ -242,7 +242,7 @@ export default function SearchPage() {
     };
     
     // Process the fallback data
-    const processFallbackData = (data: any) => {
+    const processFallbackData = useCallback((data: any) => {
       console.log('Processing fallback data:', data);
       
       if (data.rural) {
@@ -277,7 +277,7 @@ export default function SearchPage() {
         console.log('Using fallback SROs:', sros);
         setSroOptions(sros);
       }
-    };
+    }, [selectedDistrict, selectedDivision]);
 
     fetchData();
   }, [isMounted]); // Depend only on isMounted
@@ -310,50 +310,50 @@ export default function SearchPage() {
     }
   }, [urbanFormData.sro, isUrban, locationData])
 
-  const handleUrbanChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setUrbanFormData({
-      ...urbanFormData,
+  const handleUrbanChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setUrbanFormData(prev => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    })
-  }
+    }))
+  }, []);
 
-  const handleRuralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRuralFormData({
-      ...ruralFormData,
+  const handleRuralChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setRuralFormData(prev => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    })
-  }
+    }))
+  }, []);
 
-  const handleUrbanSelectChange = (name: keyof UrbanFormData, value: string) => {
-    setUrbanFormData({
-      ...urbanFormData,
+  const handleUrbanSelectChange = useCallback((name: keyof UrbanFormData, value: string) => {
+    setUrbanFormData(prev => ({
+      ...prev,
       [name]: value,
-    })
-  }
+    }))
+  }, []);
 
-  const handleRuralSelectChange = (name: keyof RuralFormData, value: string) => {
+  const handleRuralSelectChange = useCallback((name: keyof RuralFormData, value: string) => {
     if (name === "district") {
       setSelectedDistrict(value)
-      setRuralFormData({
-        ...ruralFormData,
+      setRuralFormData(prev => ({
+        ...prev,
         [name]: value,
         division: "",
         village: "",
-      })
+      }))
     } else if (name === "division") {
       setSelectedDivision(value)
-      setRuralFormData({
-        ...ruralFormData,
+      setRuralFormData(prev => ({
+        ...prev,
         [name]: value,
         village: "",
-      })
+      }))
     } else {
-      setRuralFormData({
-        ...ruralFormData,
+      setRuralFormData(prev => ({
+        ...prev,
         [name]: value,
-      })
+      }))
     }
-  }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -370,32 +370,28 @@ export default function SearchPage() {
     router.push(`/results?${params}`)
   }
 
-  const containerVariants = {
+  // Simplified animation variant
+  const fadeIn = {
     hidden: { opacity: 0 },
-    visible: {
+    visible: { 
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
+      transition: { duration: 0.5 } 
     },
-  }
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1 },
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
-        <SplineBackground />
-        <div className="absolute top-4 right-4 z-20">
+      <div className="bg-black min-h-screen">
+        <div className="fixed inset-0 -z-10">
+          <SplineBackground />
+        </div>
+        <div className="fixed top-4 right-4 z-50">
           <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
             <LogOut className="h-4 w-4 mr-2" />
             Logout
           </Button>
         </div>
-        <div className="relative z-10 flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-screen">
           <div className="text-white text-center">
             <AlertCircle className="h-8 w-8 text-red-500 mx-auto mb-4" />
             <p className="text-red-500">{error}</p>
@@ -414,15 +410,17 @@ export default function SearchPage() {
 
   if (isDataLoading) {
     return (
-      <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
-        <SplineBackground />
-        <div className="absolute top-4 right-4 z-20">
+      <div className="bg-black min-h-screen">
+        <div className="fixed inset-0 -z-10">
+          <SplineBackground />
+        </div>
+        <div className="fixed top-4 right-4 z-50">
           <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
             <LogOut className="h-4 w-4 mr-2" />
             Logout
           </Button>
         </div>
-        <div className="relative z-10 flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-screen">
           <div className="text-white text-center">
             <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
             <p>Loading location data...</p>
@@ -433,24 +431,33 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black p-4 md:p-8 relative overflow-hidden">
-      <SplineBackground />
+    <div className="bg-black">
+      {/* Fixed background */}
+      <div className="fixed inset-0 -z-10">
+        <SplineBackground />
+      </div>
+      
       {/* Logout Button */}
-      <div className="absolute top-4 right-4 z-20">
+      <div className="fixed top-4 right-4 z-50">
         <Button variant="ghost" size="sm" onClick={logout} className="text-white hover:bg-white/10">
           <LogOut className="h-4 w-4 mr-2" />
           Logout
         </Button>
       </div>
 
-      <div className="relative z-10">
+      {/* Scrollable content wrapper */}
+      <div className="py-4 px-4 md:px-8">
         <Button variant="ghost" className="text-white mb-6" onClick={() => router.push("/property-type")}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Property Type Selection
         </Button>
 
-        <motion.div initial="hidden" animate="visible" variants={containerVariants} className="max-w-2xl mx-auto">
-          <motion.div variants={itemVariants}>
-            <Card className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl">
+        <div className="max-w-2xl mx-auto">
+          <motion.div 
+            initial="hidden" 
+            animate="visible" 
+            variants={fadeIn}
+            className="w-full">
+            <Card className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl mb-20">
               <CardHeader className="space-y-1">
                 <div className="flex items-center justify-center mb-2">
                   {isUrban ? (
@@ -475,7 +482,7 @@ export default function SearchPage() {
                   {/* Urban Fields */}
                   {isUrban ? (
                     <>
-                      <motion.div variants={itemVariants} className="space-y-2">
+                      <div className="space-y-2">
                         <Label htmlFor="sro" className="text-white">SRO</Label>
                         <Select
                           name="sro"
@@ -493,9 +500,9 @@ export default function SearchPage() {
                             ))}
                           </SelectContent>
                         </Select>
-                      </motion.div>
+                      </div>
 
-                      <motion.div variants={itemVariants} className="space-y-2">
+                      <div className="space-y-2">
                         <Label htmlFor="locality" className="text-white">Locality</Label>
                         <Select
                           name="locality"
@@ -514,9 +521,9 @@ export default function SearchPage() {
                             ))}
                           </SelectContent>
                         </Select>
-                      </motion.div>
+                      </div>
 
-                      <motion.div variants={itemVariants} className="space-y-2">
+                      <div className="space-y-2">
                         <Label htmlFor="reg_year" className="text-white">Registration Year</Label>
                         <Input
                           id="reg_year"
@@ -530,9 +537,9 @@ export default function SearchPage() {
                           max={new Date().getFullYear()}
                           required
                         />
-                      </motion.div>
+                      </div>
 
-                      <motion.div variants={itemVariants} className="space-y-2">
+                      <div className="space-y-2">
                         <Label htmlFor="party_type" className="text-white">Select Party</Label>
                         <Select
                           name="party_type"
@@ -547,9 +554,9 @@ export default function SearchPage() {
                             <SelectItem value="second">Second Party</SelectItem>
                           </SelectContent>
                         </Select>
-                      </motion.div>
+                      </div>
 
-                      <motion.div variants={itemVariants} className="space-y-2">
+                      <div className="space-y-2">
                         <Label htmlFor="party_name" className="text-white">
                           {urbanFormData.party_type === "first" ? "First" : "Second"} Party Name
                         </Label>
@@ -562,12 +569,12 @@ export default function SearchPage() {
                           className="bg-black/50 border-gray-800 text-white"
                           required
                         />
-                      </motion.div>
+                      </div>
                     </>
                   ) : (
                     // Rural Fields
                     <>
-                      <motion.div variants={itemVariants} className="space-y-2">
+                      <div className="space-y-2">
                         <Label htmlFor="state" className="text-white">State</Label>
                         <Input
                           id="state"
@@ -576,9 +583,9 @@ export default function SearchPage() {
                           className="bg-black/50 border-gray-800 text-white"
                           disabled
                         />
-                      </motion.div>
+                      </div>
 
-                      <motion.div variants={itemVariants} className="space-y-2">
+                      <div className="space-y-2">
                         <Label htmlFor="district" className="text-white">District</Label>
                         <Select
                           name="district"
@@ -596,9 +603,9 @@ export default function SearchPage() {
                             ))}
                           </SelectContent>
                         </Select>
-                      </motion.div>
+                      </div>
 
-                      <motion.div variants={itemVariants} className="space-y-2">
+                      <div className="space-y-2">
                         <Label htmlFor="division" className="text-white">Division</Label>
                         <Select
                           name="division"
@@ -617,9 +624,9 @@ export default function SearchPage() {
                             ))}
                           </SelectContent>
                         </Select>
-                      </motion.div>
+                      </div>
 
-                      <motion.div variants={itemVariants} className="space-y-2">
+                      <div className="space-y-2">
                         <Label htmlFor="village" className="text-white">Village</Label>
                         <Select
                           name="village"
@@ -638,9 +645,9 @@ export default function SearchPage() {
                             ))}
                           </SelectContent>
                         </Select>
-                      </motion.div>
+                      </div>
 
-                      <motion.div variants={itemVariants} className="space-y-2">
+                      <div className="space-y-2">
                         <Label htmlFor="rectangle" className="text-white">Rectangle</Label>
                         <Input
                           id="rectangle"
@@ -651,9 +658,9 @@ export default function SearchPage() {
                           className="bg-black/50 border-gray-800 text-white"
                           required
                         />
-                      </motion.div>
+                      </div>
 
-                      <motion.div variants={itemVariants} className="space-y-2">
+                      <div className="space-y-2">
                         <Label htmlFor="khasra" className="text-white">Khasra</Label>
                         <Input
                           id="khasra"
@@ -664,7 +671,7 @@ export default function SearchPage() {
                           className="bg-black/50 border-gray-800 text-white"
                           required
                         />
-                      </motion.div>
+                      </div>
                     </>
                   )}
                 </form>
@@ -690,7 +697,7 @@ export default function SearchPage() {
               </CardFooter>
             </Card>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </div>
   )

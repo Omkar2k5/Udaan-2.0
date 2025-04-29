@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, Building, Home, LogOut, Trees, FileText } from "lucide-react"
+import { ArrowLeft, Building, Home, LogOut, Trees, FileText, Building2 } from "lucide-react"
 import { useAuth } from "@/context/auth-context"
 import { ParticleBackground } from "@/components/ui/particle-background"
 import { SplineBackground } from "@/app/components/SplineBackground"
@@ -14,7 +14,7 @@ export default function PropertyTypePage() {
   const router = useRouter()
   const { logout } = useAuth()
 
-  const handleSelectPropertyType = (type: "urban" | "rural" | "encumbrance") => {
+  const handleSelectPropertyType = (type: "urban" | "rural" | "encumbrance" | "company") => {
     router.push(`/search/${type}`)
   }
 
@@ -59,7 +59,7 @@ export default function PropertyTypePage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             <motion.div variants={itemVariants}>
               <Card
                 className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl hover:border-blue-500/50 transition-all cursor-pointer overflow-hidden group"
@@ -179,6 +179,47 @@ export default function PropertyTypePage() {
                     </li>
                   </ul>
                   <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">View Encumbrance Details</Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            <motion.div variants={itemVariants}>
+              <Card
+                className="bg-black/70 border-gray-800 backdrop-blur-md shadow-xl hover:border-blue-500/50 transition-all cursor-pointer overflow-hidden group"
+                onClick={() => handleSelectPropertyType("company")}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <CardHeader className="text-center pb-2">
+                  <div className="mx-auto bg-blue-600/20 p-4 rounded-full mb-4">
+                    <Building2 className="h-10 w-10 text-blue-400" />
+                  </div>
+                  <CardTitle className="text-xl text-white">Company Property</CardTitle>
+                  <CardDescription className="text-gray-400">
+                    Search for company/LLP details and property charges
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="text-center">
+                  <ul className="text-sm text-gray-300 space-y-2 mb-4">
+                    <li className="flex items-center justify-center">
+                      <span className="bg-blue-500/20 p-1 rounded-full mr-2">
+                        <Building2 className="h-3 w-3 text-blue-400" />
+                      </span>
+                      Company Master Data & Charges
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <span className="bg-blue-500/20 p-1 rounded-full mr-2">
+                        <Building2 className="h-3 w-3 text-blue-400" />
+                      </span>
+                      Director & Signatory Information
+                    </li>
+                    <li className="flex items-center justify-center">
+                      <span className="bg-blue-500/20 p-1 rounded-full mr-2">
+                        <Building2 className="h-3 w-3 text-blue-400" />
+                      </span>
+                      Company Property Details
+                    </li>
+                  </ul>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">View Company Details</Button>
                 </CardContent>
               </Card>
             </motion.div>

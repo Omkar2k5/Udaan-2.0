@@ -14,12 +14,21 @@ import { useAuth } from "@/context/auth-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { SplineViewer } from "@/components/ui/spline-viewer"
 
-interface FormData {
+interface UrbanFormData {
   locality: string
   party_type: "first" | "second"
   party_name: string
   sro: string
   reg_year: string
+}
+
+interface RuralFormData {
+  state: string
+  district: string
+  division: string
+  village: string
+  rectangle: string
+  khasra: string
 }
 
 export default function SearchPage() {
@@ -32,12 +41,115 @@ export default function SearchPage() {
   const propertyType = params.type as string
   const isUrban = propertyType === "urban"
 
-  const [formData, setFormData] = useState<FormData>({
+  // New Delhi districts
+  const delhiDistricts = [
+    "Central Delhi",
+    "East Delhi",
+    "New Delhi",
+    "North Delhi",
+    "North East Delhi",
+    "North West Delhi",
+    "Shahdara",
+    "South Delhi",
+    "South East Delhi",
+    "South West Delhi",
+    "West Delhi"
+  ]
+  
+  // Sample divisions by district
+  const divisionsByDistrict: Record<string, string[]> = {
+    "Central Delhi": ["Civil Lines", "Karol Bagh", "Kotwali"],
+    "East Delhi": ["Gandhi Nagar", "Preet Vihar", "Mayur Vihar"],
+    "New Delhi": ["Chanakyapuri", "Connaught Place", "Vasant Vihar"],
+    "North Delhi": ["Alipur", "Model Town", "Narela"],
+    "North East Delhi": ["Seelampur", "Shahdara", "Seemapuri"],
+    "North West Delhi": ["Saraswati Vihar", "Rohini", "Kanjhawala"],
+    "Shahdara": ["Shahdara", "Vivek Vihar", "Seemapuri"],
+    "South Delhi": ["Hauz Khas", "Saket", "Mehrauli"],
+    "South East Delhi": ["Defence Colony", "Kalkaji", "Sarita Vihar"],
+    "South West Delhi": ["Najafgarh", "Kapashera", "Dwarka"],
+    "West Delhi": ["Patel Nagar", "Rajouri Garden", "Punjabi Bagh"]
+  }
+
+  // Sample villages by division (restructured)
+  const villagesByDivision: Record<string, Record<string, string[]>> = {
+    "Central Delhi": {
+      "Civil Lines": ["Kamla Nagar", "Timarpur", "Maurice Nagar", "Malka Ganj"],
+      "Karol Bagh": ["Paharganj", "Rajinder Nagar", "Dev Nagar", "Bapa Nagar"],
+      "Kotwali": ["Daryaganj", "Chandni Chowk", "Jama Masjid", "Lal Kuan"]
+    },
+    "East Delhi": {
+      "Gandhi Nagar": ["Geeta Colony", "Kailash Nagar", "Raghubar Pura", "Shastri Nagar"],
+      "Preet Vihar": ["Nirman Vihar", "Anand Vihar", "Jagriti Enclave", "Surajmal Vihar"],
+      "Mayur Vihar": ["Patparganj", "Vasundhara Enclave", "Trilokpuri", "Kondli"]
+    },
+    "New Delhi": {
+      "Chanakyapuri": ["Diplomatic Enclave", "Moti Bagh", "Race Course", "Kautilya Marg"],
+      "Connaught Place": ["Janpath", "Barakhamba", "Kasturba Gandhi Marg", "Sansad Marg"],
+      "Vasant Vihar": ["Munirka", "Kishangarh", "Anant Lok", "Shanti Niketan"]
+    },
+    "North Delhi": {
+      "Alipur": ["Bakhtawarpur", "Akbarpur Majra", "Hamidpur", "Singhu"],
+      "Model Town": ["Rana Pratap Bagh", "Kamla Nagar", "Shakti Nagar", "GTB Nagar"],
+      "Narela": ["Holambi Kalan", "Pooth Khurd", "Bhorgarh", "Bankner"]
+    },
+    "North East Delhi": {
+      "Seelampur": ["Welcome", "Jafrabad", "Maujpur", "Babarpur"],
+      "Shahdara": ["Ram Nagar", "Farsh Bazar", "Bholanath Nagar", "Vishwas Nagar"],
+      "Seemapuri": ["New Seemapuri", "Old Seemapuri", "Dilshad Garden", "Janta Flats"]
+    },
+    "North West Delhi": {
+      "Saraswati Vihar": ["Pitampura", "Ashok Vihar", "Wazirpur", "Bharat Nagar"],
+      "Rohini": ["Sector 1-16", "Begumpur", "Kanjhawala", "Rithala"],
+      "Kanjhawala": ["Nizampur", "Qutabgarh", "Chandpur", "Karala"]
+    },
+    "Shahdara": {
+      "Shahdara": ["Ram Nagar", "Bholanath Nagar", "Gandhi Nagar", "Jhilmil"],
+      "Vivek Vihar": ["Shreshtha Vihar", "Karkardooma", "Surajmal Vihar", "Krishna Nagar"],
+      "Seemapuri": ["New Seemapuri", "Old Seemapuri", "Dilshad Garden", "Tahirpur"]
+    },
+    "South Delhi": {
+      "Hauz Khas": ["Green Park", "SDA", "Sarvapriya Vihar", "Panchsheel Park"],
+      "Saket": ["Malviya Nagar", "Pushp Vihar", "Sheikh Sarai", "Khirki Extension"],
+      "Mehrauli": ["Chattarpur", "Lado Sarai", "Sultanpur", "Gadaipur"]
+    },
+    "South East Delhi": {
+      "Defence Colony": ["Lajpat Nagar", "Jangpura", "Nizamuddin", "Andrews Ganj"],
+      "Kalkaji": ["Govindpuri", "CR Park", "GK II", "Alaknanda"],
+      "Sarita Vihar": ["Jasola", "Madanpur Khadar", "Okhla", "Khadar"]
+    },
+    "South West Delhi": {
+      "Najafgarh": ["Dichaon Kalan", "Mitraon", "Roshanpura", "Chhawla"],
+      "Kapashera": ["Bijwasan", "Samalkha", "Barthal", "Bajghera"],
+      "Dwarka": ["Sector 1-29", "Palam", "Dabri", "Mahavir Enclave"]
+    },
+    "West Delhi": {
+      "Patel Nagar": ["Karol Bagh", "Ranjit Nagar", "Baljit Nagar", "Anand Parbat"],
+      "Rajouri Garden": ["Tilak Nagar", "Tagore Garden", "Subhash Nagar", "Khyala"],
+      "Punjabi Bagh": ["Madipur", "Paschim Vihar", "Nangloi", "Rani Bagh"]
+    }
+  }
+
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("")
+  const [selectedDivision, setSelectedDivision] = useState<string>("")
+  const [divisions, setDivisions] = useState<string[]>([])
+  const [villages, setVillages] = useState<string[]>([])
+
+  const [urbanFormData, setUrbanFormData] = useState<UrbanFormData>({
     locality: "",
     party_type: "first",
     party_name: "",
     sro: "",
     reg_year: "",
+  })
+
+  const [ruralFormData, setRuralFormData] = useState<RuralFormData>({
+    state: "Delhi",
+    district: "",
+    division: "",
+    village: "",
+    rectangle: "",
+    khasra: "",
   })
 
   useEffect(() => {
@@ -49,22 +161,71 @@ export default function SearchPage() {
     document.body.appendChild(script)
 
     return () => {
-      document.body.removeChild(script)
+      // Make sure the script exists before trying to remove it
+      if (script && document.body.contains(script)) {
+        document.body.removeChild(script)
+      }
     }
   }, [])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
+  useEffect(() => {
+    if (!isUrban && selectedDistrict) {
+      setDivisions(divisionsByDistrict[selectedDistrict] || [])
+      // Clear division and village selections when district changes
+      setSelectedDivision("")
+      setVillages([])
+    }
+  }, [selectedDistrict, isUrban])
+
+  useEffect(() => {
+    if (!isUrban && selectedDistrict && selectedDivision) {
+      setVillages(villagesByDivision[selectedDistrict]?.[selectedDivision] || [])
+    }
+  }, [selectedDivision, selectedDistrict, isUrban])
+
+  const handleUrbanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUrbanFormData({
+      ...urbanFormData,
       [e.target.name]: e.target.value,
     })
   }
 
-  const handleSelectChange = (name: keyof FormData, value: string) => {
-    setFormData({
-      ...formData,
+  const handleRuralChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRuralFormData({
+      ...ruralFormData,
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  const handleUrbanSelectChange = (name: keyof UrbanFormData, value: string) => {
+    setUrbanFormData({
+      ...urbanFormData,
       [name]: value,
     })
+  }
+
+  const handleRuralSelectChange = (name: keyof RuralFormData, value: string) => {
+    if (name === "district") {
+      setSelectedDistrict(value)
+      setRuralFormData({
+        ...ruralFormData,
+        [name]: value,
+        division: "",
+        village: "",
+      })
+    } else if (name === "division") {
+      setSelectedDivision(value)
+      setRuralFormData({
+        ...ruralFormData,
+        [name]: value,
+        village: "",
+      })
+    } else {
+      setRuralFormData({
+        ...ruralFormData,
+        [name]: value,
+      })
+    }
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -72,8 +233,9 @@ export default function SearchPage() {
     setIsLoading(true)
 
     // Encode the form data to pass as URL parameters
+    const formDataToSubmit = isUrban ? urbanFormData : ruralFormData
     const params = new URLSearchParams({
-      ...formData,
+      ...formDataToSubmit as any,
       property_type: propertyType,
     }).toString()
 
@@ -140,80 +302,186 @@ export default function SearchPage() {
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Common Fields */}
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="locality" className="text-white">Locality</Label>
-                    <Input
-                      id="locality"
-                      name="locality"
-                      value={formData.locality}
-                      onChange={handleChange}
-                      placeholder="Enter locality"
-                      className="bg-black/50 border-gray-800 text-white"
-                      required
-                    />
-                  </motion.div>
+                  {/* Urban Fields */}
+                  {isUrban ? (
+                    <>
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="locality" className="text-white">Locality</Label>
+                        <Input
+                          id="locality"
+                          name="locality"
+                          value={urbanFormData.locality}
+                          onChange={handleUrbanChange}
+                          placeholder="Enter locality"
+                          className="bg-black/50 border-gray-800 text-white"
+                          required
+                        />
+                      </motion.div>
 
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="party_type" className="text-white">Select Party</Label>
-                    <Select
-                      name="party_type"
-                      value={formData.party_type}
-                      onValueChange={(value) => handleSelectChange("party_type", value)}
-                    >
-                      <SelectTrigger className="bg-black/50 border-gray-800 text-white">
-                        <SelectValue placeholder="Select party type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="first">First Party</SelectItem>
-                        <SelectItem value="second">Second Party</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </motion.div>
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="party_type" className="text-white">Select Party</Label>
+                        <Select
+                          name="party_type"
+                          value={urbanFormData.party_type}
+                          onValueChange={(value) => handleUrbanSelectChange("party_type", value as "first" | "second")}
+                        >
+                          <SelectTrigger className="bg-black/50 border-gray-800 text-white">
+                            <SelectValue placeholder="Select party type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="first">First Party</SelectItem>
+                            <SelectItem value="second">Second Party</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </motion.div>
 
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="party_name" className="text-white">
-                      {formData.party_type === "first" ? "First" : "Second"} Party Name
-                    </Label>
-                    <Input
-                      id="party_name"
-                      name="party_name"
-                      value={formData.party_name}
-                      onChange={handleChange}
-                      placeholder="Enter party name"
-                      className="bg-black/50 border-gray-800 text-white"
-                      required
-                    />
-                  </motion.div>
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="party_name" className="text-white">
+                          {urbanFormData.party_type === "first" ? "First" : "Second"} Party Name
+                        </Label>
+                        <Input
+                          id="party_name"
+                          name="party_name"
+                          value={urbanFormData.party_name}
+                          onChange={handleUrbanChange}
+                          placeholder="Enter party name"
+                          className="bg-black/50 border-gray-800 text-white"
+                          required
+                        />
+                      </motion.div>
 
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="sro" className="text-white">SRO</Label>
-                    <Input
-                      id="sro"
-                      name="sro"
-                      value={formData.sro}
-                      onChange={handleChange}
-                      placeholder="Enter SRO"
-                      className="bg-black/50 border-gray-800 text-white"
-                      required
-                    />
-                  </motion.div>
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="sro" className="text-white">SRO</Label>
+                        <Input
+                          id="sro"
+                          name="sro"
+                          value={urbanFormData.sro}
+                          onChange={handleUrbanChange}
+                          placeholder="Enter SRO"
+                          className="bg-black/50 border-gray-800 text-white"
+                          required
+                        />
+                      </motion.div>
 
-                  <motion.div variants={itemVariants} className="space-y-2">
-                    <Label htmlFor="reg_year" className="text-white">Registration Year</Label>
-                    <Input
-                      id="reg_year"
-                      name="reg_year"
-                      value={formData.reg_year}
-                      onChange={handleChange}
-                      placeholder="Enter registration year"
-                      className="bg-black/50 border-gray-800 text-white"
-                      type="number"
-                      min="1900"
-                      max={new Date().getFullYear()}
-                      required
-                    />
-                  </motion.div>
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="reg_year" className="text-white">Registration Year</Label>
+                        <Input
+                          id="reg_year"
+                          name="reg_year"
+                          value={urbanFormData.reg_year}
+                          onChange={handleUrbanChange}
+                          placeholder="Enter registration year"
+                          className="bg-black/50 border-gray-800 text-white"
+                          type="number"
+                          min="1900"
+                          max={new Date().getFullYear()}
+                          required
+                        />
+                      </motion.div>
+                    </>
+                  ) : (
+                    // Rural Fields
+                    <>
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="state" className="text-white">State</Label>
+                        <Input
+                          id="state"
+                          name="state"
+                          value={ruralFormData.state}
+                          className="bg-black/50 border-gray-800 text-white"
+                          disabled
+                        />
+                      </motion.div>
+
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="district" className="text-white">District</Label>
+                        <Select
+                          name="district"
+                          value={ruralFormData.district}
+                          onValueChange={(value) => handleRuralSelectChange("district", value)}
+                        >
+                          <SelectTrigger className="bg-black/50 border-gray-800 text-white">
+                            <SelectValue placeholder="Select district" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {delhiDistricts.map((district) => (
+                              <SelectItem key={district} value={district}>
+                                {district}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </motion.div>
+
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="division" className="text-white">Division</Label>
+                        <Select
+                          name="division"
+                          value={ruralFormData.division}
+                          onValueChange={(value) => handleRuralSelectChange("division", value)}
+                          disabled={!selectedDistrict}
+                        >
+                          <SelectTrigger className="bg-black/50 border-gray-800 text-white">
+                            <SelectValue placeholder="Select division" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {divisions.map((division) => (
+                              <SelectItem key={division} value={division}>
+                                {division}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </motion.div>
+
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="village" className="text-white">Village</Label>
+                        <Select
+                          name="village"
+                          value={ruralFormData.village}
+                          onValueChange={(value) => handleRuralSelectChange("village", value)}
+                          disabled={!selectedDivision}
+                        >
+                          <SelectTrigger className="bg-black/50 border-gray-800 text-white">
+                            <SelectValue placeholder="Select village" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {villages.map((village) => (
+                              <SelectItem key={village} value={village}>
+                                {village}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </motion.div>
+
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="rectangle" className="text-white">Rectangle</Label>
+                        <Input
+                          id="rectangle"
+                          name="rectangle"
+                          value={ruralFormData.rectangle}
+                          onChange={handleRuralChange}
+                          placeholder="Enter rectangle"
+                          className="bg-black/50 border-gray-800 text-white"
+                          required
+                        />
+                      </motion.div>
+
+                      <motion.div variants={itemVariants} className="space-y-2">
+                        <Label htmlFor="khasra" className="text-white">Khasra</Label>
+                        <Input
+                          id="khasra"
+                          name="khasra"
+                          value={ruralFormData.khasra}
+                          onChange={handleRuralChange}
+                          placeholder="Enter khasra"
+                          className="bg-black/50 border-gray-800 text-white"
+                          required
+                        />
+                      </motion.div>
+                    </>
+                  )}
                 </form>
               </CardContent>
               <CardFooter>

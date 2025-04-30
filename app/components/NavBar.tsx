@@ -64,7 +64,7 @@ export function NavBar({ showBackButton = false }) {
           <Button 
             variant="ghost" 
             size="sm" 
-            onClick={() => router.push("/SmartSearch")} 
+            onClick={() => router.push("/property-type")} 
             className="relative text-white text-base px-4 overflow-hidden group"
           >
             <span className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-400/20 opacity-0 group-hover:opacity-100 transition-opacity"></span>

@@ -18,7 +18,7 @@ import { SplineBackground } from "@/components/ui/spline-background"
 import { DelhiKhasraMap } from "@/components/ui/delhi-khasra-map"
 import { SimpleRevenueMap } from "@/components/ui/simple-revenue-map"
 import { db } from "@/lib/firebase"
-import { ref, get } from "firebase/database"
+import { ref, get, query, orderByChild, equalTo, Query } from "firebase/database"
 
 // --- Define Interfaces Directly Here ---
 interface RuralLocationData {
@@ -57,6 +57,20 @@ interface RuralFormData {
   village: string
   rectangle: string
   khasra: string
+}
+
+interface PropertyData {
+  SRO?: string;
+  Locality?: string;
+  "Registration Year"?: string;
+  "First Party Name"?: string;
+  "Second Party Name"?: string;
+  District?: string;
+  Division?: string;
+  Village?: string;
+  "Khasra No"?: string;
+  Rectangle?: string;
+  [key: string]: any;
 }
 
 export default function SearchPage() {
@@ -170,7 +184,7 @@ export default function SearchPage() {
         // Fetch urban data
         try {
           console.log('Attempting to get data from Firebase ref: /urban/');
-          const urbanRef = ref(db, '/urban/');
+          const urbanRef = ref(db, '/input/urban/');
           
           // Race against timeout
           const urbanSnapshot = await Promise.race([
@@ -203,7 +217,7 @@ export default function SearchPage() {
         // Fetch rural data
         try {
           console.log('Attempting to get data from Firebase ref: /rural/');
-          const ruralRef = ref(db, '/rural/');
+          const ruralRef = ref(db, '/input/rural');
           
           // Race against timeout
           const ruralSnapshot = await Promise.race([
@@ -361,15 +375,67 @@ export default function SearchPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    // Encode the form data to pass as URL parameters
-    const formDataToSubmit = isUrban ? urbanFormData : ruralFormData
-    const params = new URLSearchParams({
-      ...formDataToSubmit as any,
-      property_type: propertyType,
-    }).toString()
+    try {
+      const formDataToSubmit = isUrban ? urbanFormData : ruralFormData
+      const outputPath = isUrban ? "urban_output" : "rural_output"
+      
+      // Create a reference to the appropriate output path
+      const outputRef = ref(db, outputPath)
+      
+      // Fetch all data and filter in memory
+      const snapshot = await get(outputRef)
+      
+      if (snapshot.exists()) {
+        const results = snapshot.val()
+        // Filter the results based on criteria
+        const filteredResults = Object.entries(results).filter(([_, data]) => {
+          const propertyData = data as PropertyData
+          if (isUrban) {
+            return (
+              propertyData.SRO === urbanFormData.sro &&
+              propertyData.Locality === urbanFormData.locality &&
+              propertyData["Registration Year"] === urbanFormData.reg_year &&
+              (propertyData["First Party Name"] === urbanFormData.party_name || 
+               propertyData["Second Party Name"] === urbanFormData.party_name)
+            )
+          } else {
+            return (
+              propertyData.District === ruralFormData.district &&
+              propertyData.Division === ruralFormData.division &&
+              propertyData.Village === ruralFormData.village &&
+              propertyData["Khasra No"] === ruralFormData.khasra &&
+              propertyData.Rectangle === ruralFormData.rectangle
+            )
+          }
+        })
 
-    // Navigate to results page with search parameters
-    router.push(`/results?${params}`)
+        // Convert to array of results
+        const formattedResults = filteredResults.map(([id, data]) => {
+          const propertyData = data as PropertyData
+          return {
+            id,
+            ...propertyData
+          }
+        })
+
+        // Navigate to results page with the filtered data
+        router.push(`/results?${new URLSearchParams({
+          property_type: propertyType,
+          results: JSON.stringify(formattedResults)
+        }).toString()}`)
+      } else {
+        // No results found
+        router.push(`/results?${new URLSearchParams({
+          property_type: propertyType,
+          no_results: "true"
+        }).toString()}`)
+      }
+    } catch (error) {
+      console.error("Error fetching property details:", error)
+      setError("Failed to fetch property details. Please try again.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const containerVariants = {

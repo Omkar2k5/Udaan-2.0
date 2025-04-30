@@ -376,85 +376,57 @@ export default function SearchPage() {
     setIsLoading(true)
 
     try {
-      const formDataToSubmit = isUrban ? urbanFormData : ruralFormData
-      const outputPath = isUrban ? "urban_output" : "rural_output"
-      
-      // Log the form data before sending
-      console.log("Form Data:", {
-        urbanFormData,
-        ruralFormData,
-        isUrban
+      // Sample urban property data
+      const urbanSampleData = [
+        {
+          S_No_: 1,
+          Reg_No: 809,
+          Reg_Date: "02-12-2022",
+          "First Party Name": "NICOLE BURGESS",
+          "Second Party Name": "ANNA HUMPHREY",
+          "Property Address": "House No. 106-B, Sector 21",
+          Area: "222 Sq. Feet",
+          "Deed Type": "GIFT, GIFT WITH IN MC AREA",
+          "Property Type": "Industrial",
+          SRO: "SRI",
+          Locality: "Sector 21",
+          "Registration Year": "2022",
+          "Property ID": "23809039"
+        }
+      ]
+
+      // Sample rural property data
+      const ruralSampleData = [
+        {
+          S_No_: 1,
+          State: "Delhi",
+          District: "South East Delhi",
+          Division: "Greater Kailash",
+          Village: "Alaknanda",
+          "Khasra No": "41",
+          Rectangle: "A-1",
+          Area: "2656 sq.ft.",
+          "Property Value": "₹11,00,000",
+          "Encumbrance Status": "Under Dispute",
+          Name: "Vikram, son of Pratap",
+          Address: "Alaknanda village, Part-4/12",
+          "Property ID": "32672352"
+        }
+      ]
+
+      // Use sample data based on property type
+      const results = propertyType === "urban" ? urbanSampleData : ruralSampleData
+
+      // Log the parameters before navigation
+      const params = new URLSearchParams({
+        type: propertyType,
+        results: JSON.stringify(results)
       })
-
-      // Create a reference to the appropriate output path
-      const outputRef = ref(db, outputPath)
-      
-      // Fetch all data and filter in memory
-      const snapshot = await get(outputRef)
-      
-      if (snapshot.exists()) {
-        const results = snapshot.val()
-        // Filter the results based on criteria
-        const filteredResults = Object.entries(results).filter(([_, data]) => {
-          const propertyData = data as PropertyData
-          if (isUrban) {
-            return (
-              propertyData.SRO === urbanFormData.sro &&
-              propertyData.Locality === urbanFormData.locality &&
-              propertyData["Registration Year"] === urbanFormData.reg_year &&
-              (propertyData["First Party Name"] === urbanFormData.party_name || 
-               propertyData["Second Party Name"] === urbanFormData.party_name)
-            )
-          } else {
-            return (
-              propertyData.District === ruralFormData.district &&
-              propertyData.Division === ruralFormData.division &&
-              propertyData.Village === ruralFormData.village &&
-              propertyData["Khasra No"] === ruralFormData.khasra &&
-              propertyData.Rectangle === ruralFormData.rectangle
-            )
-          }
-        })
-
-        // Convert to array of results
-        const formattedResults = filteredResults.map(([id, data]) => {
-          const propertyData = data as PropertyData
-          return {
-            id,
-            ...propertyData
-          }
-        })
-
-        // Log the parameters before navigation
-        const params = new URLSearchParams({
-          property_type: propertyType,
-          results: JSON.stringify(formattedResults),
-          ...(isUrban ? {
-            sro: urbanFormData.sro,
-            locality: urbanFormData.locality,
-            reg_year: urbanFormData.reg_year,
-            party_name: urbanFormData.party_name,
-            party_type: urbanFormData.party_type
-          } : {
-            district: ruralFormData.district,
-            division: ruralFormData.division,
-            village: ruralFormData.village,
-            khasra: ruralFormData.khasra,
-            rectangle: ruralFormData.rectangle
-          })
-        })
-        console.log("Navigating with params:", Object.fromEntries(params))
-        router.push(`/results?${params.toString()}`)
-      } else {
-        // No results found
-        router.push(`/results?${new URLSearchParams({
-          property_type: propertyType,
-          no_results: "true"
-        }).toString()}`)
-      }
+      console.log("Navigating with params:", Object.fromEntries(params))
+      router.push(`/results?${params.toString()}`)
     } catch (error) {
-      console.error("Error fetching property details:", error)
-      setError("Failed to fetch property details. Please try again.")
+      console.error("Error processing search:", error)
+      setError("Failed to process search. Please try again.")
     } finally {
       setIsLoading(false)
     }

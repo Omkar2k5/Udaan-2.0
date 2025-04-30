@@ -379,6 +379,13 @@ export default function SearchPage() {
       const formDataToSubmit = isUrban ? urbanFormData : ruralFormData
       const outputPath = isUrban ? "urban_output" : "rural_output"
       
+      // Log the form data before sending
+      console.log("Form Data:", {
+        urbanFormData,
+        ruralFormData,
+        isUrban
+      })
+
       // Create a reference to the appropriate output path
       const outputRef = ref(db, outputPath)
       
@@ -418,11 +425,26 @@ export default function SearchPage() {
           }
         })
 
-        // Navigate to results page with the filtered data
-        router.push(`/results?${new URLSearchParams({
+        // Log the parameters before navigation
+        const params = new URLSearchParams({
           property_type: propertyType,
-          results: JSON.stringify(formattedResults)
-        }).toString()}`)
+          results: JSON.stringify(formattedResults),
+          ...(isUrban ? {
+            sro: urbanFormData.sro,
+            locality: urbanFormData.locality,
+            reg_year: urbanFormData.reg_year,
+            party_name: urbanFormData.party_name,
+            party_type: urbanFormData.party_type
+          } : {
+            district: ruralFormData.district,
+            division: ruralFormData.division,
+            village: ruralFormData.village,
+            khasra: ruralFormData.khasra,
+            rectangle: ruralFormData.rectangle
+          })
+        })
+        console.log("Navigating with params:", Object.fromEntries(params))
+        router.push(`/results?${params.toString()}`)
       } else {
         // No results found
         router.push(`/results?${new URLSearchParams({

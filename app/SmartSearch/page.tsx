@@ -5,13 +5,80 @@ import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Search, Building, Home, Trees, FileText, Building2, User, Hash, MapPin } from "lucide-react"
+import { Search, Building, Home, Trees, FileText, Building2, User, Hash, MapPin, Download } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { NavBar } from "@/app/components/NavBar"
 import { ParticleBackground } from "@/components/ui/particle-background"
 import { SplineBackground } from "@/app/components/SplineBackground"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
+import * as XLSX from 'xlsx'
+
+interface PropertyData {
+  S_No_: number;
+  Reg_No?: number;
+  Reg_Date?: string;
+  "First Party Name"?: string;
+  "Second Party Name"?: string;
+  "Property Address"?: string;
+  Area: string;
+  "Deed Type"?: string;
+  "Property Type": string;
+  SRO?: string;
+  Locality?: string;
+  "Registration Year"?: number;
+  "Property ID": string;
+  State?: string;
+  District?: string;
+  Division?: string;
+  Village?: string;
+  "Khasra No"?: string;
+  "Registration Date"?: string;
+  "Property Value"?: string;
+  "Encumbrance Status"?: string;
+  Name?: string;
+  Address?: string;
+}
+
+// Sample data for demonstration
+const sampleData: Record<string, { source: string; data: PropertyData }> = {
+  "23809039": {
+    "source": "urban",
+    "data": {
+      "S_No_": 1,
+      "Reg_No": 809,
+      "Reg_Date": "02-12-2022",
+      "First Party Name": "NICOLE BURGESS",
+      "Second Party Name": "ANNA HUMPHREY",
+      "Property Address": "House No. 106-B, Sector 21",
+      "Area": "222 Sq. Feet",
+      "Deed Type": "GIFT, GIFT WITH IN MC AREA",
+      "Property Type": "Industrial",
+      "SRO": "SRO2",
+      "Locality": "Sector 21",
+      "Registration Year": 2022,
+      "Property ID": "23809039"
+    }
+  },
+  "37153378": {
+    "source": "rural",
+    "data": {
+      "S_No_": 15,
+      "State": "Delhi",
+      "District": "North East Delhi",
+      "Division": "Seelampur",
+      "Village": "Jafrabad",
+      "Khasra No": "148",
+      "Property Type": "Mixed Use",
+      "Registration Date": "27-06-2013",
+      "Area": "2656 sq.ft.",
+      "Property Value": "₹48,00,000",
+      "Encumbrance Status": "Partially Encumbered",
+      "Address": "Jafrabad village, Part-3/8",
+      "Property ID": "37153378"
+    }
+  }
+}
 
 export default function SmartSearchPage() {
   const router = useRouter()
@@ -22,13 +89,42 @@ export default function SmartSearchPage() {
   })
   const [activeTab, setActiveTab] = useState("all")
   const [selectedCategory, setSelectedCategory] = useState("")
-  const [results, setResults] = useState<any[]>([])
+  const [results, setResults] = useState<PropertyData[]>([])
 
   const handleInputChange = (field: string, value: string) => {
     setSearchParams(prev => ({
       ...prev,
       [field]: value
     }))
+
+    // Fetch and display dummy data based on the input
+    if (value.trim()) {
+      let matchingResults: PropertyData[] = []
+      
+      if (field === "fullName") {
+        // Search by name
+        matchingResults = Object.values(sampleData)
+          .filter(item => item.data["First Party Name"]?.toLowerCase().includes(value.toLowerCase()))
+          .map(item => item.data)
+      } else if (field === "propertyId") {
+        // Search by property ID
+        if (sampleData[value]) {
+          matchingResults = [sampleData[value].data]
+        }
+      } else if (field === "address") {
+        // Search by address
+        matchingResults = Object.values(sampleData)
+          .filter(item => {
+            const propertyAddress = item.data["Property Address"]?.toLowerCase() || ""
+            return propertyAddress.includes(value.toLowerCase())
+          })
+          .map(item => item.data)
+      }
+
+      setResults(matchingResults)
+    } else {
+      setResults([])
+    }
   }
 
   const handleSearch = () => {
@@ -40,6 +136,36 @@ export default function SmartSearchPage() {
       queryParams.append("type", activeTab)
       router.push(`/results?${queryParams.toString()}`)
     }
+  }
+
+  const handleDownload = () => {
+    if (results.length === 0) return
+
+    // Prepare data for Excel
+    const excelData = [
+      {
+        "Sheet": "Property Details",
+        "Data": results.map(result => ({
+          ...result,
+          "Property Type": selectedCategory === "urban" ? "Urban" : "Rural"
+        }))
+      }
+    ]
+
+    // Create workbook
+    const wb = XLSX.utils.book_new()
+
+    // Add sheets
+    excelData.forEach(({ Sheet, Data }) => {
+      const ws = XLSX.utils.json_to_sheet(Data)
+      XLSX.utils.book_append_sheet(wb, ws, Sheet)
+    })
+
+    // Generate file name
+    const fileName = `Property_Search_Results_${new Date().toISOString().split('T')[0]}.xlsx`
+
+    // Save file
+    XLSX.writeFile(wb, fileName)
   }
 
   const containerVariants = {
@@ -65,10 +191,21 @@ export default function SmartSearchPage() {
       <div className="relative z-10 mt-16">
         <motion.div initial="hidden" animate="visible" variants={containerVariants} className="max-w-5xl mx-auto">
           <motion.div variants={itemVariants} className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-              <span className="bg-gradient-to-r from-indigo-300 to-purple-300 bg-clip-text text-transparent">Smart Property Search</span>
-            </h1>
-            <p className="text-gray-400 max-w-xl mx-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-white">
+                <span className="bg-gradient-to-r from-indigo-300 to-purple-300 bg-clip-text text-transparent">Smart Property Search</span>
+              </h1>
+              {results.length > 0 && (
+                <Button
+                  onClick={handleDownload}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download Results
+                </Button>
+              )}
+            </div>
+            <p className="text-white-400 max-w-xl mx-auto">
               Search across all property types, companies, and records in one place
             </p>
           </motion.div>
@@ -209,9 +346,9 @@ export default function SmartSearchPage() {
                             <tbody>
                               {results.map((item, idx) => (
                                 <tr key={idx} className="hover:bg-indigo-950">
-                                  {Object.values(item).map((val, i) => (
-                                    <td key={i} className="px-4 py-2 border border-indigo-800 whitespace-nowrap">
-                                      {val}
+                                  {Object.entries(item).map(([key, val]) => (
+                                    <td key={key} className="px-4 py-2 border border-indigo-800 whitespace-nowrap">
+                                      {val?.toString() || "-"}
                                     </td>
                                   ))}
                                 </tr>

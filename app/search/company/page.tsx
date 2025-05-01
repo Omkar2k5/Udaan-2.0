@@ -67,14 +67,43 @@ export default function CompanySearchPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    // Encode the form data to pass as URL parameters
-    const params = new URLSearchParams({
-      ...formData,
-      type: "company",
-    }).toString()
+    try {
+      // Sample company data for Oracle Financial Limited
+      const sampleData = [
+        {
+          "CIN": "L85110KA2018PLC506562",
+          "Company Name": "ORACLE FINANCIAL LIMITED",
+          "ROC Name": "ROC Bangalore",
+          "Registration Number": "506562",
+          "Date of Incorporation": "20/03/1991",
+          "Email Id": "info@oracle.com",
+          "Listed in Stock Exchange(s) (Y/N)": "Yes",
+          "Category of Company": "Company limited by shares",
+          "Subcategory of the Company": "Non-government company",
+          "Class of Company": "Public",
+          "ACTIVE compliance": "ACTIVE Compliant",
+          "Authorised Capital (Rs)": "23,00,00,00,000",
+          "Paid up Capital (Rs)": "60,56,89,111",
+          "Date of last AGM": "26/06/2024",
+          "Date of Balance Sheet": "31/03/2024",
+          "Company Status": "Active"
+        }
+      ]
 
-    // Navigate to results page with search parameters
-    router.push(`/results?${params}`)
+      // Encode the form data and results to pass as URL parameters
+      const params = new URLSearchParams({
+        ...formData,
+        type: "company",
+        results: JSON.stringify(sampleData)
+      })
+
+      // Navigate to results page with search parameters
+      router.push(`/results?${params.toString()}`)
+    } catch (error) {
+      console.error("Error processing search:", error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const containerVariants = {

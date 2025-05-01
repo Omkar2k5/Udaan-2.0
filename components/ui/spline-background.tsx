@@ -19,6 +19,8 @@ export function SplineBackground({
       <spline-viewer 
         url={url}
         class="w-full h-full"
+        loading-anim="true"
+        events-target="global"
         style={{
           pointerEvents: "none",
           userSelect: "none",

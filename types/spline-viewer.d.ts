@@ -7,6 +7,8 @@ declare global {
         url?: string;
         class?: string;
         style?: React.CSSProperties;
+        'loading-anim'?: string;
+        'events-target'?: string;
       }, HTMLElement>;
     }
   }

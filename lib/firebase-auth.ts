@@ -6,6 +6,8 @@ import {
   signOut as firebaseSignOut,
   onAuthStateChanged,
   updateProfile,
+  GoogleAuthProvider,
+  signInWithPopup,
   type User,
 } from "firebase/auth"
 import { getAnalytics } from "firebase/analytics"
@@ -31,6 +33,7 @@ if (typeof window !== "undefined") {
 }
 
 const auth = getAuth(app)
+const googleProvider = new GoogleAuthProvider()
 
 // Sign up with email and password
 export const signUp = async (email: string, password: string, displayName: string) => {
@@ -52,6 +55,17 @@ export const signIn = async (email: string, password: string) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
     return userCredential.user
+  } catch (error: any) {
+    const errorMessage = getErrorMessage(error.code)
+    throw new Error(errorMessage)
+  }
+}
+
+// Sign in with Google
+export const signInWithGoogle = async () => {
+  try {
+    const result = await signInWithPopup(auth, googleProvider)
+    return result.user
   } catch (error: any) {
     const errorMessage = getErrorMessage(error.code)
     throw new Error(errorMessage)
@@ -92,6 +106,14 @@ const getErrorMessage = (errorCode: string): string => {
       return "Incorrect password. Please try again."
     case "auth/too-many-requests":
       return "Too many failed login attempts. Please try again later."
+    case "auth/popup-closed-by-user":
+      return "Sign-in popup was closed before completing the sign in. Please try again."
+    case "auth/cancelled-popup-request":
+      return "The sign-in popup was cancelled. Please try again."
+    case "auth/popup-blocked":
+      return "Sign-in popup was blocked by your browser. Please allow popups for this site and try again."
+    case "auth/account-exists-with-different-credential":
+      return "An account already exists with the same email but different sign-in credentials. Try signing in using a different method."
     default:
       return "An error occurred. Please try again."
   }

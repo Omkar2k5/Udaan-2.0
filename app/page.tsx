@@ -36,7 +36,7 @@ export default function HomePage() {
       {/* 3D Spline Object */}
       <div className="absolute inset-0 z-0">
         <div dangerouslySetInnerHTML={{ 
-          __html: '<spline-viewer url="https://prod.spline.design/pY4CEJVxSZ9x753F/scene.splinecode" class="w-full h-full"></spline-viewer>' 
+          __html: '<spline-viewer url="https://prod.spline.design/pY4CEJVxSZ9x753F/scene.splinecode" class="w-full h-full" loading-anim="true" events-target="global"></spline-viewer>' 
         }} />
       </div>
 

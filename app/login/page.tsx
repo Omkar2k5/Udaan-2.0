@@ -10,11 +10,13 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Eye, EyeOff, Lock, Mail } from "lucide-react"
 import Link from "next/link"
-import { signIn } from "@/lib/firebase-auth"
+import { signIn, signInWithGoogle } from "@/lib/firebase-auth"
+import { FcGoogle } from "react-icons/fc"
 
 export default function LoginPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
@@ -43,6 +45,20 @@ export default function LoginPage() {
       setIsLoading(false)
     }
   }
+  
+  const handleGoogleSignIn = async () => {
+    setGoogleLoading(true)
+    setError("")
+    
+    try {
+      await signInWithGoogle()
+      router.push("/")
+    } catch (error: any) {
+      setError(error.message || "Failed to login with Google. Please try again.")
+    } finally {
+      setGoogleLoading(false)
+    }
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -66,6 +82,8 @@ export default function LoginPage() {
         <spline-viewer 
           url="https://prod.spline.design/fKCmgDdSMnN7Ekd4/scene.splinecode"
           class="w-full h-full"
+          loading-anim="true"
+          events-target="global"
         />
       </div>
 
@@ -133,12 +151,33 @@ export default function LoginPage() {
                 <Button
                   type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                  disabled={isLoading}
+                  disabled={isLoading || googleLoading}
                   suppressHydrationWarning
                 >
                   {isLoading ? "Logging in..." : "Login"}
                 </Button>
               </form>
+              
+              <div className="relative my-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-700"></div>
+                </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="px-2 bg-black/70 text-gray-400">OR</span>
+                </div>
+              </div>
+              
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full border-gray-700 bg-black/50 text-white hover:bg-black/30 flex items-center justify-center gap-2"
+                onClick={handleGoogleSignIn}
+                disabled={isLoading || googleLoading}
+                suppressHydrationWarning
+              >
+                <FcGoogle className="h-5 w-5" />
+                {googleLoading ? "Signing in..." : "Sign in with Google"}
+              </Button>
             </CardContent>
             <CardFooter className="flex flex-col space-y-2">
               <div className="text-sm text-gray-400 text-center">
